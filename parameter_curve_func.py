@@ -6,14 +6,7 @@ import  math
 
 t = np.linspace(0,1,50)
 
-'''x_0=0
-y_0=0
-x_1=0.8
-y_1=0
-x_2=0.4
-y_2=1
-x_3=1
-y_3=1'''
+
 x_0=0
 y_0=0
 x_1=1
@@ -51,13 +44,4 @@ def function(input):
 		
 	
 
-#print(function(0.67))
-
-#print(a3,b3)
-
-#plt.plot(x,b3,label="splprep")
 plt.title("bezier")
-#plt.set_aspect('equal')
-
-
-#plt.show()
