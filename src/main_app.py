@@ -240,7 +240,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def read_setting(self):
         self.print_setting = configparser.ConfigParser()
-        self.print_setting.read('print_setting.ini', encoding='utf-8')
+        path = os.path.join(os.path.dirname(__file__), 'print_setting.ini')
+        self.print_setting.read(path, encoding='utf-8')
         #var = self.print_setting['Nozzle']['Diameter']
         #print(var)
 
