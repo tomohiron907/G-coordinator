@@ -1,6 +1,6 @@
 import numpy as np
 #from scipy import interpolate
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import  math
 
 
@@ -27,10 +27,7 @@ def g(t):
 x = [f(t_i) for t_i in t]
 y = [g(t_i) for t_i in t]
 #plt.figure(figsize=(10,10))
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
-ax.set_aspect('equal')
-ax.plot(x, y,label="controlpoint")
+
 
 
 
@@ -44,4 +41,3 @@ def function(input):
 		
 	
 
-plt.title("bezier")
