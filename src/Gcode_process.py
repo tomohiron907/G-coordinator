@@ -105,7 +105,7 @@ def file_close():
     f.close()
 
 
-f = open('py_modeling.gcode', 'w', encoding="UTF-8")
+f = open('G-coordinator.gcode', 'w', encoding="UTF-8")
 
 
 
