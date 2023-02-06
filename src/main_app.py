@@ -312,7 +312,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv) 
     path = os.path.join(os.path.dirname(sys.modules[__name__].__file__), 'layers.png')
     app.setWindowIcon(QIcon(path))
-    main_window = MainWindow() #ウィンドウクラスのオブジェクト生成
-    main_window.show() #ウィンドウの表示
+    main_window = MainWindow() 
+    main_window.show() 
     #main_window.draw_object()
-    sys.exit(app.exec_()) #プログラム終了
+    sys.exit(app.exec_()) 
