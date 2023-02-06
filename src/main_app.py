@@ -83,11 +83,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.full_object=modeling.object_modeling()  # get the list of coordinate from modeling.py
             self.message_console.setTextColor(QColor('#00bfff'))
             self.message_console.setText('object displyed')
+            with open("modeling.py",'w') as f:
+                pass
         except:
             print('syntax error!!')
             self.message_console.setTextColor(QColor('#FF6347'))
             print(str(traceback.format_exc()))
             self.message_console.setText(traceback.format_exc())
+            with open("modeling.py",'w') as f:
+                pass
         draw_object.draw_object_array(self.full_object,self.graphicsView,len(self.full_object))  #redraw updated full objects in modeling.py
         self.Slider.setRange(0, len(self.full_object))  # set slider range
         self.file_save()
@@ -313,6 +317,6 @@ if __name__ == '__main__':
     path = os.path.join(os.path.dirname(sys.modules[__name__].__file__), 'layers.png')
     app.setWindowIcon(QIcon(path))
     main_window = MainWindow() 
-    main_window.show() 
+    main_window.show() #ウィンドウの表示
     #main_window.draw_object()
-    sys.exit(app.exec_()) 
+    sys.exit(app.exec_()) #プログラム終了
