@@ -1,6 +1,6 @@
 import numpy as np
 import math
-
+from print_functions import *
 
 LAYER=250
 
@@ -22,7 +22,7 @@ def amp_calc(height):
 
 
 def object_modeling():
-    pos_array=[]
+    full_object=[]
     for height in range(LAYER):
         arg = np.linspace(0, np.pi*2,401)
         amp = amp_calc(height)
@@ -33,7 +33,8 @@ def object_modeling():
         y = rad*np.sin(arg+angle)
         z = np.full_like(arg, height*0.3+0.2)
         layer_pos = np.column_stack([x, y, z])
-        pos_array.append(layer_pos.tolist())
+        outer_wall = print_layer(x, y, z)
+        full_object.append(outer_wall)
         
         
         
@@ -49,8 +50,8 @@ def object_modeling():
             x = rad*np.cos(arg+angle)
             y = rad*np.sin(arg+angle)
             z = np.full_like(arg, height*0.3+0.2)
-            layer_pos = np.column_stack([x, y, z])
-            pos_array.append(layer_pos.tolist())
+            inner_wall = print_layer(x, y, z)
+            full_object.append(inner_wall)
         
 
 
@@ -58,5 +59,6 @@ def object_modeling():
         
         
 
-    return pos_array
+    return full_object
+    
 

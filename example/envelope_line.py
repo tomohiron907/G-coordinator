@@ -1,8 +1,6 @@
 import numpy as np
 import math
-import draw_object
-import print_functions
-from print_functions import print_layer
+from print_functions import *
 LAYER=100
 d = 0.8
 gr = 1/1.618

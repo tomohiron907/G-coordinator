@@ -1,7 +1,5 @@
 import numpy as np
 import math
-#import draw_object
-import print_functions
 import parameter_curve_func as pf
 from print_functions import *
 '''
@@ -59,7 +57,6 @@ def object_modeling():
         
         bezier_rad =np.array( [30 * pf.function(height_list_i/1.01) for height_list_i in height_list])
         amp = 1+4.5*np.exp(-(12*(height/LAYER-1/2.8))**2)
-        '''rad=30+amp*np.sin(arg*50.5+np.pi*height)+ 30* np.sin(height_list/LAYER *np.pi/2)'''
         rad=30+amp*np.sin(arg*50.5+np.pi*height)+ bezier_rad
         x = rad*np.cos(arg )
         y = rad*np.sin(arg )
