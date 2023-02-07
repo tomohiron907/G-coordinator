@@ -101,5 +101,30 @@ For each layer, a layer is added to the list of full_objects and a full_object i
 
 Once modeling is complete, prepare the G-code.
 
-![img7](img/印刷パラメータ.png)
+![img7](img/print_parameter.png)
 
+At this stage, it is not possible to make such complicated print settings. Only the minimum settings are available.
+As you can see, nozzle_diameter is the nozzle diameter and layer_height is the layer height.
+
+The Origin item requires a bit of attention. In general 3D printers, the origin is set to the front left of the bed, but in G-coordinator, the origin is set to the center of the bed to make it easier to write the formula for modeling.
+The bed of the 3D printer I am currently using is 210mm x 210mm, so I set the origin at 105mm from the center of the bed.
+
+Coordinates of (10,-20) on the G-coordinator are converted to (115, 85) on the G-code and recorded.
+
+In addition, a speed setting is also provided. The print speed here is the default value when nothing is set, and if the speed is specified in detail in the editor, it takes precedence. The same is true for the bottom item Extrusion_multiplier.
+
+In travel_option, you can set whether or not retraction is used and the z-hop.
+
+In extrusion_multiplier, you can determine the factor by which the extrusion amount (E value) is multiplied.
+
+# Export G-code
+When ready, press the Gcode Export button.
+When the message "Gcode Exported" appears in the message console in the lower left corner, the process is complete.
+A file named G-coordinator.gcode is generated in the src directory of the current directory.
+
+![img8](img/srcフォルダ.png)
+
+It is recommended to check the generated G-code with other software, just to be sure.
+![img5](img/reptier.png)
+These are the steps to create a G-code with G-coordinator.
+We will update the examples and the scripts for them as needed.
