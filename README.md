@@ -6,7 +6,7 @@ To use a 3D printer, it is basically necessary to prepare a 3D model, run it thr
 ![img1](img/modeling.png)
 By creating G-codes directly, you can easily create shapes and forms that would be difficult to achieve using conventional methods of creating 3D models. For example, the following weave shape can be realized.
 
-<img src="img/造形事例1.jpg" width=70%>
+<img src="img/printted_thing.jpg" width=70%>
 
 While Grasshopper in Rhinoceros can do the same thing with visual programming, G-coordinator uses python to achieve the same thing. This allows a high degree of freedom in modeling.
 
