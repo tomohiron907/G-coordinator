@@ -1,6 +1,6 @@
 # G-coordinator
 
-
+日本語バージョンはQiitaで[ここ](https://qiita.com/tomohiron907/items/e14137fd15cb52a415dc)に載せています．
 # What is G-coordinator?
 To use a 3D printer, it is basically necessary to prepare a 3D model, run it through slicing software to create a G-code, and load it into the printer. G-coordinator is an open source software for creating G-codes directly in python.
 ![img1](img/modeling.png)
