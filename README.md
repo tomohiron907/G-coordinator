@@ -122,7 +122,7 @@ When ready, press the Gcode Export button.
 When the message "Gcode Exported" appears in the message console in the lower left corner, the process is complete.
 A file named G-coordinator.gcode is generated in the src directory of the current directory.
 
-![img8](img/srcフォルダ.png)
+![img8](img/src_folder.png)
 
 It is recommended to check the generated G-code with other software, just to be sure.
 ![img5](img/reptier.png)
