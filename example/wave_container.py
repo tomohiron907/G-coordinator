@@ -9,7 +9,7 @@ Print_speed = 700
 Ext_multiplier = 1.4
 '''
 
-LAYER=80
+LAYER=120
 
 
 

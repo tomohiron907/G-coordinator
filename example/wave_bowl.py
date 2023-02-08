@@ -10,8 +10,8 @@ Print_speed = 700
 Ext_multiplier = 2.6
 '''
 
-LAYER=50
-
+LAYER=100
+base_rad = 50
 
 
 
@@ -21,7 +21,7 @@ def object_modeling():
     for height in range(LAYER):
         arg = np.linspace(0, np.pi*2,203)
         amp = 2
-        rad = 30+amp*np.sin(arg*50.5+np.pi*height) + 30*np.sin((height+arg/(2*np.pi))/LAYER*np.pi/2)
+        rad = base_rad+amp*np.sin(arg*50.5+np.pi*height) + 30*np.sin((height+arg/(2*np.pi))/LAYER*np.pi)
         x = rad*np.cos(arg )
         y = rad*np.sin(arg )
         z = np.linspace(height*0.7,(height+1)*0.7,203)
@@ -30,7 +30,7 @@ def object_modeling():
 
         if height <2:
             arg = np.linspace(0, np.pi*2,401)
-            rad = [30-2  for arg_i in arg]
+            rad = [base_rad-2  for arg_i in arg]
             #rotation = rotation_calc(height)
             x = rad*np.cos(arg )
             y = rad*np.sin(arg )
@@ -44,7 +44,7 @@ def object_modeling():
             
             
             arg = np.linspace(0, np.pi*2,401)
-            rad = [30-2-1  for arg_i in arg]
+            rad = [base_rad-2-1  for arg_i in arg]
             #rotation = rotation_calc(height)
             x = rad*np.cos(arg )
             y = rad*np.sin(arg )
