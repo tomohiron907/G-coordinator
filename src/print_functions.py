@@ -99,7 +99,18 @@ def line_fill(a,distance,angle):
     #return infill_list
 
 
-def contour_offset(pos_array,distance):
+def contour_offset(layer,distance):
+    x=[]
+    y = []
+    z = []
+    for i in range(len(layer)):
+        x.append(layer[i][0])
+        y.append(layer[i][1])
+        z.append(layer[i][2])
+    x=np.array(x)
+    y= np.array(y)
+    z = np.array(z)
+    pos_array = np.column_stack([x, y, z])
     poly_line = LineString(pos_array)
     poly_line_offset = poly_line.parallel_offset(distance, side='left', resolution=6, join_style=2, mitre_limit=1)
     Xlist = poly_line_offset.xy[0]
