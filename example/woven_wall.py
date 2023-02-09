@@ -55,14 +55,14 @@ def object_modeling():
         y = np.linspace(25,-25,100)
         x = np.full_like(y, 5*i-50)
         z = np.full_like(y, 4.4)
-        line = print_layer(x, y, z, Feed = 400, E_multiplier = 4)
+        line = print_layer(x, y, z, Feed = 200, E_multiplier = 10)
         full_object.append(line)
     
     for i in range(10):
         x = np.linspace(-50,50,100)
-        y = np.full_like(x, 5*i-25-0.25)
+        y = np.full_like(x, 5*i-25+2.5)
         z = np.full_like(x, 4.4)
-        line = print_layer(x, y, z, Feed = 400, E_multiplier = 4)
+        line = print_layer(x, y, z, Feed = 200, E_multiplier = 10)
         full_object.append(line)
     
     rectangle_top = print_rectangle(22)
