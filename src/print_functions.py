@@ -1,15 +1,10 @@
 import numpy as np
 import math
-#import matplotlib
-#import matplotlib.pyplot as plt
 from shapely.geometry.polygon import LinearRing,LineString
-#import japanize_matplotlib
 import sys
 
 def print_layer(x, y, z, Feed = None, E_multiplier = None):
     coordinates = np.column_stack([x,y,z]).tolist()
-    #coordinates.tolist()
-    
     
     if Feed is None:
         nans = np.zeros(len(coordinates))
@@ -21,7 +16,6 @@ def print_layer(x, y, z, Feed = None, E_multiplier = None):
         Feed_list = np.full(len(coordinates),Feed)
 
 
-
     if E_multiplier is None:
         nans = np.zeros(len(coordinates))
         nans[:] = np.nan
@@ -30,16 +24,10 @@ def print_layer(x, y, z, Feed = None, E_multiplier = None):
         E_multiplier_list = E_multiplier
     else:
         E_multiplier_list = np.full(len(coordinates),E_multiplier)
-
-
+    
     layer_list = np.column_stack([x,y,z,Feed_list,E_multiplier_list]).tolist()
-    #print(layer_list)
 
     return layer_list
-
-
-
-
 
 
 
@@ -55,8 +43,6 @@ def line_fill(a,distance,angle):
 
     x=np.array(x)
     y= np.array(y)
-    #fig = plt.figure()
-    #ax = fig.add_subplot(1, 1, 1)
     if angle == np.pi/2 or angle == -np.pi/2:
         angle -=0.001
     y_intersept = distance / math.cos(angle)
@@ -69,19 +55,12 @@ def line_fill(a,distance,angle):
     for k in K:
         for n in range(len(a)-1):
             if (slope*x[n+1] - y[n+1] + k )* (slope*x[n] - y [n] +k) < 0:
-                #T=(x[n+1]*y[n]-y[n+1]*x[n])/((x[n+1]-x[n])-(y[n+1]-y[n]))
-                #X=T+(x[n+1]-x[n])*k
                 X=(x[n+1]*y[n]-y[n+1]*x[n]-(x[n+1]-x[n])*k)/(slope*(x[n+1]-x[n])-(y[n+1]-y[n]))
                 Y=slope*X+k
                 Xlist.append(X)
                 Ylist.append(Y)
             
-                
-    #ax.plot(x,y, label='measure data')
-    #ax.plot(x,y, label='measure data')
-    #ax.set_ylim(-2,3)
-    #ax.set_xlim(-13.5,13.5)
-    #ax.set_xlim(-2,3)
+
     for i in range(len(Xlist)-1):
         if i%4==2:
             Xlist[i],Xlist[i+1]=Xlist[i+1],Xlist[i]
@@ -94,9 +73,7 @@ def line_fill(a,distance,angle):
                 Xlist[i],Xlist[i+1]=Xlist[i+1],Xlist[i]
                 Ylist[i],Ylist[i+1]=Ylist[i+1],Ylist[i]
     Zlist = [a[0][2] for i in range(len(Xlist))]
-    #infill_list = np.column_stack([Xlist,Ylist,Zlist])
     return Xlist,Ylist,Zlist
-    #return infill_list
 
 
 def contour_offset(layer,distance):
@@ -117,7 +94,6 @@ def contour_offset(layer,distance):
     Ylist = poly_line_offset.xy[1]
     Zlist = [pos_array[0][2] for i in range(len(Xlist))]
     offset_list = np.column_stack([Xlist,Ylist,Zlist])
-    #print(poly_line_offset)
     return Xlist,Ylist,Zlist
 
 

@@ -1,17 +1,12 @@
+import os
 import numpy as np
 import math
 import default_Gcode
-#import print_setting
-import os
 import configparser
-
-
 
 print_setting = configparser.ConfigParser()
 path = os.path.join(os.path.dirname(__file__), 'print_setting.ini')
 print_setting.read(path, encoding='utf-8')
-
-
 
 NOZZLE = float(print_setting['Nozzle']['nozzle_diameter'])
 LAYER = float(print_setting['Layer']['Layer_height'])
@@ -22,9 +17,7 @@ TRAVEL_SPEED = int(print_setting['Speed']['travel_speed'])
 PRINT_TEMPERATURE = int(print_setting['Temperature']['Nozzle_temperature'])
 BED_TEMPERATURE = int(print_setting['Temperature']['Bed_temperature'])
 EXRTRUSION_MULTIPLIER_DEFAULT = float(print_setting['Extrusion_option']['Extrusion_multiplier'])
-
 RETRACTION = print_setting.getboolean('Travel_option','Retraction')
-#RETRACTION_THRESHOLD = float(print_setting['Print_option']['Retraction_threshold'])
 RETRACTION_DISTANCE = float(print_setting['Travel_option']['Retraction_distance'])
 UNRETRACTION_DISTANCE = float(print_setting['Travel_option']['Unretraction_distance'])
 Z_HOP = print_setting.getboolean('Travel_option','Z_hop')
@@ -61,13 +54,6 @@ def Gcode_export(full_object):
 
 
 def travel(X,Y,Z):
-    '''if RETRACTION == False:
-        f.write(f'G90 F{TRAVEL_SPEED} X{X+XC:.5f} Y{Y+YC:.5f} Z{Z:.5f}\n' )
-    else:
-        f.write(f'G1 E{-RETRACTION_DISTANCE}\n')
-        f.write(f'G90 F{TRAVEL_SPEED} X{X+XC:.5f} Y{Y+YC:.5f} Z{Z:.5f}\n' )
-        f.write(f'G1 E{UNRETRACTION_DISTANCE}\n')'''
-
     if RETRACTION == True:
         f.write(f'G1 E{-RETRACTION_DISTANCE}\n')
     if Z_HOP == True:

@@ -141,33 +141,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # get the text
         text = self.editor.toPlainText()
         # try catch block
-        
         # opening file to write
         with open('modeling.py', 'w') as f:
-
             # write text in the file
             f.write(text)
         #self.draw_object()
 
-
     def file_save(self):
-        
         # if there is no save path
         if self.path is None:
- 
             # call save as method
             return self.file_save_as()
- 
         # else call save to path method
         self._save_to_path(self.path)
         # action called by save as action
 
     def file_save_as(self):
- 
         # opening path
         path, _ = QFileDialog.getSaveFileName(self, "Save file", "",
                              "Text documents (*.txt);All files (*.*)")
- 
         # if dialog is cancelled i.e no path is selected
         if not path:
             # return this method
@@ -179,22 +171,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
  
     # save to path method
     def _save_to_path(self, path):
- 
         # get the text
         text = self.editor.toPlainText()
- 
         # try catch block
         try:
- 
             # opening file to write
             with open(path, 'w') as f:
- 
                 # write text in the file
                 f.write(text)
  
         # if error occurs
         except Exception as e:
- 
             # show error using critical
             self.dialog_critical(str(e))
  
@@ -206,7 +193,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.update_title()
 
     def update_title(self):
- 
         # setting window title with prefix as file name
         # suffix aas PyQt5 Notepad
         self.setWindowTitle("%s - G-coordinator" %(os.path.basename(self.path)
@@ -218,8 +204,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.print_setting = configparser.ConfigParser()
         path = os.path.join(os.path.dirname(__file__), 'print_setting.ini')
         self.print_setting.read(path, encoding='utf-8')
-        #var = self.print_setting['Nozzle']['Diameter']
-        #print(var)
 
     def parameter_tree_setting(self):
         self.params = [
@@ -243,7 +227,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ]},
             {'name': 'Travel_option', 'type': 'group', 'children': [
                 {'name': 'Retraction', 'type': 'bool', 'value': self.print_setting.getboolean('Travel_option','Retraction')},
-                #{'name': 'Retraction_threshold', 'type': 'float', 'value': float(self.print_setting['Print_option']['Retraction_threshold'])},
                 {'name': 'Retraction_distance', 'type': 'float', 'value': float(self.print_setting['Travel_option']['Retraction_distance'])},
                 {'name': 'Unretraction_distance', 'type': 'float', 'value': float(self.print_setting['Travel_option']['Unretraction_distance'])},
                 {'name': 'Z_hop', 'type': 'bool', 'value': self.print_setting.getboolean('Travel_option','Z_hop')},
@@ -270,15 +253,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print('  data:      %s'% str(data))
             print('  ----------')
 
-
-
-
-
-
-
-
-    def keyPressEvent(self, event):
-        pass
 
 
 class GcodeExportWindow(QWidget):
@@ -320,5 +294,4 @@ if __name__ == '__main__':
     app.setWindowIcon(QIcon(path))
     main_window = MainWindow() 
     main_window.show() #ウィンドウの表示
-    #main_window.draw_object()
     sys.exit(app.exec_()) #プログラム終了
