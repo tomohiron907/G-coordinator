@@ -5,11 +5,8 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
-import pyqtgraph as pg
-from pyqtgraph.parametertree import Parameter, ParameterTree
+from pyqtgraph.parametertree import Parameter
 import pyqtgraph.opengl as gl
-import numpy as np
-import math
 import modeling
 import importlib
 import syntax_pars
@@ -17,7 +14,6 @@ import Gcode_process
 import draw_object
 import configparser
 from gcode_modeling_ui import Ui_MainWindow
-import gcode_modeling_ui
 
 
 
@@ -28,7 +24,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.initUI()
         self.grid_draw()
     
-
     def initUI(self):
         self.editor.setStyleSheet("""QPlainTextEdit{ 
             color: #ccc; 
@@ -40,15 +35,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
         self.up_button.setArrowType(Qt.UpArrow)
         self.down_button.setArrowType(Qt.DownArrow)
-
-        #self.parameter_tree = ParameterTree(self)
         self.read_setting()
         self.parameter_tree_setting()
         self.p = Parameter.create(name='params', type='group', children=self.params)
         self.p.sigTreeStateChanged.connect(self.change)
         self.parameter_tree.setParameters(self.p, showTop=True)
         self.parameter_tree.resize(250,540)
-
 
     # drawing grid in pyqtgraph widget
     def grid_draw(self):
@@ -69,10 +61,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.graphicsView.addItem(z_text)
         self.graphicsView.addItem(gz)
         
-
-
-
-
     # reload and draw update object in pyqtgraph widget
     def draw_updated_object(self):
         print('draw_object')
@@ -96,12 +84,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Slider.setRange(0, len(self.full_object))  # set slider range
         self.file_save()
 
-
-
-    
-
-
-
     def Gcode_create(self):
         importlib.reload(Gcode_process)
         Gcode_process.file_remove()
@@ -115,7 +97,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.gcode_window = GcodeExportWindow()
         self.gcode_window.show()
 
-
     def redraw_object(self): 
         #print(self.Slider.value())
         self.graphicsView.clear()  # initialize pyqtgraph widget
@@ -123,7 +104,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         draw_object.draw_object_array(self.full_object,self.graphicsView,self.Slider.value())  #redraw updated objects in modeling.py
         #print(value)
     
-
     def up_button_pressed(self):
         self.Slider.setValue(self.Slider.value()+1)
         self.redraw_object()
@@ -131,11 +111,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def down_button_pressed(self):
         self.Slider.setValue(self.Slider.value()-1)
         self.redraw_object()
-    
-
         
     def file_open(self):
- 
         # getting path and bool value
         path, _ = QFileDialog.getOpenFileName(self, "Open file", "",
                              "Text documents (*.txt);All files (*.*)")
@@ -146,32 +123,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 with open(path, 'r') as f:
                     # read the file
                     text = f.read()
- 
             # if some error occurred
             except Exception as e:
- 
                 # show error using critical method
                 self.dialog_critical(str(e))
             # else
             else:
                 # update path value
                 self.path = path
- 
                 # update the text
                 self.editor.setPlainText(text)
- 
                 # update the title
                 self.update_title()
 
 
     def save_as_modeling(self):
         # get the text
-        #self.file_save()
         text = self.editor.toPlainText()
- 
         # try catch block
         
- 
         # opening file to write
         with open('modeling.py', 'w') as f:
 
