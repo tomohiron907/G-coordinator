@@ -112,6 +112,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Gcode_process.file_close()
         self.message_console.setTextColor(QColor('#00bfff'))
         self.message_console.setText('Gcode Exported')
+        self.gcode_window = GcodeExportWindow()
+        self.gcode_window.show()
 
 
     def redraw_object(self): 
@@ -309,6 +311,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pass
 
 
+class GcodeExportWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.save_gocde_button = QPushButton(self)
+        self.save_gocde_button.setText('save G-code')
+        self.save_gocde_button.pressed.connect(self.file_save_as)
+        self.gcode_editor = QTextEdit(self)
+        with open('G-coordinator.gcode','r') as f:
+            gcode = f.read()
+        self.gcode_editor.setPlainText(gcode)
+        layout.addWidget(self.save_gocde_button)
+        layout.addWidget(self.gcode_editor)
+        self.setLayout(layout)
+        self.resize(700,500)
+
+    def file_save_as(self):
+        path, _ = QFileDialog.getSaveFileName(self, "Save file", "",
+                             "Text documents (*.txt);All files (*.*)")
+        if not path:
+            return
+        self._save_to_path(path)
+
+    def _save_to_path(self, path):
+        text = self.gcode_editor.toPlainText()
+        try:
+            with open(path, 'w') as f:
+                f.write(text)
+        except Exception as e:
+            self.dialog_critical(str(e))
 
 
 
