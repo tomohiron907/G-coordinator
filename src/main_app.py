@@ -14,6 +14,8 @@ import Gcode_process
 import draw_object
 import configparser
 from gcode_modeling_ui import Ui_MainWindow
+from import_file import import_file
+import print_functions
 
 
 
@@ -67,7 +69,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.graphicsView.clear()  # initialize pyqtgraph widget
         self.grid_draw()
         try:
-            importlib.reload(modeling)  #reload updated modeling.py
+            #importlib.reload(modeling)  #reload updated modeling.py
+            modeling = import_file('modeling.py')
             self.full_object=modeling.object_modeling()  # get the list of coordinate from modeling.py
             self.message_console.setTextColor(QColor('#00bfff'))
             self.message_console.setText('object displyed')

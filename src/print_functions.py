@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from shapely.geometry.polygon import LinearRing,LineString
+#from shapely.geometry.polygon import LinearRing,LineString
 import sys
 
 def print_layer(x, y, z, Feed = None, E_multiplier = None):
@@ -76,7 +76,7 @@ def line_fill(a,distance,angle):
     return Xlist,Ylist,Zlist
 
 
-def contour_offset(layer,distance):
+'''def contour_offset(layer,distance):
     x=[]
     y = []
     z = []
@@ -94,6 +94,6 @@ def contour_offset(layer,distance):
     Ylist = poly_line_offset.xy[1]
     Zlist = [pos_array[0][2] for i in range(len(Xlist))]
     offset_list = np.column_stack([Xlist,Ylist,Zlist])
-    return Xlist,Ylist,Zlist
+    return Xlist,Ylist,Zlist'''
 
 
