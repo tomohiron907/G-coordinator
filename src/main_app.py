@@ -9,12 +9,12 @@ from pyqtgraph.parametertree import Parameter
 import pyqtgraph.opengl as gl
 import modeling
 import importlib
+from import_file import import_file
 import syntax_pars
 import Gcode_process    
 import draw_object
 import configparser
 from gcode_modeling_ui import Ui_MainWindow
-from import_file import import_file
 import print_functions
 
 
@@ -205,8 +205,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def read_setting(self):
         self.print_setting = configparser.ConfigParser()
-        path = os.path.join(os.path.dirname(__file__), 'print_setting.ini')
-        self.print_setting.read(path, encoding='utf-8')
+        #path = os.path.join(os.path.dirname(__file__), 'print_setting.ini')
+        #elf.print_setting.read(path, encoding='utf-8')
+        self.print_setting.read('print_setting.ini')
 
     def parameter_tree_setting(self):
         self.params = [
@@ -293,8 +294,8 @@ class GcodeExportWindow(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv) 
-    path = os.path.join(os.path.dirname(sys.modules[__name__].__file__), 'layers.png')
-    app.setWindowIcon(QIcon(path))
+    '''path = os.path.join(os.path.dirname(sys.modules[__name__].__file__), 'layers.png')
+    app.setWindowIcon(QIcon(path))'''
     main_window = MainWindow() 
     main_window.show() #ウィンドウの表示
     sys.exit(app.exec_()) #プログラム終了

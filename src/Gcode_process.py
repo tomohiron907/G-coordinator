@@ -5,8 +5,9 @@ import default_Gcode
 import configparser
 
 print_setting = configparser.ConfigParser()
-path = os.path.join(os.path.dirname(__file__), 'print_setting.ini')
-print_setting.read(path, encoding='utf-8')
+#path = os.path.join(os.path.dirname(__file__), 'print_setting.ini')
+#print_setting.read(path, encoding='utf-8')
+print_setting.read('print_setting.ini')
 
 NOZZLE = float(print_setting['Nozzle']['nozzle_diameter'])
 LAYER = float(print_setting['Layer']['Layer_height'])
