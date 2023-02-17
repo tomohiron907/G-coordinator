@@ -9,7 +9,9 @@ from setuptools import setup
 
 APP = ['main.py']
 DATA_FILES = ['print_setting.ini','G-coordinator.gcode']
-OPTIONS = {}
+OPTIONS = {
+    'iconfile' : 'G-coordinator.png'
+}
 
 setup(
     app=APP,
@@ -22,6 +24,7 @@ setup(
 
 setup(
     app=APP,
+    name = 'G-coordinator',
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
