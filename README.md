@@ -21,7 +21,7 @@ For the final check of the output G-cocde, software such as prusa-slicer or repe
 
 # G-coordinator installation procedure
 This section is intended for those who are not familiar with python, so those who are familiar with python can skip this section.
-The source code of G-coordinator is available on github [here](https://github.com/tomohiron907/G-coordinator). (You can download the zip file from the bottom of the green <>code button.) The main code is placed in the src directory, so after downloading and extracting, open the src file with an editor. In this directory, 'main_app.py' is the main pytnon script to be executed.
+The source code of G-coordinator is available on github [here](https://github.com/tomohiron907/G-coordinator). (You can download the zip file from the bottom of the green <>code button.) The main code is placed in the src directory, so after downloading and extracting, open the src file with an editor. In this directory, 'main.py' is the main pytnon script to be executed.
 
 Then, install the necessary libraries by pip. The necessary items are listed in requiremets.txt.
 ![img3](img/after_installation.png)
@@ -33,10 +33,9 @@ Download the libraries needed to run the program by typing the following in a te
 ```pip install pyqt5```
 ```pip install pyqtgraph```
 ```pip install pyopengl```
-```pip install shaply```
 
 In some cases, you may need to install something that comes standard on a mac, but is not required on a win machine.
-If the error disappears and main_app.py is executed, the installation is complete.
+If the error disappears and main.py is executed, the installation is complete.
 
 ![img4](img/launch_G-coordinator.png)
 

@@ -7,7 +7,7 @@ Usage:
 
 from setuptools import setup
 
-APP = ['main_app.py']
+APP = ['main.py']
 DATA_FILES = ['print_setting.ini','G-coordinator.gcode']
 OPTIONS = {}
 
