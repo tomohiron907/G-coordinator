@@ -260,35 +260,59 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 class GcodeExportWindow(QWidget):
+
     def __init__(self):
         super().__init__()
+        self.title = 'Save G-code file'
+        self.left = 10
+        self.top = 10
+        self.width = 500
+        self.height = 400
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
         layout = QVBoxLayout()
-        self.save_gocde_button = QPushButton(self)
-        self.save_gocde_button.setText('save G-code')
-        self.save_gocde_button.pressed.connect(self.file_save_as)
-        self.gcode_editor = QTextEdit(self)
-        with open('G-coordinator.gcode','r') as f:
-            gcode = f.read()
-        self.gcode_editor.setPlainText(gcode)
-        layout.addWidget(self.save_gocde_button)
-        layout.addWidget(self.gcode_editor)
+        self.button = QPushButton('Save G-code file', self)
+        self.button.setToolTip('Click to save G-code file')
+        #button.move(200, 20)
+        self.button.clicked.connect(self.saveFileDialog)
+        
+        self.textEdit = QTextEdit(self)
+        self.textEdit.setFont(QFont("Courier New", 10))
+        #self.textEdit.setGeometry(10, 60, 480, 330)
+        self.showGCodePreview()
+        
+        self.label = QLabel(self)
+        #self.label.setGeometry(10, 350, 480, 40)
+        self.label.setFont(QFont("Arial", 10, QFont.Bold))
+        self.label.setText("Showing the first 1000 lines of G-code file.")
+
+        layout.addWidget(self.button)
+        layout.addWidget(self.label)
+        layout.addWidget(self.textEdit)
         self.setLayout(layout)
-        self.resize(700,500)
+        self.show()
 
-    def file_save_as(self):
-        path, _ = QFileDialog.getSaveFileName(self, "Save file", "",
-                             "Text documents (*.txt);All files (*.*)")
-        if not path:
-            return
-        self._save_to_path(path)
+    def showGCodePreview(self):
+        with open("G-coordinator.gcode", 'r') as f:
+            content = f.readlines()
+            if len(content) > 1000:
+                content = content[:1000]
+            content = ''.join(content)
+            self.textEdit.setPlainText(content)
 
-    def _save_to_path(self, path):
-        text = self.gcode_editor.toPlainText()
-        try:
-            with open(path, 'w') as f:
-                f.write(text)
-        except Exception as e:
-            self.dialog_critical(str(e))
+    def saveFileDialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getSaveFileName(self,"Save G-code file","","G-code Files (*.gcode);;All Files (*)", options=options)
+        if fileName:
+            with open("G-coordinator.gcode", 'r') as f:
+                content = f.read()
+                with open(fileName, 'w') as new_f:
+                    new_f.write(content)
+            self.showGCodePreview()
 
 
 
