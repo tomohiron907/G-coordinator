@@ -14,6 +14,7 @@ XC = int(print_setting['Origin']['x_origin'])
 YC = int(print_setting['Origin']['y_origin'])
 PRINT_SPPED = int(print_setting['Speed']['print_speed'])
 TRAVEL_SPEED = int(print_setting['Speed']['travel_speed'])
+FAN_SPEED =  int(print_setting['Fan_speed']['fan_speed'])
 PRINT_TEMPERATURE = int(print_setting['Temperature']['Nozzle_temperature'])
 BED_TEMPERATURE = int(print_setting['Temperature']['Bed_temperature'])
 EXRTRUSION_MULTIPLIER = float(print_setting['Extrusion_option']['Extrusion_multiplier'])
@@ -70,7 +71,7 @@ G1 Z0.300
 G1 E3.20000 F2400.00000
 
 
-M106 S0 ; set fan speed
+M106 S{FAN_SPEED} ; set fan speed
 
 ;END OF THE START GCODE
 

@@ -92,6 +92,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Gcode_process.file_remove()
         Gcode_process.start()
         Gcode_process.set_temp()
+        Gcode_process.set_fan_speed()
         Gcode_process.Gcode_export(self.full_object)
         Gcode_process.end()
         Gcode_process.file_close()
@@ -224,6 +225,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             {'name': 'Speed', 'type': 'group', 'children': [
                 {'name': 'Print_speed', 'type': 'int', 'value': int(self.print_setting['Speed']['Print_speed'])},
                 {'name': 'Travel_speed', 'type': 'int', 'value': int(self.print_setting['Speed']['Travel_speed'])},
+            ]},
+            {'name': 'Fan_speed', 'type': 'group', 'children': [
+                {'name': 'Fan_speed', 'type': 'int', 'value': int(self.print_setting['Fan_speed']['fan_speed'])},
             ]},
             {'name': 'Temperature', 'type': 'group', 'children': [
                 {'name': 'Nozzle_temperature', 'type': 'int', 'value': int(self.print_setting['Temperature']['Nozzle_temperature'])},

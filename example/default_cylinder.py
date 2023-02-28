@@ -2,7 +2,7 @@ import numpy as np
 import math
 
 from print_functions import *
-LAYER=10
+LAYER=50
 
 
 

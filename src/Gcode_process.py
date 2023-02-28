@@ -15,6 +15,7 @@ XC = int(print_setting['Origin']['x_origin'])
 YC = int(print_setting['Origin']['y_origin'])
 PRINT_SPEED_DEFAULT = int(print_setting['Speed']['print_speed'])
 TRAVEL_SPEED = int(print_setting['Speed']['travel_speed'])
+FAN_SPEED =  int(print_setting['Fan_speed']['fan_speed'])
 PRINT_TEMPERATURE = int(print_setting['Temperature']['Nozzle_temperature'])
 BED_TEMPERATURE = int(print_setting['Temperature']['Bed_temperature'])
 EXRTRUSION_MULTIPLIER_DEFAULT = float(print_setting['Extrusion_option']['Extrusion_multiplier'])
@@ -84,6 +85,8 @@ M104 S{PRINT_TEMPERATURE}
 M109 S{PRINT_TEMPERATURE}
 ''')
 
+def set_fan_speed():
+    f.write(f'M106 S{FAN_SPEED}\n''')
     
 def end():
     f.write(default_Gcode.endGcode)
