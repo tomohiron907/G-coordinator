@@ -29,6 +29,31 @@ def print_layer(x, y, z, Feed = None, E_multiplier = None):
 
     return layer_list
 
+def travel_to(x, y, z, Feed = None, E_multiplier = None):
+    coordinates = np.column_stack([x,y,z]).tolist()
+    
+    if Feed is None:
+        nans = np.zeros(len(coordinates))
+        nans[:] = np.nan
+        Feed_list = nans
+    elif type(Feed) is np.ndarray:
+        Feed_list = Feed
+    else:
+        Feed_list = np.full(len(coordinates),Feed)
+
+
+    if E_multiplier is None:
+        nans = np.zeros(len(coordinates))
+        nans[:] = np.nan
+        E_multiplier_list = nans
+    elif type(E_multiplier) is np.ndarray:
+        E_multiplier_list = E_multiplier
+    else:
+        E_multiplier_list = np.full(len(coordinates),E_multiplier)
+    
+    layer_list = np.column_stack([x,y,z,Feed_list,E_multiplier_list]).tolist()
+
+    return layer_list
 
 
 
