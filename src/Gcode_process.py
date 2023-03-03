@@ -1,13 +1,16 @@
 import os
+import sys
 import numpy as np
 import math
 import default_Gcode
 import configparser
 
+'''print_setting = configparser.ConfigParser()
+print_setting.read('print_setting.ini')'''
+ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
+CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
 print_setting = configparser.ConfigParser()
-#path = os.path.join(os.path.dirname(__file__), 'print_setting.ini')
-#print_setting.read(path, encoding='utf-8')
-print_setting.read('print_setting.ini')
+print_setting.read(CONFIG_PATH)
 
 NOZZLE = float(print_setting['Nozzle']['nozzle_diameter'])
 LAYER = float(print_setting['Layer']['Layer_height'])

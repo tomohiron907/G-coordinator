@@ -205,10 +205,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def read_setting(self):
+        '''self.print_setting = configparser.ConfigParser()
+        self.print_setting.read('print_setting.ini')'''
+        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
+        CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
         self.print_setting = configparser.ConfigParser()
-        #path = os.path.join(os.path.dirname(__file__), 'print_setting.ini')
-        #elf.print_setting.read(path, encoding='utf-8')
-        self.print_setting.read('print_setting.ini')
+        self.print_setting.read(CONFIG_PATH)
 
     def parameter_tree_setting(self):
         self.params = [
