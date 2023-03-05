@@ -1,7 +1,7 @@
 import numpy as np
 import math
 from print_functions import *
-LAYER=20
+LAYER=50
 
 def print_rectangle (height):
     x = np.array([50,-50,-50,50,50],dtype = float)
@@ -23,9 +23,9 @@ def object_modeling():
     for height in range(LAYER):
         rectangle= print_rectangle(height)
         full_object.append(rectangle)
-        offset = contour_offset(rectangle,0.4)
+        '''offset = contour_offset(rectangle,0.4)
         offset_line = print_layer(offset[0], offset[1], offset[2])
-        full_object.append(offset_line)
+        full_object.append(offset_line)'''
 
     for i in range(10):
         line = print_line(-50,25-i*5, -50+i*5, 25,20)
@@ -48,7 +48,7 @@ def object_modeling():
         full_object.append(line)
     
     
-    rectangle_top = print_rectangle(20)
+    rectangle_top = print_rectangle(50)
     full_object.append(rectangle_top)
     
     for i in range(20):

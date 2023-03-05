@@ -1,13 +1,12 @@
 import numpy as np
 import math
 from print_functions import *
-import parameter_curve_func as pf
 
 '''
 NOZZLE = 0.8
-LAYER = 0.4
+LAYER = 0.7
 Print_speed = 700
-Ext_multiplier = 2.6
+Ext_multiplier = 1.4
 '''
 
 LAYER=100

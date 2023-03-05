@@ -21,28 +21,18 @@ def object_modeling():
     for height in range(LAYER):
         arg = np.linspace(0, np.pi*2,201)
         amp = 3
-        #z = np.linspace(height*1,(height+1)*1,201)
+        z = np.linspace(height*1,(height+1)*1,201)
         rad = base_rad+amp*np.sin(arg*50+height*np.pi)
         rad += 4*np.sin((height/LAYER)*np.pi)
         x = rad*np.cos(arg )
         y = rad*np.sin(arg )
-        z = np.full_like(arg,height*1 +1)
+        #z = np.full_like(arg,height*1 +1)
         wave_wall = print_layer(x, y, z)
         full_object.append(wave_wall)
         
         
         
-        arg = np.linspace(0, -np.pi*2,201)
-        amp = 3
-        rad = base_rad+1.5
-        #rad += 7*np.sin((z/LAYER)*np.pi*4.5)
-        #rad -= 7*np.cos((z/LAYER)*np.pi*1)-7
-        rad += 4*np.sin((height/LAYER)*np.pi)
-        x = rad*np.cos(arg )
-        y = rad*np.sin(arg )
-        z = np.full_like(arg,height*1 +1.5)
-        wave_wall = print_layer(x, y, z)
-        full_object.append(wave_wall)
+        
 
         if height <2:
             arg = np.linspace(0, np.pi*2,401)
