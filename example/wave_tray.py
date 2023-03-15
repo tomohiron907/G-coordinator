@@ -7,7 +7,7 @@ from print_functions import *
 NOZZLE = 1
 LAYER = 1
 Print_speed = 500
-Ext_multiplier = 1
+Ext_multiplier = 1.4
 '''
 
 LAYER=40
@@ -21,22 +21,21 @@ def object_modeling():
     for height in range(LAYER):
         arg = np.linspace(0, np.pi*2,403)
         amp = 2
+        z = np.linspace(height*1,(height+1)*1,403)
         rad = base_rad+amp*np.sin(arg*100.5+np.pi*height)
-        rad += 7*np.sin((height/LAYER)*np.pi)
+        rad += 7*np.sin((z/LAYER)*np.pi)
         x = rad*np.cos(arg )
         y = rad*np.sin(arg )
-        z = np.linspace(height*1,(height+1)*1,403)
+        
         wave_wall = print_layer(x, y, z)
         full_object.append(wave_wall)
 
         if height <2:
             arg = np.linspace(0, np.pi*2,401)
-            rad = [base_rad-2  for arg_i in arg]
-            #rotation = rotation_calc(height)
+            rad = base_rad-2 
             x = rad*np.cos(arg )
             y = rad*np.sin(arg )
             z = np.full_like(arg, height*1+1)
-            #F = np.full_like(arg,500)
             inner_wall = print_layer(x, y, z,Feed = 1000)
             full_object.append(inner_wall)
 
@@ -45,8 +44,7 @@ def object_modeling():
             
             
             arg = np.linspace(0, np.pi*2,401)
-            rad = [base_rad-2-0.5  for arg_i in arg]
-            #rotation = rotation_calc(height)
+            rad = base_rad-2-0.5  
             x = rad*np.cos(arg )
             y = rad*np.sin(arg )
             z = np.full_like(arg, height*1+1)
