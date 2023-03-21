@@ -37,6 +37,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
         self.up_button.setArrowType(Qt.UpArrow)
         self.down_button.setArrowType(Qt.DownArrow)
+        self.left_button.setArrowType(Qt.LeftArrow)
+        self.right_button.setArrowType(Qt.RightArrow)
         self.read_setting()
         self.parameter_tree_setting()
         self.p = Parameter.create(name='params', type='group', children=self.params)
@@ -83,8 +85,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.message_console.setText(traceback.format_exc())
             with open("modeling.py",'w') as f:
                 pass
-        draw_object.draw_object_array(self.full_object,self.graphicsView,len(self.full_object))  #redraw updated full objects in modeling.py
-        self.Slider.setRange(0, len(self.full_object))  # set slider range
+        #print(self.full_object)
+        draw_object.set_object_array(self.full_object)
+        self.slider_layer.setRange(0, len(self.full_object))  # set slider range
+        self.slider_layer.setValue(len(self.full_object))
+        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()-1]))
+        self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()-1]))
+        draw_object.draw_object_array(self.graphicsView,self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
         self.file_save()
 
     def Gcode_create(self):
@@ -101,19 +108,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.gcode_window = GcodeExportWindow()
         self.gcode_window.show()
 
-    def redraw_object(self): 
-        #print(self.Slider.value())
+    def redraw_layer_object(self): 
         self.graphicsView.clear()  # initialize pyqtgraph widget
         self.grid_draw()
-        draw_object.draw_object_array(self.full_object,self.graphicsView,self.Slider.value())  #redraw updated objects in modeling.py
-        #print(value)
+        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()-1]))
+        self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()-1]))
+        draw_object.draw_object_array(self.graphicsView,self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
+
+    def redraw_segment_object(self): 
+        self.graphicsView.clear()  # initialize pyqtgraph widget
+        self.grid_draw()
+        draw_object.draw_object_array(self.graphicsView,self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
     
     def up_button_pressed(self):
-        self.Slider.setValue(self.Slider.value()+1)
+        self.slider_layer.setValue(self.slider_layer.value()+1)
         self.redraw_object()
     
     def down_button_pressed(self):
-        self.Slider.setValue(self.Slider.value()-1)
+        self.slider_layer.setValue(self.slider_layer.value()-1)
+        self.redraw_object()
+    
+    def left_button_pressed(self):
+        self.slider_segment.setValue(self.slider_segment.value()-1)
+        self.redraw_object()
+    
+    def right_button_pressed(self):
+        self.slider_segment.setValue(self.slider_segment.value()+1)
         self.redraw_object()
         
     def file_open(self):
@@ -216,6 +236,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.params = [
             {'name': 'Nozzle', 'type': 'group', 'children': [
                 {'name': 'Nozzle_diameter', 'type': 'float', 'value': float(self.print_setting['Nozzle']['Nozzle_diameter'])},
+                {'name': 'Filament_diameter', 'type': 'float', 'value': float(self.print_setting['Nozzle']['Filament_diameter'])},
             ]},
             {'name': 'Layer', 'type': 'group', 'children': [
                 {'name': 'Layer_height', 'type': 'float', 'value': float(self.print_setting['Layer']['Layer_height'])},
@@ -245,7 +266,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             {'name': 'Extrusion_option', 'type': 'group', 'children': [
                 {'name': 'Extrusion_multiplier', 'type': 'float', 'value': float(self.print_setting['Extrusion_option']['Extrusion_multiplier'])},
             ]},
-            
+            {'name': 'Kinematics', 'type': 'group', 'children': [
+                {'name': 'Kinematics', 'type': 'str', 'value': self.print_setting['Kinematics']['Kinematics']},
+                {'name': 'Tilt_code', 'type': 'str', 'value': self.print_setting['Kinematics']['Tilt_code']},
+                {'name': 'Rot_code', 'type': 'str', 'value': self.print_setting['Kinematics']['Rot_code']},
+                {'name': 'Rot_offset', 'type': 'float', 'value': float(self.print_setting['Kinematics']['Rot_offset'])},
+            ]},            
         ]
     
 

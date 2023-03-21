@@ -3,7 +3,38 @@ import math
 #from shapely.geometry.polygon import LinearRing,LineString
 import sys
 
+def print_layer_5axes(x, y, z, tilt, rot, Feed = None, E_multiplier = None):
+    coordinates = np.column_stack([x,y,z]).tolist()
+    
+    if Feed is None:
+        nans = np.zeros(len(coordinates))
+        nans[:] = np.nan
+        Feed_list = nans
+    elif type(Feed) is np.ndarray:
+        Feed_list = Feed
+    else:
+        Feed_list = np.full(len(coordinates),Feed)
+
+
+    if E_multiplier is None:
+        nans = np.zeros(len(coordinates))
+        nans[:] = np.nan
+        E_multiplier_list = nans
+    elif type(E_multiplier) is np.ndarray:
+        E_multiplier_list = E_multiplier
+    else:
+        E_multiplier_list = np.full(len(coordinates),E_multiplier)
+    
+    layer_list = np.column_stack([x,y,z,tilt,rot,Feed_list,E_multiplier_list]).tolist()
+
+    return layer_list
+    
 def print_layer(x, y, z, Feed = None, E_multiplier = None):
+    tilt = [0] * len(z)
+    rot = [0] * len(z)
+    return print_layer_5axes(x, y, z, tilt, rot, Feed, E_multiplier)
+
+def travel_to_5axes(x, y, z, tilt, rot, Feed = None, E_multiplier = None):
     coordinates = np.column_stack([x,y,z]).tolist()
     
     if Feed is None:
@@ -25,41 +56,18 @@ def print_layer(x, y, z, Feed = None, E_multiplier = None):
     else:
         E_multiplier_list = np.full(len(coordinates),E_multiplier)
     
-    layer_list = np.column_stack([x,y,z,Feed_list,E_multiplier_list]).tolist()
+    layer_list = np.column_stack([x,y,z,tilt,rot,Feed_list,E_multiplier_list]).tolist()
 
     return layer_list
-
+    
 def travel_to(x, y, z, Feed = None, E_multiplier = None):
-    coordinates = np.column_stack([x,y,z]).tolist()
-    
-    if Feed is None:
-        nans = np.zeros(len(coordinates))
-        nans[:] = np.nan
-        Feed_list = nans
-    elif type(Feed) is np.ndarray:
-        Feed_list = Feed
-    else:
-        Feed_list = np.full(len(coordinates),Feed)
-
-
-    if E_multiplier is None:
-        nans = np.zeros(len(coordinates))
-        nans[:] = np.nan
-        E_multiplier_list = nans
-    elif type(E_multiplier) is np.ndarray:
-        E_multiplier_list = E_multiplier
-    else:
-        E_multiplier_list = np.full(len(coordinates),E_multiplier)
-    
-    layer_list = np.column_stack([x,y,z,Feed_list,E_multiplier_list]).tolist()
-
-    return layer_list
-
-
+    tilt = [0] * len(z)
+    rot = [0] * len(z)
+    return travel_to_5axes(x, y, z, tilt, rot, Feed, E_multiplier)
 
 def line_fill(a,distance,angle):
     x=[]
-    y = []
+    y=[]
 
     for i in range(len(a)):
         x.append(a[i][0])
@@ -67,7 +75,7 @@ def line_fill(a,distance,angle):
 
 
     x=np.array(x)
-    y= np.array(y)
+    y=np.array(y)
     if angle == np.pi/2 or angle == -np.pi/2:
         angle -=0.001
     y_intersept = distance / math.cos(angle)
@@ -98,7 +106,7 @@ def line_fill(a,distance,angle):
                 Xlist[i],Xlist[i+1]=Xlist[i+1],Xlist[i]
                 Ylist[i],Ylist[i+1]=Ylist[i+1],Ylist[i]
     Zlist = [a[0][2] for i in range(len(Xlist))]
-    return Xlist,Ylist,Zlist
+    return Xlist,Ylist,Zlist,[0]*len(Zlist),[0]*len(Zlist)
 
 
 '''def contour_offset(layer,distance):
