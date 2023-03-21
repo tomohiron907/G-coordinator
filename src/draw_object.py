@@ -10,8 +10,7 @@ ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
 CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
 print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)
-KINEMATICS = print_setting['Kinematics']['Kinematics']
-DEGREE_DIVIDE = 18.0
+
 
 pos_array = []
 noz_array = []
