@@ -1,6 +1,5 @@
 import numpy as np
 import math
-#from shapely.geometry.polygon import LinearRing,LineString
 import sys
 
 def print_layer(x, y, z, Feed = None, E_multiplier = None):

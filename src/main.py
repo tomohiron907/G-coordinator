@@ -122,19 +122,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def up_button_pressed(self):
         self.slider_layer.setValue(self.slider_layer.value()+1)
-        #self.redraw_object()
     
     def down_button_pressed(self):
         self.slider_layer.setValue(self.slider_layer.value()-1)
-        #self.redraw_object()
     
     def left_button_pressed(self):
         self.slider_segment.setValue(self.slider_segment.value()-1)
-        #self.redraw_object()
     
     def right_button_pressed(self):
         self.slider_segment.setValue(self.slider_segment.value()+1)
-        #self.redraw_object()
         
     def file_open(self):
         # getting path and bool value
