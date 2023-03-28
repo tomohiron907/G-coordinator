@@ -261,7 +261,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             ]},
             {'name': 'Extrusion_option', 'type': 'group', 'children': [
                 {'name': 'Extrusion_multiplier', 'type': 'float', 'value': float(self.print_setting['Extrusion_option']['Extrusion_multiplier'])},
-            ]},      
+            ]},
+            {'name': 'Default_gcode', 'type': 'group', 'children': [
+                {'name': 'start_gcode', 'type': 'str', 'value': str(self.print_setting['Default_gcode']['start_gcode'])},
+                {'name': 'end_gcode', 'type': 'str', 'value': str(self.print_setting['Default_gcode']['end_gcode'])},
+            ]},
         ]
     
 
