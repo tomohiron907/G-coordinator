@@ -34,12 +34,28 @@ def draw_object_array(widget,slider_layer, slider_segment):
     buf_array = []
     for i in range(slider_layer - 1):
         buf_array.append(pos_array[i])
-    buf_array.append(pos_array[slider_layer - 1][:slider_segment - 1])
+    buf_array.append(pos_array[slider_layer - 1][:slider_segment ])
     
-    for i in range(len(buf_array)):
-        if len(buf_array[i]) > 1:
-            plt = gl.GLLinePlotItem(pos = buf_array[i] ,color = pg.intColor(pos_array[i][0][2],300,alpha=80),width=0.5, antialias = True)
-            widget.addItem(plt) 
+    if slider_layer==len(pos_array):
+        for i in range(slider_layer):
+            if len(pos_array[i])==1:
+                continue
+            else:
+                plt = gl.GLLinePlotItem(pos = buf_array[i] ,color = pg.intColor(pos_array[i][0][2],300,alpha=180),width=0.5, antialias = True)
+                widget.addItem(plt)
+    
+    else:
+        for i in range(len(buf_array)):
+            if i == slider_layer-1: # current layer display
+                if slider_segment > 1:
+                    plt = gl.GLLinePlotItem(pos = buf_array[i] ,color = pg.mkColor('w'),width=0.8, antialias = True)
+                    widget.addItem(plt)
+                else:
+                    pass
+            else:
+                if len(buf_array[i]) > 1:
+                    plt = gl.GLLinePlotItem(pos = buf_array[i] ,color = pg.intColor(pos_array[i][0][2],300,alpha=180),width=0.5, antialias = True)
+                    widget.addItem(plt) 
 
     mesh = gl.MeshData.cylinder(rows = 8, cols = 8, radius = [1.0, 5.0], length = 10.0)
     plt = gl.GLMeshItem(meshdata = mesh, smooth=True, color=(1.0, 1.0, 1.0, 0.5), shader='shaded')
