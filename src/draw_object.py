@@ -42,7 +42,7 @@ def draw_object_array(widget,slider_layer, slider_segment):
             widget.addItem(plt) 
 
     mesh = gl.MeshData.cylinder(rows = 8, cols = 8, radius = [1.0, 5.0], length = 10.0)
-    plt = gl.GLMeshItem(meshdata = mesh, smooth=True, color=(1.0, 1.0, 1.0, 0.7), shader='shaded')
+    plt = gl.GLMeshItem(meshdata = mesh, smooth=True, color=(1.0, 1.0, 1.0, 0.5), shader='shaded')
     plt.setGLOptions('translucent')
     
     pos_x = pos_array[slider_layer-1][slider_segment-1][0]
