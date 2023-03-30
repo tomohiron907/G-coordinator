@@ -9,7 +9,11 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtPrintSupport import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -47,7 +51,7 @@ class Ui_MainWindow(object):
         self.save_as_button.setObjectName("save_as_button")
         self.horizontalLayout.addWidget(self.save_as_button)
         self.verticalLayout.addLayout(self.horizontalLayout)
-        self.editor = QtWidgets.QPlainTextEdit(self.frame)
+        self.editor = PlainTextEdit(self.frame)
         self.editor.setObjectName("editor")
         self.verticalLayout.addWidget(self.editor)
         self.reload_button = QtWidgets.QPushButton(self.frame)
@@ -166,5 +170,24 @@ class Ui_MainWindow(object):
         self.gcode_export_button.setText(_translate("MainWindow", "Gcode Export"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
         self.toolBar_2.setWindowTitle(_translate("MainWindow", "toolBar_2"))
+
+class PlainTextEdit(QPlainTextEdit):
+    def keyPressEvent(self, event):
+        #オートインデントの処理
+        if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+
+            indent_width = 4
+            line_number = self.textCursor().blockNumber()
+            #print(line_number)
+            line_text = self.document().findBlockByLineNumber(line_number).text()
+            indent_level = line_text.count(" " * indent_width)
+            if line_text.endswith(":"):
+                indent_level += 1
+            self.insertPlainText("\n")
+            self.insertPlainText( " " * indent_width * indent_level)
+
+
+            return
+        super(PlainTextEdit, self).keyPressEvent(event)
 from pyqtgraph import opengl
 from pyqtgraph.parametertree import ParameterTree
