@@ -53,6 +53,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.editor = PlainTextEdit(self.frame)
         self.editor.setObjectName("editor")
+        self.editor.setLineWrapMode(PlainTextEdit.LineWrapMode.NoWrap)
         self.verticalLayout.addWidget(self.editor)
         self.reload_button = QtWidgets.QPushButton(self.frame)
         self.reload_button.setObjectName("reload_button")
