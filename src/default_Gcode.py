@@ -15,12 +15,14 @@ print_setting.read(CONFIG_PATH)
 START_GCODE_PATH = str(print_setting['Default_gcode']['start_gcode'])
 END_GCODE_PATH = str(print_setting['Default_gcode']['end_gcode'])
 
+try:
+    with open(START_GCODE_PATH, 'r') as f:
+        startGcode = f.read()
 
-with open(START_GCODE_PATH, 'r') as f:
-    startGcode = f.read()
+    with open(END_GCODE_PATH, 'r') as f :
+        endGcode = f.read()
 
-with open(END_GCODE_PATH, 'r') as f :
-    endGcode = f.read()
-
-
+except:
+    startGcode = ''
+    endGcode = ''
 
