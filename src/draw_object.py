@@ -17,20 +17,13 @@ noz_array = []
 idx_array = []
 
 
-def set_object_array(full_object):
-    global pos_array, noz_array, idx_array
-    pos_array = copy.deepcopy(full_object)
-    for layer_list in pos_array:
-        sub_noz_array = []
-        for segment in layer_list:
-            if len(segment) > 3:
-                del segment[3:]
-            sub_noz_array.append((0,0))
-        noz_array.append(sub_noz_array)
-    
 
-def draw_object_array(widget,slider_layer, slider_segment):
+
+def draw_object_array(widget,full_object,slider_layer, slider_segment):
     #global pos_array, noz_array
+    pos_array = []
+    for path in full_object:
+        pos_array.append(path.coords)
     buf_array = []
     for i in range(slider_layer - 1):
         buf_array.append(pos_array[i])
