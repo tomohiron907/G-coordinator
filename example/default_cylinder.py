@@ -1,7 +1,8 @@
 import numpy as np
 import math
+import print_setting
+from path_generator import *
 
-from print_functions import *
 LAYER=50
 
 
@@ -13,9 +14,16 @@ def object_modeling():
         rad = 10
         x = rad*np.cos(arg)
         y = rad*np.sin(arg)
-        z = np.full_like(arg, height*0.2+0.2)
-        layer = print_layer(x,y,z)
-        full_object.append(layer)
+        z = np.full_like(arg, height*print_setting.LAYER+0.2)
+        wall = Path(x, y, z)
+        inner_wall = Transform.offset(wall, 0.4)
+        full_object.append(wall)
+        full_object.append(inner_wall)
+        
+        if height <2 :
+            bottom = Transform.fill(wall, infill_distance = print_setting.NOZZLE, offset = -print_setting.NOZZLE)
+            bottom = Transform.rotate(bottom, np.pi/2*height)
+            full_object.append(bottom)
             
 
 

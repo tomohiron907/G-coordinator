@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+from print_setting import *
 
 
 
@@ -13,6 +14,7 @@ class Path:
         self.z = np.array(z)
         self.coords_arrange()
         self.set_print_settings()
+        self.e_calc()
         
     def coords_arrange(self):
         self.coords = np.column_stack([self.x, self.y, self.z])
@@ -26,6 +28,16 @@ class Path:
         self.retract = False
         self.before_gcode = ''
         self.after_gcode = ''
+
+    def e_calc(self):
+        self.Eval = np.array([0])
+        for i in range(len(self.coords)-1):
+            Dis = math.sqrt((self.x[i+1]-self.x[i])**2 + (self.y[i+1]-self.y[i])**2 + (self.z[i+1]-self.z[i])**2)
+            AREA=(NOZZLE-LAYER)*(LAYER)+(LAYER/2)**2*np.pi
+            self.Eval = np.append(self.Eval, 4*AREA*Dis/(np.pi*FILAMENT_DIAMETER**2))
+        
+
+
 
 
 class Transform:

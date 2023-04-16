@@ -7,6 +7,7 @@ print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)
 
 NOZZLE = float(print_setting['Nozzle']['nozzle_diameter'])
+FILAMENT_DIAMETER = float(print_setting['Nozzle']['Filament_diameter'])
 LAYER = float(print_setting['Layer']['Layer_height'])
 XC = int(print_setting['Origin']['x_origin'])
 YC = int(print_setting['Origin']['y_origin'])
@@ -23,9 +24,10 @@ Z_HOP = print_setting.getboolean('Travel_option','Z_hop')
 Z_HOP_DISTANCE = float(print_setting['Travel_option']['Z_hop_distance'])
 
 def reload_print_setting():
-    global NOZZLE, LAYER, XC, YC, PRINT_SPEED_DEFAULT, TRAVEL_SPEED, FAN_SPEED, PRINT_TEMPERATURE, BED_TEMPERATURE, EXRTRUSION_MULTIPLIER_DEFAULT, RETRACTION, RETRACTION_DISTANCE, UNRETRACTION_DISTANCE, Z_HOP, Z_HOP_DISTANCE
+    global NOZZLE, FILAMENT_DIAMETER, LAYER, XC, YC, PRINT_SPEED_DEFAULT, TRAVEL_SPEED, FAN_SPEED, PRINT_TEMPERATURE, BED_TEMPERATURE, EXRTRUSION_MULTIPLIER_DEFAULT, RETRACTION, RETRACTION_DISTANCE, UNRETRACTION_DISTANCE, Z_HOP, Z_HOP_DISTANCE
     print_setting.read(CONFIG_PATH)
     NOZZLE = float(print_setting['Nozzle']['nozzle_diameter'])
+    FILAMENT_DIAMETER = float(print_setting['Nozzle']['Filament_diameter'])
     LAYER = float(print_setting['Layer']['Layer_height'])
     XC = int(print_setting['Origin']['x_origin'])
     YC = int(print_setting['Origin']['y_origin'])

@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from print_functions import *
+from path_generator import *
 LAYER=10
 
 
@@ -13,7 +13,7 @@ def object_modeling():
         x = rad*np.cos(arg)
         y = rad*np.sin(arg)
         z = np.full_like(arg, height*0.4+0.4)
-        layer = print_layer(x,y,z)
+        layer = Path(x,y,z)
         full_object.append(layer)
     
     for polar in range(12):
@@ -22,7 +22,7 @@ def object_modeling():
         x = rad*np.cos(arg)
         y = rad*np.sin(arg)
         z = np.full_like(arg, LAYER*0.4)
-        layer = print_layer(x,y,z,Feed = 300)
+        layer = Path(x,y,z)
         full_object.append(layer)
 
 

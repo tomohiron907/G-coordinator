@@ -4,10 +4,12 @@ import numpy as np
 import math
 import default_Gcode
 import configparser
+import print_setting
+from print_setting import *
 
 '''print_setting = configparser.ConfigParser()
 print_setting.read('print_setting.ini')'''
-ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
+'''ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
 CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
 print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)
@@ -26,12 +28,12 @@ RETRACTION = print_setting.getboolean('Travel_option','Retraction')
 RETRACTION_DISTANCE = float(print_setting['Travel_option']['Retraction_distance'])
 UNRETRACTION_DISTANCE = float(print_setting['Travel_option']['Unretraction_distance'])
 Z_HOP = print_setting.getboolean('Travel_option','Z_hop')
-Z_HOP_DISTANCE = float(print_setting['Travel_option']['Z_hop_distance'])
+Z_HOP_DISTANCE = float(print_setting['Travel_option']['Z_hop_distance'])'''
 
 
 
 def Gcode_export(full_object):
-    for layer in range(len(full_object)):
+    '''for layer in range(len(full_object)):
         travel(full_object[layer][0][0],full_object[layer][0][1],full_object[layer][0][2])
         for segment in range(len(full_object[layer])-1):
             x=full_object[layer][segment][0]
@@ -53,12 +55,30 @@ def Gcode_export(full_object):
                 PRINT_SPEED = full_object[layer][segment][3]
 
             Eval=4*AREA*Dis/(np.pi*1.75**2)*EXRTRUSION_MULTIPLIER
-            f.write(f'G1 F{PRINT_SPEED} X{next_x+XC:.5f} Y{next_y+YC:.5f} Z{next_z:.5f} E{Eval:.5f}\n')
+            f.write(f'G1 F{PRINT_SPEED} X{next_x+XC:.5f} Y{next_y+YC:.5f} Z{next_z:.5f} E{Eval:.5f}\n')'''
+    print_setting.update()
+    for path in full_object:
+        if path.E_multiplier ==1 and np.all(path.E_multiplier_array == 1):
+            extrusion_multiplier = np.full_like(path.x, EXRTRUSION_MULTIPLIER_DEFAULT)
+        elif path.E_multiplier != 1:
+            extrusion_multiplier = np.full_like(path.x, path.E_multiplier)
+        elif np.any(path.E_multiplier_array != 1):
+            extrusion_multiplier = path.E_multiplier_array
+        else:
+            extrusion_multiplier = np.full_like(path.x, 1)
+        
+        travel(path.coords[0])
+        for i in range(len(path.coords)-1):
+            f.write(f'G1 F{PRINT_SPEED_DEFAULT} X{path.x[i+1]+XC:.5f} Y{path.y[i+1]+YC:.5f} Z{path.z[i+1]:.5f} E{path.Eval[i+1] * extrusion_multiplier[i+1]:.5f}\n')
+
     print("Gcode exported!!")
 
 
 
-def travel(X,Y,Z):
+def travel(coords):
+    X = coords[0]
+    Y = coords[1]
+    Z = coords[2]
     if RETRACTION == True:
         f.write(f'G1 E{-RETRACTION_DISTANCE}\n')
     if Z_HOP == True:

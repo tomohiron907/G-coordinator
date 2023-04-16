@@ -21,14 +21,14 @@ def object_modeling():
         x = rad*np.cos(arg)
         y = gr*rad*np.sin(arg)
         z = np.full_like(arg, height*0.2+0.2)
-        layer = print_layer(x, y, z)
+        layer = Path(x, y, z)
         full_object.append(layer)
         
         rad = 40.4*math.sqrt(2)
         x = rad*np.cos(arg)
         y = gr*rad*np.sin(arg)
         z = np.full_like(arg, height*0.2+0.2)
-        layer = print_layer(x, y, z)
+        layer = Path(x, y, z)
         full_object.append(layer)
         
         
@@ -36,7 +36,7 @@ def object_modeling():
         y = gr*np.linspace(40,-40,10)
         z = np.full_like(x, height * 0.2 + 0.2)
         
-        layer = print_layer(x,  y , z)
+        layer = Path(x,  y , z)
         full_object.append(layer)
         
         
@@ -44,31 +44,26 @@ def object_modeling():
             x = np.linspace(40, 40-d*height,10)
             y = gr*np.linspace(40-d*height,-40+d*height,10)
             z = np.full_like(x,height*0.2+0.2)
-            layer = print_layer(x, y, z)
+            layer = Path(x, y, z)
             full_object.append(layer)
-            
-            
-            
-           
-            
             
             x = np.linspace(-40, -40+d*height,10)
             y = gr*np.linspace(-40+d*height,+40-d*height,10)
             z = np.full_like(x,height*0.2+0.2)
-            layer = print_layer(x, y, z)
+            layer = Path(x, y, z)
             full_object.append(layer)
             
         if height != 0 and height %3 ==1:
             x = np.linspace(40, 40-d*(height-1),10)
             y = gr*np.linspace(40-d*(height-1),-40+d*(height-1),10)
             z = np.full_like(x,(height)*0.2+0.2)
-            layer = print_layer(x, y, z)
+            layer = Path(x, y, z)
             full_object.append(layer)
             
             x = np.linspace(-40, -40+d*(height-1),10)
             y = gr*np.linspace(-40+d*(height-1),+40-d*(height-1),10)
             z = np.full_like(x,(height)*0.2+0.2)
-            layer = print_layer(x, y, z)
+            layer = Path(x, y, z)
             full_object.append(layer)
         
    
