@@ -40,5 +40,4 @@ def reload_print_setting():
     UNRETRACTION_DISTANCE = float(print_setting['Travel_option']['Unretraction_distance'])
     Z_HOP = print_setting.getboolean('Travel_option','Z_hop')
     Z_HOP_DISTANCE = float(print_setting['Travel_option']['Z_hop_distance'])
-    #print(NOZZLE)
 
