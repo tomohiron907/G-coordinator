@@ -16,6 +16,7 @@ import draw_object
 import configparser
 from gcode_modeling_ui import Ui_MainWindow
 import print_functions
+import print_setting
 
 
 
@@ -274,7 +275,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for param, change, data in changes:
             path = self.p.childPath(param)
             childName = '.'.join(path)
-
             self.print_setting.set(path[0],path[1],str(data))
             with open('print_setting.ini', 'w') as file:
                 self.print_setting.write(file)
@@ -282,6 +282,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print('  change:    %s'% change)
             print('  data:      %s'% str(data))
             print('  ----------')
+            print_setting.reload_print_setting()
 
 
 

@@ -37,7 +37,7 @@ class Ui_MainWindow(object):
         self.splitter.widget(0).setLayout(self.left_pane_layout)
         self.splitter.widget(1).setLayout(self.central_layout)
         self.splitter.widget(2).setLayout(self.right_layout)
-        self.splitter.setSizes([100, 600, 200])
+        self.splitter.setSizes([100, 600, 220])
 
         self.main_layout = QVBoxLayout()
         self.main_layout.addWidget(self.splitter)
@@ -163,8 +163,9 @@ class PlainTextEdit(QPlainTextEdit):
                 indent_level += 1
             self.insertPlainText("\n")
             self.insertPlainText( " " * indent_width * indent_level)
-
-
+            return
+        elif event.key() == Qt.Key_Tab:
+            self.insertPlainText(" " * 4)
             return
         super(PlainTextEdit, self).keyPressEvent(event)
 
