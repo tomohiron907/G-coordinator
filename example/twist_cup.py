@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from print_functions import *
+from path_generator import *
 
 LAYER=380
 def rotation_calc(height):
@@ -20,7 +20,7 @@ def object_modeling():
         x = rad*np.cos(arg+rotation)
         y = rad*np.sin(arg+rotation)
         z = np.full_like(arg, height*0.2+0.2)
-        wall = print_layer(x, y, z)
+        wall = Path(x, y, z)
         full_object.append(wall)
 
         
@@ -35,7 +35,7 @@ def object_modeling():
         x_c = rad_c*np.cos(arg_c+rotation)
         y_c = rad_c*np.sin(arg_c+rotation)
         z_c = np.full_like(arg_c, height*0.2+0.2)
-        wall_c = print_layer(x_c, y_c, z_c)
+        wall_c = Path(x_c, y_c, z_c)
         full_object.append(wall_c)
         
 

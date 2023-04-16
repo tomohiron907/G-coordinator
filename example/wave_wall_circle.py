@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from print_functions import *
+from path_generator import *
 
 
 '''
@@ -20,10 +20,9 @@ def object_modeling():
     for height in range(LAYER):
         t = np.linspace(0,1,200)
         x = t*100-50
-        #y = [2 * math.sin(i*2*np.pi*3) * 2*math.sin((height/LAYER)*2*np.pi*4) for i in t]
         y = [-6*math.floor( abs(1.05 * math.sin(i * 2 * np.pi * 20))) + function(height,i) for i in t]
         z = np.full_like(t, height*0.2+0.2)
-        layer = print_layer(x, y, z)
+        layer = Path(x, y, z)
         full_object.append(layer)
 
         
@@ -31,10 +30,9 @@ def object_modeling():
         x = t*100-50        
         y=[0.4+function(height,i) for i in t]
         z = np.full_like(t, height*0.2+0.2)
-        wall = print_layer(x, y, z)
+        wall = Path(x, y, z)
         full_object.append(wall)
-        y_2=[0.8+function(height,i) for i in t]
-        wall_2 = print_layer(x, y_2,  z)
+        wall_2 = Transform.offset(wall, -0.4)
         full_object.append(wall_2)
         
 
