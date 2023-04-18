@@ -72,12 +72,14 @@ class Ui_MainWindow(object):
         self.editor_layout = QtWidgets.QHBoxLayout()
         self.editor_layout.addWidget(self.line_number_widget)
         self.editor_layout.addWidget(self.editor)
+        self.editor_layout.setSpacing(0)
         self.reload_button = QtWidgets.QPushButton(MainWindow)
         
         self.editor_button_layout = QtWidgets.QVBoxLayout()
         self.editor_button_layout.addLayout(self.button_horizontal_layout)
         self.editor_button_layout.addLayout(self.editor_layout)
         self.editor_button_layout.addWidget(self.reload_button)
+        #self.editor_button_layout.setSpacing(0)
 
         self.message_console = QtWidgets.QTextEdit(MainWindow)
         self.message_console.setMinimumHeight(10)
@@ -247,6 +249,7 @@ class LineNumberWidget(QTextBrowser):
         self.verticalScrollBar().setEnabled(False)
         self.widget.verticalScrollBar().valueChanged.connect(self.__changeLineWidgetScrollAsTargetedWidgetScrollChanged)
         self.widget.installEventFilter(self)
+        self.setAlignment(Qt.AlignRight)
         self.initLineCount()
 
     def __changeLineWidgetScrollAsTargetedWidgetScrollChanged(self, v):
@@ -292,14 +295,14 @@ class LineNumberWidget(QTextBrowser):
     def styleInit(self):
         style = f'''
             QTextBrowser {{
-                background: transparent;
+                background: #2b2b2b;
                 border: none;
                 color: #AAA;
                 font: {self.fontSize}pt;
             }}
         '''
         self.setStyleSheet(style)
-        self.setFixedWidth(self.fontSize * 2)
+        self.setFixedWidth(self.fontSize * 3)
 
     def updateLineCount(self):
         new_line_count = self.widget.document().blockCount()
