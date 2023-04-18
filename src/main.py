@@ -28,7 +28,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grid_draw()
     
     def initUI(self):
-        self.editor.setStyleSheet("""QPlainTextEdit{ 
+        self.editor.setStyleSheet("""QTextEdit{ 
             color: #ccc; 
             background-color: #2b2b2b;}""")
         #シンタックス表示

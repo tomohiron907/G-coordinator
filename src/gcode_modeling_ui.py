@@ -64,11 +64,19 @@ class Ui_MainWindow(object):
 
         self.editor = PlainTextEdit(MainWindow)
         self.editor.setLineWrapMode(PlainTextEdit.LineWrapMode.NoWrap)
+        self.editor.textChanged.connect(self.__line_widget_line_count_changed)
+        self.editor.setFont(QFont("Arial", 14))
+        self.line_number_widget = LineNumberWidget(self.editor)
+        self.line_number_widget.setFontSize(14)
+        #self.line_number_widget.setFixedWidth(30)
+        self.editor_layout = QtWidgets.QHBoxLayout()
+        self.editor_layout.addWidget(self.line_number_widget)
+        self.editor_layout.addWidget(self.editor)
         self.reload_button = QtWidgets.QPushButton(MainWindow)
         
         self.editor_button_layout = QtWidgets.QVBoxLayout()
         self.editor_button_layout.addLayout(self.button_horizontal_layout)
-        self.editor_button_layout.addWidget(self.editor)
+        self.editor_button_layout.addLayout(self.editor_layout)
         self.editor_button_layout.addWidget(self.reload_button)
 
         self.message_console = QtWidgets.QTextEdit(MainWindow)
@@ -148,8 +156,13 @@ class Ui_MainWindow(object):
         self.left_button.pressed.connect(MainWindow.left_button_pressed) # type: ignore
         self.right_button.pressed.connect(MainWindow.right_button_pressed) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+    
+    def __line_widget_line_count_changed(self):
+        if self.line_number_widget:
+            n = int(self.editor.document().lineCount())
+            self.line_number_widget.changeLineCount(n)
         
-class PlainTextEdit(QPlainTextEdit):
+class PlainTextEdit(QTextEdit):
     '''def __init__(self):
         shortcut = QShortcut(QKeySequence(Qt.ShiftModifier + Qt.Key_Tab), self)
         shortcut.activated.connect(self.on_shortcut_activated)'''
@@ -220,3 +233,75 @@ class PlainTextEdit(QPlainTextEdit):
             elif line_text.startswith(" "):
                 cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 1)
                 cursor.removeSelectedText()
+
+class LineNumberWidget(QTextBrowser):
+    def __init__(self, widget: QPlainTextEdit):
+        super().__init__()
+        self.widget = widget
+        self.lineCount = widget.document().blockCount()
+        self.fontSize = int(widget.font().pointSizeF())
+        self.styleInit()
+        self.resize(40, widget.height())
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setTextInteractionFlags(Qt.NoTextInteraction)
+        self.verticalScrollBar().setEnabled(False)
+        self.widget.verticalScrollBar().valueChanged.connect(self.__changeLineWidgetScrollAsTargetedWidgetScrollChanged)
+        self.widget.installEventFilter(self)
+        self.initLineCount()
+
+    def __changeLineWidgetScrollAsTargetedWidgetScrollChanged(self, v):
+        self.verticalScrollBar().setValue(v)
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.Resize:
+            self.resize(40, obj.height())
+            return True
+        return False
+
+    def initLineCount(self):
+        for n in range(1, self.lineCount+1):
+            self.append(str(n))
+
+    def changeLineCount(self, n):
+        max_one = max(self.lineCount, n)
+        diff = n - self.lineCount
+        if max_one == self.lineCount:
+            first_v = self.verticalScrollBar().value()
+            for i in range(self.lineCount, self.lineCount + diff, -1):
+                self.moveCursor(QTextCursor.End, QTextCursor.MoveAnchor)
+                self.moveCursor(QTextCursor.StartOfBlock, QTextCursor.MoveAnchor)
+                self.moveCursor(QTextCursor.End, QTextCursor.KeepAnchor)
+                self.textCursor().removeSelectedText()
+                self.textCursor().deletePreviousChar()
+            last_v = self.verticalScrollBar().value()
+            if abs(first_v-last_v) != 2:
+                self.verticalScrollBar().setValue(first_v)
+        else:
+            for i in range(self.lineCount, self.lineCount + diff+1):
+                self.append(str(i + 1))
+
+        self.lineCount = n
+
+    def setValue(self, v):
+        self.verticalScrollBar().setValue(v)
+
+    def setFontSize(self, s: float):
+        self.fontSize = int(s)
+        self.styleInit()
+
+    def styleInit(self):
+        style = f'''
+            QTextBrowser {{
+                background: transparent;
+                border: none;
+                color: #AAA;
+                font: {self.fontSize}pt;
+            }}
+        '''
+        self.setStyleSheet(style)
+        self.setFixedWidth(self.fontSize * 2)
+
+    def updateLineCount(self):
+        new_line_count = self.widget.document().blockCount()
+        if new_line_count != self.lineCount:
+            self.changeLineCount(new_line_count)
