@@ -39,6 +39,4 @@ def object_modeling():
         full_object.append(wall_c)
         
 
-
-        
     return full_object

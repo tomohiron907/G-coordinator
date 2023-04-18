@@ -1,6 +1,11 @@
 import numpy as np
 from path_generator import *
 
+'''
+NOZZLE = 0.8
+LAYER = 0.3
+'''
+
 LAYER = 2
 def object_modeling():
     full_object=[]
@@ -12,5 +17,5 @@ def object_modeling():
         full_object.append(wall)
         infill = Transform.fill(wall, offset = -0.8, infill_distance = 0.8, angle = np.pi/4 + np.pi/2 *height)
         full_object.append(infill)
-
+      
     return full_object
