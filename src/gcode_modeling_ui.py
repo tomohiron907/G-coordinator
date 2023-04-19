@@ -17,6 +17,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from pyqtgraph import opengl
 from pyqtgraph.parametertree import ParameterTree
+from text_editer import TextEditer
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -62,8 +63,8 @@ class Ui_MainWindow(object):
         self.button_horizontal_layout.addWidget(self.save_button)
         self.button_horizontal_layout.addWidget(self.save_as_button)
 
-        self.editor = PlainTextEdit(MainWindow)
-        self.editor.setLineWrapMode(PlainTextEdit.LineWrapMode.NoWrap)
+        self.editor = TextEditer(MainWindow)
+        self.editor.setLineWrapMode(TextEditer.LineWrapMode.NoWrap)
         self.editor.textChanged.connect(self.__line_widget_line_count_changed)
         self.editor.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.editor.setFont(QFont("Arial", 14))
@@ -165,77 +166,7 @@ class Ui_MainWindow(object):
             n = int(self.editor.document().lineCount())
             self.line_number_widget.changeLineCount(n)
         
-class PlainTextEdit(QTextEdit):
-    '''def __init__(self):
-        shortcut = QShortcut(QKeySequence(Qt.ShiftModifier + Qt.Key_Tab), self)
-        shortcut.activated.connect(self.on_shortcut_activated)'''
-    def keyPressEvent(self, event):
-        #オートインデントの処理
-        if event.key() in (Qt.Key_Return, Qt.Key_Enter):
 
-            indent_width = 4
-            line_number = self.textCursor().blockNumber()
-            #print(line_number)
-            line_text = self.document().findBlockByLineNumber(line_number).text()
-            indent_level = line_text.count(" " * indent_width)
-            if line_text.endswith(":"):
-                indent_level += 1
-            self.insertPlainText("\n")
-            self.insertPlainText( " " * indent_width * indent_level)
-            return
-        
-        if event.key() == Qt.Key_Tab:
-            self.indent()
-            return
-            
-        if event.key() == Qt.Key_Backtab:  # Shift + Tabの場合はQt.Key_Backtabを使う
-            if event.modifiers() == Qt.ShiftModifier:  # Shiftが同時に押されているかをチェック
-                self.unindent()
-                return
-        
-
-        super(PlainTextEdit, self).keyPressEvent(event)
-
-
-    def indent(self):
-        if not self.textCursor().hasSelection():
-            self.insertPlainText(" " * 4)
-        # 選択範囲がある場合は選択範囲内の各行の先頭にインデントを挿入
-        else:
-            # 選択範囲の開始と終了行番号を取得
-            start = self.textCursor().selectionStart()
-            end = self.textCursor().selectionEnd()
-            start_block = self.document().findBlock(start).blockNumber()
-            end_block = self.document().findBlock(end).blockNumber()
-            # 選択範囲の各行に対して処理を行う
-            for block_number in range(start_block, end_block + 1):
-                block = self.document().findBlockByNumber(block_number)
-                cursor = self.textCursor()
-                cursor.setPosition(block.position())
-                cursor.movePosition(QTextCursor.StartOfLine)
-                cursor.insertText(" " * 4)
-
-    def unindent(self):
-        start = self.textCursor().selectionStart()
-        end = self.textCursor().selectionEnd()
-        start_block = self.document().findBlock(start).blockNumber()
-        end_block = self.document().findBlock(end).blockNumber()
-
-        # 選択範囲の各行に対して処理を行う
-        for block_number in range(start_block, end_block + 1):
-            block = self.document().findBlockByNumber(block_number)
-            cursor = self.textCursor()
-            cursor.setPosition(block.position())
-            cursor.movePosition(QTextCursor.StartOfLine)
-
-            # スペースをアンインデントする
-            line_text = block.text()
-            if len(line_text) > 4 and line_text.startswith(" " * 4):
-                cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 4)
-                cursor.removeSelectedText()
-            elif line_text.startswith(" "):
-                cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 1)
-                cursor.removeSelectedText()
 
 class LineNumberWidget(QTextBrowser):
     def __init__(self, widget: QPlainTextEdit):
