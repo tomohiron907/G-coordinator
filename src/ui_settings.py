@@ -67,6 +67,8 @@ class Ui_MainWindow(object):
         self.editor.setLineWrapMode(TextEditer.LineWrapMode.NoWrap)
         self.editor.textChanged.connect(self.__line_widget_line_count_changed)
         self.editor.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.editor.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+
         self.editor.setFont(QFont("Arial", 14))
         self.line_number_widget = LineNumberWidget(self.editor)
         self.line_number_widget.setFontSize(14)

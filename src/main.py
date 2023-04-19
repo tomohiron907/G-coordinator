@@ -222,8 +222,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def read_setting(self):
-        '''self.print_setting = configparser.ConfigParser()
-        self.print_setting.read('print_setting.ini')'''
         ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
         CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
         self.print_setting = configparser.ConfigParser()
@@ -345,8 +343,6 @@ class GcodeExportWindow(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv) 
-    '''path = os.path.join(os.path.dirname(sys.modules[__name__].__file__), 'layers.png')
-    app.setWindowIcon(QIcon(path))'''
     main_window = MainWindow() 
-    main_window.show() #ウィンドウの表示
-    sys.exit(app.exec_()) #プログラム終了
+    main_window.show() 
+    sys.exit(app.exec_())

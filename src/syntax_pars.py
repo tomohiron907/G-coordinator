@@ -27,8 +27,10 @@ def format(color, style=''):
 
 STYLES = {
     'library_word': format([ 71,176,155]),
-    'keyword': format([86,155,212]),
+    'keyword': format([86, 156, 214]),
     'other_keyword': format([ 185,127,181]),
+    'variables': format([86, 156, 214]),
+    #'method': format([ 240,230,140]),
     'operator': format([ 199,199,199]),
     'brace': format([233,197,3]),
     'defclass': format([205,205,159], 'bold'),
@@ -45,7 +47,7 @@ class PythonHighlighter(QSyntaxHighlighter):
     """
     # Python keywords
     library_words = [
-        'np','math'
+        'np','math', 'Transform', 'print_settings', 'Path'
     ]
 
 
@@ -60,6 +62,12 @@ class PythonHighlighter(QSyntaxHighlighter):
     other_keywords = [
         'if','else','elif','return','for','import'
     ]
+    variables = [
+        'full_object'
+    ]
+    '''method = [
+        'append'
+    ]'''
 
     # Python operators
     operators = [
@@ -89,7 +97,13 @@ class PythonHighlighter(QSyntaxHighlighter):
         self.tri_double = (QRegExp('"""'), 2, STYLES['string2'])
 
         rules = []
+        method_pattern = r'\b(\w+)\('
+        method_format = format([ 220, 220, 170])
+        rules.append((method_pattern, 1, method_format))
 
+        '''constant_pattern = r'\b[A-Z]+\b'
+        constant_format = format([ 75, 162, 235])
+        rules.append((constant_pattern, 1, constant_format))'''
         # Keyword, operator, and brace rules
         rules += [(r'\b%s\b' % w, 0, STYLES['library_word'])
                   for w in PythonHighlighter.library_words]
@@ -97,6 +111,10 @@ class PythonHighlighter(QSyntaxHighlighter):
                   for w in PythonHighlighter.keywords]
         rules += [(r'\b%s\b' % w, 0, STYLES['other_keyword'])
                   for w in PythonHighlighter.other_keywords]
+        rules += [(r'\b%s\b' % w, 0, STYLES['variables'])
+                  for w in PythonHighlighter.variables]
+        '''rules += [(r'\b(\w+)\(' % w, 0, STYLES['method'])
+                  for w in PythonHighlighter.method]'''
         rules += [(r'%s' % o, 0, STYLES['operator'])
                   for o in PythonHighlighter.operators]
         rules += [(r'%s' % b, 0, STYLES['brace'])
@@ -125,6 +143,7 @@ class PythonHighlighter(QSyntaxHighlighter):
             (r'\b[+-]?0[xX][0-9A-Fa-f]+[lL]?\b', 0, STYLES['numbers']),
             (r'\b[+-]?[0-9]+(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\b', 0, STYLES['numbers']),
         ]
+        
 
         # Build a QRegExp for each pattern
         self.rules = [(QRegExp(pat), index, fmt)
