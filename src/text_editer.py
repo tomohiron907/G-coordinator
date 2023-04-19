@@ -16,9 +16,9 @@ class TextEditer(QTextEdit):
     def __init__(self,  parent=None):
         super().__init__(parent)
         
-        self.word_list = []
-        self.class_list = []
-        self.method_list = []
+        self.word_list = ['full_object', 'full_object.append']
+        self.class_list = ['full_object']
+        self.method_list = ['full_object.append']
         self.variable_list = []
         self.word_list_path_generator(path_generator)
         self.word_list_print_setting(print_settings)
