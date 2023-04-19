@@ -14,9 +14,9 @@ import syntax_pars
 import Gcode_process    
 import draw_object
 import configparser
-from gcode_modeling_ui import Ui_MainWindow
+from ui_settings import Ui_MainWindow
 import print_functions
-import print_setting
+import print_settings
 
 
 
@@ -282,7 +282,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print('  change:    %s'% change)
             print('  data:      %s'% str(data))
             print('  ----------')
-            print_setting.reload_print_setting()
+            print_settings.reload_print_setting()
 
 
 

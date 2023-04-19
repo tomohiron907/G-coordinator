@@ -4,8 +4,8 @@ import numpy as np
 import math
 import default_Gcode
 import configparser
-import print_setting
-from print_setting import *
+import print_settings
+from print_settings import *
 
 '''print_setting = configparser.ConfigParser()
 print_setting.read('print_setting.ini')'''

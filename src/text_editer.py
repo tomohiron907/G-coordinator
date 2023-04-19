@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 
 import path_generator
-import print_setting
+import print_settings
 import numpy as np
 import inspect
 
@@ -21,7 +21,7 @@ class TextEditer(QTextEdit):
         self.method_list = []
         self.variable_list = []
         self.word_list_path_generator(path_generator)
-        self.word_list_print_setting(print_setting)
+        self.word_list_print_setting(print_settings)
         self.word_list += ["np."+ method  for method in dir(np) if not method.startswith('__')]
         self.method_list += ["np."+ method  for method in dir(np) if not method.startswith('__')]
         completer = QCompleter(self.word_list)
@@ -133,12 +133,12 @@ class TextEditer(QTextEdit):
                     self.method_list.append(f'{class_name}.{method_name}')
         
     def word_list_print_setting(self, module):
-        self.word_list.append('print_setting')
-        self.class_list.append('print_setting')
+        self.word_list.append('print_settings')
+        self.class_list.append('print_settings')
         for name, obj in inspect.getmembers(module):
             if not name.startswith('_') and not inspect.ismodule(obj):
-                self.word_list.append(f'print_setting.{name}')
-                self.variable_list.append(f'print_setting.{name}')
+                self.word_list.append(f'print_settings.{name}')
+                self.variable_list.append(f'print_settings.{name}')
 
 
     
