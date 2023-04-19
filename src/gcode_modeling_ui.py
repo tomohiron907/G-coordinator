@@ -249,7 +249,6 @@ class LineNumberWidget(QTextBrowser):
         self.verticalScrollBar().setEnabled(False)
         self.widget.verticalScrollBar().valueChanged.connect(self.__changeLineWidgetScrollAsTargetedWidgetScrollChanged)
         self.widget.installEventFilter(self)
-        self.setAlignment(Qt.AlignRight)
         self.initLineCount()
 
     def __changeLineWidgetScrollAsTargetedWidgetScrollChanged(self, v):
@@ -280,7 +279,7 @@ class LineNumberWidget(QTextBrowser):
             if abs(first_v-last_v) != 2:
                 self.verticalScrollBar().setValue(first_v)
         else:
-            for i in range(self.lineCount, self.lineCount + diff+1):
+            for i in range(self.lineCount, self.lineCount + diff):
                 self.append(str(i + 1))
 
         self.lineCount = n
@@ -295,14 +294,14 @@ class LineNumberWidget(QTextBrowser):
     def styleInit(self):
         style = f'''
             QTextBrowser {{
-                background: #2b2b2b;
+                background: transparent;
                 border: none;
                 color: #AAA;
                 font: {self.fontSize}pt;
             }}
         '''
         self.setStyleSheet(style)
-        self.setFixedWidth(self.fontSize * 3)
+        self.setFixedWidth(self.fontSize * 2)
 
     def updateLineCount(self):
         new_line_count = self.widget.document().blockCount()
