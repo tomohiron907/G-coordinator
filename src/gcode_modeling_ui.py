@@ -65,6 +65,7 @@ class Ui_MainWindow(object):
         self.editor = PlainTextEdit(MainWindow)
         self.editor.setLineWrapMode(PlainTextEdit.LineWrapMode.NoWrap)
         self.editor.textChanged.connect(self.__line_widget_line_count_changed)
+        self.editor.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.editor.setFont(QFont("Arial", 14))
         self.line_number_widget = LineNumberWidget(self.editor)
         self.line_number_widget.setFontSize(14)
@@ -263,7 +264,6 @@ class LineNumberWidget(QTextBrowser):
     def initLineCount(self):
         for n in range(1, self.lineCount+1):
             self.append(str(n))
-
     def changeLineCount(self, n):
         max_one = max(self.lineCount, n)
         diff = n - self.lineCount
@@ -283,6 +283,7 @@ class LineNumberWidget(QTextBrowser):
                 self.append(str(i + 1))
 
         self.lineCount = n
+        self.styleInit()
 
     def setValue(self, v):
         self.verticalScrollBar().setValue(v)
@@ -294,14 +295,18 @@ class LineNumberWidget(QTextBrowser):
     def styleInit(self):
         style = f'''
             QTextBrowser {{
-                background: transparent;
+                background: #2b2b2b;
                 border: none;
                 color: #AAA;
                 font: {self.fontSize}pt;
             }}
         '''
         self.setStyleSheet(style)
-        self.setFixedWidth(self.fontSize * 2)
+        if self.lineCount<99:
+            self.setFixedWidth(self.fontSize * 2)
+        else:
+            self.setFixedWidth(self.fontSize * 3)
+
 
     def updateLineCount(self):
         new_line_count = self.widget.document().blockCount()
