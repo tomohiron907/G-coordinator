@@ -11,7 +11,7 @@ import modeling
 import importlib
 from import_file import import_file
 import syntax_pars
-import Gcode_process    
+from Gcode_process import Gcode
 import draw_object
 import configparser
 from ui_settings import Ui_MainWindow
@@ -96,14 +96,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.file_save()
 
     def Gcode_create(self):
-        importlib.reload(Gcode_process)
-        Gcode_process.file_remove()
-        Gcode_process.start()
-        Gcode_process.set_temp()
-        Gcode_process.set_fan_speed()
-        Gcode_process.Gcode_export(self.full_object)
-        Gcode_process.end()
-        Gcode_process.file_close()
+        Gcode(self.full_object)
         self.message_console.setTextColor(QColor('#00bfff'))
         self.message_console.setText('Gcode Exported')
         self.gcode_window = GcodeExportWindow()

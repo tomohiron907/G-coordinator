@@ -21,13 +21,15 @@ class Path:
         return self.coords
     
     def set_print_settings(self):
-        self.E_multiplier = 1
-        self.E_multiplier_array = np.full_like(self.x, 1)
-        self.feed = 1000
-        self.feed_array = np.full_like(self.x, 1000)
-        self.retract = False
-        self.before_gcode = ''
-        self.after_gcode = ''
+        self.array_number = len(self.x)
+        self.E_multiplier = None
+        self.E_multiplier_array = np.full(self.array_number, None)
+        self.feed = None
+        self.feed_array = np.full(self.array_number, None)
+        self.retraction = None
+        self.z_hop = None
+        self.before_gcode = None
+        self.after_gcode = None
 
     def e_calc(self):
         self.Eval = np.array([0])
