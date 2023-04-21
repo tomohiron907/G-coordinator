@@ -11,7 +11,7 @@ d = np.pi/2
 def object_modeling():
     full_object=[]
     for height in range(LAYER):
-        t = np.linspace(0, np.pi* 1.5,1000)
+        t = np.linspace(0, np.pi* 2,1000)
         rad = 60
         x = rad*np.sin(a*t + d)
         y = rad*np.sin(b*t)
