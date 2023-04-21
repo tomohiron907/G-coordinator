@@ -28,18 +28,21 @@ class Gcode:
         prev_path = Path([0,0], [0,0], [0,0])
         for path in self.full_object:
 
-
+            self.retract_setting(path)
+            self.z_hop_setting(path)
             extrusion_multiplier = self.ext_multiplier_calc(path)
             feed_speed = self.feed_calc(path)
             self.before_path(path)
-            self.travel(path) # travel to the first point fo the path
-            self.z_hop_down(path, prev_path)
-            self.unretract(path, prev_path)
+            self.travel(path, prev_path) # travel to the first point fo the path // if zhop is true in the previous path, z_hop_down()
+
             for i in range(len(path.coords)-1):
                 self.f.write(f'G1 F{feed_speed[i+1]} X{path.x[i+1]+XC:.5f} Y{path.y[i+1]+YC:.5f} Z{path.z[i+1]:.5f} E{path.Eval[i+1] * extrusion_multiplier[i+1]:.5f}\n')
+            if path.retraction:
+                self.retract()
+            if path.z_hop:
+                self.z_hop_up()
             self.after_gcode(path)
-            self.retract(path)
-            self.z_hop_up(path)
+
             prev_path = path
         
 
@@ -81,58 +84,45 @@ class Gcode:
         else:
             self.f.write(str(path.after_gcode)+'\n')
 
-    def z_hop_down(self, path, prev_path):
-        if prev_path.z_hop:
-            z_hop = prev_path.z_hop
-        else:
-            z_hop = print_settings.Z_HOP
-        if z_hop:
-            self.f.write(f'G91 \n')
-            self.f.write(f'G0 Z{-Z_HOP_DISTANCE}\n')
-            self.f.write(f'G90 \n')
+
+    def retract_setting(self, path):
+        if path.retraction is None:
+            path.retraction = print_settings.RETRACTION
+            #self.retraction = self.retraction
         else:
             pass
-
-    def z_hop_up(self, path):
-        if path.z_hop:
-            z_hop = path.z_hop
-        else:
-            z_hop = print_settings.Z_HOP
-        if z_hop:
-            self.f.write(f'G91 \n')
-            self.f.write(f'G0 Z{Z_HOP_DISTANCE}\n')
-            self.f.write(f'G90 \n')
-        else:
-            pass
-
     
-    def retract(self, path):
-        if path.retraction:
-            retract = path.retraction
-        else:
-            retract = print_settings.RETRACTION
-        if retract:
-            self.f.write(f'G1 E{-print_settings.RETRACTION_DISTANCE}\n')
+    def z_hop_setting(self, path):
+        if path.z_hop is None:
+            path.z_hop = print_settings.Z_HOP
         else:
             pass
+    def z_hop_up(self):
+        self.f.write(f'G91 \n')
+        self.f.write(f'G0 Z{Z_HOP_DISTANCE}\n')
+        self.f.write(f'G90 \n')
+    def z_hop_down(self):
+        self.f.write(f'G91 \n')
+        self.f.write(f'G0 Z{-Z_HOP_DISTANCE}\n')
+        self.f.write(f'G90 \n')
+    def retract(self):
+        self.f.write(f'G1 E{-print_settings.RETRACTION_DISTANCE}\n')
+    def unretract(self):
+        self.f.write(f'G1 E{print_settings.UNRETRACTION_DISTANCE}\n')
 
-    def unretract(self, path, prev_path):
-        if prev_path.retraction:
-            retract = prev_path.retraction
-        else:
-            retract = print_settings.RETRACTION
-        if retract:
-            self.f.write(f'G1 E{print_settings.UNRETRACTION_DISTANCE}\n')
-        else:
-            pass
-
-    def travel(self, path):
+    def travel(self, path, prev_path):
         X = path.coords[0][0]
         Y = path.coords[0][1]
         Z = path.coords[0][2]
+        if prev_path.z_hop:
+            self.f.write(f'G0 F{TRAVEL_SPEED} X{X+XC:.5f} Y{Y+YC:.5f} Z{Z+print_settings.Z_HOP_DISTANCE:.5f}\n' )
+        else:
+            self.f.write(f'G0 F{TRAVEL_SPEED} X{X+XC:.5f} Y{Y+YC:.5f} Z{Z:.5f}\n' )
 
-        
-        self.f.write(f'G0 F{TRAVEL_SPEED} X{X+XC:.5f} Y{Y+YC:.5f} Z{Z:.5f}\n' )
+        if prev_path.z_hop:
+            self.z_hop_down()
+        if prev_path.retraction:
+            self.unretract()
 
     def file_remove(self):
         self.f.truncate(0)
