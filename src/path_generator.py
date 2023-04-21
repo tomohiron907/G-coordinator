@@ -1,7 +1,6 @@
 import sys
 import numpy as np
 import math
-import matplotlib.pyplot as plt
 from print_settings import *
 
 
@@ -169,29 +168,4 @@ class Transform:
 
 
 
-def plot_path(path):
-    plt.plot(path.coords[:,0], path.coords[:,1])
-    
-    
-    
-    
-def object_modeling():
-    arg = np.linspace(0, 2*np.pi, 100)
-    r = 2
-    x = r * np.cos(arg)
-    y = r * np.sin(arg)
-    z = np.full_like(x, 0)
-    path = Path(x, y, z)
-    plot_path(path)
-    offset_path = Transform.offset(path, 0.1)
-    bottom = Transform.fill(path, infill_distance = 0.1, offset = 0.2)
-    bottom_rotate = Transform.rotate(bottom, np.pi/2)
-    plot_path(offset_path)
-    plot_path(bottom)
-    plot_path(bottom_rotate)
-    plt.axis('equal')
-    plt.show()
 
-
-if __name__ == '__main__':
-    object_modeling()
