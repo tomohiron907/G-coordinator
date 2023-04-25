@@ -154,6 +154,7 @@ class Ui_MainWindow(object):
         self.save_as_button.pressed.connect(MainWindow.file_save_as) # type: ignore
         self.reload_button.pressed.connect(MainWindow.save_as_modeling) # type: ignore
         self.reload_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
+        self.gcode_export_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
         self.gcode_export_button.pressed.connect(MainWindow.Gcode_create) # type: ignore
         self.slider_layer.valueChanged['int'].connect(MainWindow.redraw_layer_object) # type: ignore
         self.up_button.pressed.connect(MainWindow.up_button_pressed) # type: ignore

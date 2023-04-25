@@ -1,7 +1,8 @@
 import sys
 import numpy as np
 import math
-from print_settings import *
+#from print_settings import *
+import print_settings
 
 
 
@@ -34,8 +35,8 @@ class Path:
         self.Eval = np.array([0])
         for i in range(len(self.coords)-1):
             Dis = math.sqrt((self.x[i+1]-self.x[i])**2 + (self.y[i+1]-self.y[i])**2 + (self.z[i+1]-self.z[i])**2)
-            AREA=(NOZZLE-LAYER)*(LAYER)+(LAYER/2)**2*np.pi
-            self.Eval = np.append(self.Eval, 4*AREA*Dis/(np.pi*FILAMENT_DIAMETER**2))
+            AREA=(print_settings.NOZZLE-print_settings.LAYER)*(print_settings.LAYER)+(print_settings.LAYER/2)**2*np.pi
+            self.Eval = np.append(self.Eval, 4*AREA*Dis/(np.pi*print_settings.FILAMENT_DIAMETER**2))
         
 
 
