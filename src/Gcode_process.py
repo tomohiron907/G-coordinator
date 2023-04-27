@@ -36,7 +36,7 @@ class Gcode:
             self.travel(path, prev_path) # travel to the first point fo the path // if zhop is true in the previous path, z_hop_down()
 
             for i in range(len(path.coords)-1):
-                self.f.write(f'G1 F{feed_speed[i+1]} X{path.x[i+1]+XC:.5f} Y{path.y[i+1]+YC:.5f} Z{path.z[i+1]:.5f} E{path.Eval[i+1] * extrusion_multiplier[i+1]:.5f}\n')
+                self.f.write(f'G1 F{feed_speed[i+1]} X{path.x[i+1]+print_settings.x_origin:.5f} Y{path.y[i+1]+print_settings.y_origin:.5f} Z{path.z[i+1]:.5f} E{path.Eval[i+1] * extrusion_multiplier[i+1]:.5f}\n')
             if path.retraction:
                 self.retract()
             if path.z_hop:
@@ -49,28 +49,28 @@ class Gcode:
 
     def ext_multiplier_calc(self, path):
         extrusion_multiplier = np.ones(len(path.x))
-        if path.E_multiplier is None and any(x is not None for x in path.E_multiplier_array) is False:
-            extrusion_multiplier = np.full_like(path.x, print_settings.EXRTRUSION_MULTIPLIER_DEFAULT)
-        elif path.E_multiplier != None:
-            extrusion_multiplier = np.full_like(path.x, path.E_multiplier)
-        elif any(x is not None for x in path.E_multiplier_array):
-            for i in range(len(path.E_multiplier_array)):
-                if path.E_multiplier_array[i] is not None:
-                    extrusion_multiplier[i] = path.E_multiplier_array[i]
+        if path.extrusion_multiplier is None and any(x is not None for x in path.extrusion_multiplier_array) is False:
+            extrusion_multiplier = np.full_like(path.x, print_settings.extrusion_multiplier)
+        elif path.extrusion_multiplier != None:
+            extrusion_multiplier = np.full_like(path.x, path.extrusion_multiplier)
+        elif any(x is not None for x in path.extrusion_multiplier_array):
+            for i in range(len(path.extrusion_multiplier_array)):
+                if path.extrusion_multiplier_array[i] is not None:
+                    extrusion_multiplier[i] = path.extrusion_multiplier_array[i]
         return extrusion_multiplier
     
     def feed_calc(self, path):
-        feed_array = np.full_like(path.x, print_settings.PRINT_SPEED_DEFAULT)
-        if path.feed is None and any(x is not None for x in path.feed_array) is False:
+        print_speed_array = np.full_like(path.x, print_settings.print_speed)
+        if path.print_speed is None and any(x is not None for x in path.print_speed_array) is False:
             pass
             #feed_array = np.full_like(path.x, print_settings.EXRTRUSION_MULTIPLIER_DEFAULT)
-        elif path.feed != None:
-            feed_array = np.full_like(path.x, path.feed)
-        elif any(x is not None for x in path.feed_array):
-            for i in range(len(path.feed_array)):
-                if path.feed_array[i] is not None:
-                    feed_array[i] = path.feed_array[i]
-        return feed_array
+        elif path.print_speed != None:
+            print_speed_array = np.full_like(path.x, path.print_speed)
+        elif any(x is not None for x in path.print_speed_array):
+            for i in range(len(path.print_speed_array)):
+                if path.print_speed_array[i] is not None:
+                    print_speed_array[i] = path.print_speed_array[i]
+        return print_speed_array
 
     def before_path(self, path):
         if path.before_gcode is None:
@@ -87,37 +87,37 @@ class Gcode:
 
     def retract_setting(self, path):
         if path.retraction is None:
-            path.retraction = print_settings.RETRACTION
+            path.retraction = print_settings.retraction
             #self.retraction = self.retraction
         else:
             pass
     
     def z_hop_setting(self, path):
         if path.z_hop is None:
-            path.z_hop = print_settings.Z_HOP
+            path.z_hop = print_settings.z_hop
         else:
             pass
     def z_hop_up(self):
         self.f.write(f'G91 \n')
-        self.f.write(f'G0 Z{Z_HOP_DISTANCE}\n')
+        self.f.write(f'G0 Z{print_settings.z_hop_distance}\n')
         self.f.write(f'G90 \n')
     def z_hop_down(self):
         self.f.write(f'G91 \n')
-        self.f.write(f'G0 Z{-Z_HOP_DISTANCE}\n')
+        self.f.write(f'G0 Z{-print_settings.z_hop_distance}\n')
         self.f.write(f'G90 \n')
     def retract(self):
-        self.f.write(f'G1 E{-print_settings.RETRACTION_DISTANCE}\n')
+        self.f.write(f'G1 E{-print_settings.retraction_distance}\n')
     def unretract(self):
-        self.f.write(f'G1 E{print_settings.UNRETRACTION_DISTANCE}\n')
+        self.f.write(f'G1 E{print_settings.unretraction_distance}\n')
 
     def travel(self, path, prev_path):
         X = path.coords[0][0]
         Y = path.coords[0][1]
         Z = path.coords[0][2]
         if prev_path.z_hop:
-            self.f.write(f'G0 F{TRAVEL_SPEED} X{X+XC:.5f} Y{Y+YC:.5f} Z{Z+print_settings.Z_HOP_DISTANCE:.5f}\n' )
+            self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z+print_settings.z_hop_distance:.5f}\n' )
         else:
-            self.f.write(f'G0 F{TRAVEL_SPEED} X{X+XC:.5f} Y{Y+YC:.5f} Z{Z:.5f}\n' )
+            self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z:.5f}\n' )
 
         if prev_path.z_hop:
             self.z_hop_down()
@@ -136,14 +136,14 @@ class Gcode:
         self.f.write(default_Gcode.startGcode)
 
     def set_temperature(self):
-        self.f.write(f'''M140 S{BED_TEMPERATURE}
-M190 S{BED_TEMPERATURE}
-M104 S{PRINT_TEMPERATURE}
-M109 S{PRINT_TEMPERATURE}
+        self.f.write(f'''M140 S{print_settings.bed_temperature}
+M190 S{print_settings.bed_temperature}
+M104 S{print_settings.nozzle_temperature}
+M109 S{print_settings.nozzle_temperature}
 ''')
 
     def set_fan_speed(self):
-        self.f.write(f'M106 S{FAN_SPEED}\n''')
+        self.f.write(f'M106 S{print_settings.fan_speed}\n''')
         
     def end_gcode(self):
         self.f.write(default_Gcode.endGcode)

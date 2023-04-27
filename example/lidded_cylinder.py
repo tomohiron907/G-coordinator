@@ -18,7 +18,7 @@ def object_modeling():
         full_object.append(layer)
         offset = Transform.offset(layer, 0)
     for i in range(20):
-        offset = Transform.offset(offset, - print_settings.NOZZLE)
+        offset = Transform.offset(offset, - print_settings.nozzle_diameter)
         full_object.append(offset)
         
 

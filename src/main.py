@@ -222,41 +222,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def parameter_tree_setting(self):
         self.params = [
-            {'name': 'Nozzle', 'type': 'group', 'children': [
-                {'name': 'Nozzle_diameter', 'type': 'float', 'value': float(self.print_setting['Nozzle']['Nozzle_diameter'])},
-                {'name': 'Filament_diameter', 'type': 'float', 'value': float(self.print_setting['Nozzle']['Filament_diameter'])},
+            {'name': 'nozzle', 'type': 'group', 'children': [
+                {'name': 'nozzle_diameter', 'type': 'float', 'value': float(self.print_setting['nozzle']['nozzle_diameter'])},
+                {'name': 'filament_diameter', 'type': 'float', 'value': float(self.print_setting['nozzle']['filament_diameter'])},
             ]},
-            {'name': 'Layer', 'type': 'group', 'children': [
-                {'name': 'Layer_height', 'type': 'float', 'value': float(self.print_setting['Layer']['Layer_height'])},
+            {'name': 'layer', 'type': 'group', 'children': [
+                {'name': 'layer_height', 'type': 'float', 'value': float(self.print_setting['layer']['layer_height'])},
             ]},
-            {'name': 'Origin', 'type': 'group', 'children': [
-                {'name': 'X_origin', 'type': 'int', 'value': int(self.print_setting['Origin']['X_origin'])},
-                {'name': 'Y_origin', 'type': 'int', 'value': int(self.print_setting['Origin']['Y_origin'])},
+            {'name': 'origin', 'type': 'group', 'children': [
+                {'name': 'x_origin', 'type': 'int', 'value': int(self.print_setting['origin']['x_origin'])},
+                {'name': 'y_origin', 'type': 'int', 'value': int(self.print_setting['origin']['y_origin'])},
             ]},
-            {'name': 'Speed', 'type': 'group', 'children': [
-                {'name': 'Print_speed', 'type': 'int', 'value': int(self.print_setting['Speed']['Print_speed'])},
-                {'name': 'Travel_speed', 'type': 'int', 'value': int(self.print_setting['Speed']['Travel_speed'])},
+            {'name': 'speed', 'type': 'group', 'children': [
+                {'name': 'print_speed', 'type': 'int', 'value': int(self.print_setting['speed']['print_speed'])},
+                {'name': 'travel_speed', 'type': 'int', 'value': int(self.print_setting['speed']['travel_speed'])},
             ]},
-            {'name': 'Fan_speed', 'type': 'group', 'children': [
-                {'name': 'Fan_speed', 'type': 'int', 'value': int(self.print_setting['Fan_speed']['fan_speed'])},
+            {'name': 'fan_speed', 'type': 'group', 'children': [
+                {'name': 'fan_speed', 'type': 'int', 'value': int(self.print_setting['fan_speed']['fan_speed'])},
             ]},
-            {'name': 'Temperature', 'type': 'group', 'children': [
-                {'name': 'Nozzle_temperature', 'type': 'int', 'value': int(self.print_setting['Temperature']['Nozzle_temperature'])},
-                {'name': 'Bed_temperature', 'type': 'int', 'value': int(self.print_setting['Temperature']['Bed_temperature'])},
+            {'name': 'temperature', 'type': 'group', 'children': [
+                {'name': 'nozzle_temperature', 'type': 'int', 'value': int(self.print_setting['temperature']['nozzle_temperature'])},
+                {'name': 'bed_temperature', 'type': 'int', 'value': int(self.print_setting['temperature']['bed_temperature'])},
             ]},
-            {'name': 'Travel_option', 'type': 'group', 'children': [
-                {'name': 'Retraction', 'type': 'bool', 'value': self.print_setting.getboolean('Travel_option','Retraction')},
-                {'name': 'Retraction_distance', 'type': 'float', 'value': float(self.print_setting['Travel_option']['Retraction_distance'])},
-                {'name': 'Unretraction_distance', 'type': 'float', 'value': float(self.print_setting['Travel_option']['Unretraction_distance'])},
-                {'name': 'Z_hop', 'type': 'bool', 'value': self.print_setting.getboolean('Travel_option','Z_hop')},
-                {'name': 'Z_hop_distance', 'type': 'float', 'value': float(self.print_setting['Travel_option']['Z_hop_distance'])},
+            {'name': 'travel_option', 'type': 'group', 'children': [
+                {'name': 'retraction', 'type': 'bool', 'value': self.print_setting.getboolean('travel_option','retraction')},
+                {'name': 'retraction_distance', 'type': 'float', 'value': float(self.print_setting['travel_option']['retraction_distance'])},
+                {'name': 'unretraction_distance', 'type': 'float', 'value': float(self.print_setting['travel_option']['unretraction_distance'])},
+                {'name': 'z_hop', 'type': 'bool', 'value': self.print_setting.getboolean('travel_option','z_hop')},
+                {'name': 'z_hop_distance', 'type': 'float', 'value': float(self.print_setting['travel_option']['z_hop_distance'])},
             ]},
-            {'name': 'Extrusion_option', 'type': 'group', 'children': [
-                {'name': 'Extrusion_multiplier', 'type': 'float', 'value': float(self.print_setting['Extrusion_option']['Extrusion_multiplier'])},
+            {'name': 'extrusion_option', 'type': 'group', 'children': [
+                {'name': 'extrusion_multiplier', 'type': 'float', 'value': float(self.print_setting['extrusion_option']['extrusion_multiplier'])},
             ]},
-            {'name': 'Default_gcode', 'type': 'group', 'children': [
-                {'name': 'start_gcode', 'type': 'str', 'value': str(self.print_setting['Default_gcode']['start_gcode'])},
-                {'name': 'end_gcode', 'type': 'str', 'value': str(self.print_setting['Default_gcode']['end_gcode'])},
+            {'name': 'default_gcode', 'type': 'group', 'children': [
+                {'name': 'start_gcode', 'type': 'str', 'value': str(self.print_setting['default_gcode']['start_gcode'])},
+                {'name': 'end_gcode', 'type': 'str', 'value': str(self.print_setting['default_gcode']['end_gcode'])},
             ]},
         ]
     
