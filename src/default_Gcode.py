@@ -12,8 +12,8 @@ print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)
 
 
-START_GCODE_PATH = str(print_setting['Default_gcode']['start_gcode'])
-END_GCODE_PATH = str(print_setting['Default_gcode']['end_gcode'])
+START_GCODE_PATH = str(print_setting['default_gcode']['start_gcode'])
+END_GCODE_PATH = str(print_setting['default_gcode']['end_gcode'])
 
 try:
     with open(START_GCODE_PATH, 'r') as f:
