@@ -3,17 +3,17 @@ import math
 import print_settings 
 from path_generator import *
 
-LAYER =500
+LAYER =2
 
 th = math.pi * 60 / 180  
 
-R = 60
+R = 40
 th = math.pi * 60 / 180
 a = (0.0, 0.0) 
 b = (R, 100.0 * math.sin(th) * R / 50) 
 c = (2 * R, 0.0)
 
-n = 4
+n = 7
 points = [a] 
 
 
@@ -47,6 +47,7 @@ def object_modeling():
         y = [points[i][1] - (R * math.sin(th / 2)) for i in range(len(points) - 1)] 
         z = np.full_like(x, height*0.2)
         wall = Path(x, y, z)
+        #wall = Transform.rotate(wall, height)
         full_object.append(wall)
         
 
