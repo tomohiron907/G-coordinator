@@ -4,7 +4,7 @@ import print_settings
 
 nozzle = print_settings.nozzle_diameter
 thickness = print_settings.layer_height
-
+#ext_multiplier = 1.2
 LAYER = 2
 def object_modeling():
     full_object=[]
@@ -14,9 +14,7 @@ def object_modeling():
         z = np.full_like(x, (height+1)*thickness)
         wall = Path(x, y, z)
         infill = Transform.fill(wall, offset = - nozzle , infill_distance = nozzle , angle = np.pi/4 + np.pi/2 *height)
-        if height == 0:
-            wall.print_speed = 500
-            infill.print_speed = 500
+        
         full_object.append(wall)
         full_object.append(infill)
         

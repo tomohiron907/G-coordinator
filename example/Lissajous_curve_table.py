@@ -4,7 +4,7 @@ import print_settings
 from path_generator import *
 
 LAYER =20
-
+#ext_multiplier = 1.4
 
 def lissajous(a, b, d, height):
     t = np.linspace(0, np.pi* 2,400)
@@ -18,7 +18,7 @@ def lissajous(a, b, d, height):
         b_2 = b
     x = rad*np.sin(a_2*t + d)+a*40-20-100
     y = rad*np.sin(b_2*t)+b*40-20-100
-    z = np.full_like(t, height*print_settings.layer_height+0.2+0.8)
+    z = np.full_like(t, (height+1)*print_settings.layer_height)
     wall = Path(x, y, z)
     if height == 0:
         wall.z_hop = True
