@@ -19,6 +19,7 @@ def lissajous(a, b, d, height):
     x = rad*np.sin(a_2*t + d)+a*40-20-100
     y = rad*np.sin(b_2*t)+b*40-20-100
     z = np.full_like(t, (height+1)*print_settings.layer_height)
+    
     wall = Path(x, y, z)
     if height == 0:
         wall.z_hop = True

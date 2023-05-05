@@ -6,11 +6,12 @@ LAYER=120
 nozzle = print_settings.nozzle_diameter
 thickness = print_settings.layer_height
 a = 4
+L = 40
 depth = 35
 
 
 def quarter_func(arg):
-    rad = 40 * (np.cos(arg)**a + np.sin(arg)**a)**(-1/a)
+    rad = L * (np.cos(arg)**a + np.sin(arg)**a)**(-1/a)
     return rad
 
 def object_modeling():
