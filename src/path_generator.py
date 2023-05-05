@@ -32,11 +32,13 @@ class Path:
         self.after_gcode = None
 
     def e_calc(self):
-        self.Eval = np.array([0])
-        for i in range(len(self.coords)-1):
-            Dis = math.sqrt((self.x[i+1]-self.x[i])**2 + (self.y[i+1]-self.y[i])**2 + (self.z[i+1]-self.z[i])**2)
-            AREA=(NOZZLE-LAYER)*(LAYER)+(LAYER/2)**2*np.pi
-            self.Eval = np.append(self.Eval, 4*AREA*Dis/(np.pi*FILAMENT_DIAMETER**2))
+        kinematics.e_calc(self)
+        pass
+        #self.Eval = np.array([0])
+        #for i in range(len(self.coords)-1):
+        #    Dis = math.sqrt((self.x[i+1]-self.x[i])**2 + (self.y[i+1]-self.y[i])**2 + (self.z[i+1]-self.z[i])**2)
+        #    AREA=(NOZZLE-LAYER)*(LAYER)+(LAYER/2)**2*np.pi
+        #    self.Eval = np.append(self.Eval, 4*AREA*Dis/(np.pi*FILAMENT_DIAMETER**2))
         
 
 

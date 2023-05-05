@@ -3,13 +3,14 @@ import pyqtgraph.opengl as gl
 import pyqtgraph as pg
 import copy
 import sys
-import configparser
+#import configparser
+from print_settings import *
 import math
 
-ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
-print_setting = configparser.ConfigParser()
-print_setting.read(CONFIG_PATH)
+#ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
+#CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
+#print_setting = configparser.ConfigParser()
+#print_setting.read(CONFIG_PATH)
 
 
 pos_array = []

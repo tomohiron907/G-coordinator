@@ -11,12 +11,13 @@ import modeling
 import importlib
 from import_file import import_file
 import syntax_pars
-from Gcode_process import Gcode
+from gcode_process import Gcode
 import draw_object
 import configparser
 from ui_settings import Ui_MainWindow
 import print_functions
-import print_settings
+#import print_settings
+from print_settings import *
 
 
 
@@ -92,7 +93,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.slider_layer.setValue(len(self.full_object))
         self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()-1].coords))
         self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()-1].coords))
-        draw_object.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
+        #draw_object.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
+        kinematics.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
         self.file_save()
 
     def Gcode_create(self):
@@ -107,12 +109,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grid_draw()
         self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()-1].coords))
         self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()-1].coords))
-        draw_object.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
+        #draw_object.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
+        kinematics.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
 
     def redraw_segment_object(self): 
         self.graphicsView.clear()  # initialize pyqtgraph widget
         self.grid_draw()
-        draw_object.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
+        #draw_object.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
+        kinematics.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
     
     def up_button_pressed(self):
         self.slider_layer.setValue(self.slider_layer.value()+1)
