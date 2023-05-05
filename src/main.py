@@ -34,8 +34,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #シンタックス表示
         self.highlight=syntax_pars.PythonHighlighter(self.editor.document())
         self.graphicsView.setCameraPosition(distance=120)
-        self.message_console.setReadOnly(True)
-        self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
+        #self.message_console.setReadOnly(True)
+        #self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
         self.up_button.setArrowType(Qt.UpArrow)
         self.down_button.setArrowType(Qt.DownArrow)
         self.left_button.setArrowType(Qt.LeftArrow)
@@ -75,15 +75,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             #importlib.reload(modeling)  #reload updated modeling.py
             modeling = import_file('modeling.py')
             self.full_object=modeling.object_modeling()  # get the list of coordinate from modeling.py
-            self.message_console.setTextColor(QColor('#00bfff'))
-            self.message_console.setText('object displyed')
+            self.message_console.textBrowser.setTextColor(QColor('#00bfff'))
+            self.message_console.textBrowser.setText('object displyed')
             with open("modeling.py",'w') as f:
                 pass
         except:
             print('syntax error!!')
-            self.message_console.setTextColor(QColor('#FF6347'))
+            self.message_console.textBrowser.setTextColor(QColor('#FF6347'))
             print(str(traceback.format_exc()))
-            self.message_console.setText(traceback.format_exc())
+            self.message_console.textBrowser.setText(traceback.format_exc())
             with open("modeling.py",'w') as f:
                 pass
         
@@ -97,8 +97,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def Gcode_create(self):
         Gcode(self.full_object)
-        self.message_console.setTextColor(QColor('#00bfff'))
-        self.message_console.setText('Gcode Exported')
+        self.message_console.textBrowser.setTextColor(QColor('#00bfff'))
+        self.message_console.textBrowser.setText('Gcode Exported')
         self.gcode_window = GcodeExportWindow()
         self.gcode_window.show()
 
