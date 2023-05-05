@@ -14,7 +14,7 @@ class Path:
         self.z = np.array(z)
         self.coords_arrange()
         self.set_print_settings()
-        self.e_calc()
+        kinematics.e_calc(self)
         
     def coords_arrange(self):
         self.coords = np.column_stack([self.x, self.y, self.z])
@@ -30,18 +30,6 @@ class Path:
         self.z_hop = None
         self.before_gcode = None
         self.after_gcode = None
-
-    def e_calc(self):
-        kinematics.e_calc(self)
-        pass
-        #self.Eval = np.array([0])
-        #for i in range(len(self.coords)-1):
-        #    Dis = math.sqrt((self.x[i+1]-self.x[i])**2 + (self.y[i+1]-self.y[i])**2 + (self.z[i+1]-self.z[i])**2)
-        #    AREA=(NOZZLE-LAYER)*(LAYER)+(LAYER/2)**2*np.pi
-        #    self.Eval = np.append(self.Eval, 4*AREA*Dis/(np.pi*FILAMENT_DIAMETER**2))
-        
-
-
 
 
 class Transform:

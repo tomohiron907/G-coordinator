@@ -12,11 +12,9 @@ import importlib
 from import_file import import_file
 import syntax_pars
 from gcode_process import Gcode
-import draw_object
 import configparser
 from ui_settings import Ui_MainWindow
 import print_functions
-#import print_settings
 from print_settings import *
 
 
