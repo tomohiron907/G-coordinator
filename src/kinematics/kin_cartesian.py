@@ -11,7 +11,13 @@ from kinematics.kin_base import *
 class Cartesian(Kinematics):
     def __init__(self, print_setting):
         super().__init__(print_setting)
-        print('Cartesian init')
+        self.axes_count = 3
+        
+    def add_parameter_tree(self):
+        param = {'name': 'Kinematics', 'type': 'group', 'children': [
+            {'name': 'Name', 'type': 'str', 'value': 'Cartesian'},
+        ]},
+        return param
         
     def e_calc(self, path):
         path.Eval = np.array([0])

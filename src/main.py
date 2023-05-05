@@ -261,6 +261,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 {'name': 'end_gcode', 'type': 'str', 'value': str(self.print_setting['Default_gcode']['end_gcode'])},
             ]},
         ]
+        for item in kinematics.add_parameter_tree():
+            self.params.append(item)
+        print(self.params)
     
 
     def change(self, param, changes):

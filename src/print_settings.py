@@ -27,7 +27,6 @@ def reload_print_setting():
     Z_HOP = print_setting.getboolean('Travel_option','Z_hop')
     Z_HOP_DISTANCE = float(print_setting['Travel_option']['Z_hop_distance'])
     KIN_NAME = print_setting['Kinematics']['Kin_name']
-    print(KIN_NAME)
     if KIN_NAME == 'Cartesian':
         kinematics = Cartesian(print_setting)
 
