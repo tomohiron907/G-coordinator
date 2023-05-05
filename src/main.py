@@ -263,7 +263,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ]
         for item in kinematics.add_parameter_tree():
             self.params.append(item)
-        print(self.params)
     
 
     def change(self, param, changes):
