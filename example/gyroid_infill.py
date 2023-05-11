@@ -17,6 +17,8 @@ def object_modeling():
         wall = Path(x, y, z)
         outer_wall = Transform.offset(wall, 0.4)
         infill = gyroid_infill(wall, height*0.2+0.2 ,resolution = 100, d = 2)
+        infill.z_hop = True
+        
         full_object.append(outer_wall)
         full_object.append(wall)
         full_object.append(infill)

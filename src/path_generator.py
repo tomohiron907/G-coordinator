@@ -44,27 +44,87 @@ class Path:
 class PathList:
     def __init__(self, paths):
         self.paths = paths
+        self._extrusion_multiplier = None
+        self._print_speed = None
+        self._retraction = None
+        self._z_hop = None
+        self._before_gcode = None
+        self._after_gcode = None
+
+    @property
+    def extrusion_multiplier(self):
+        return self._extrusion_multiplier
+
+    @extrusion_multiplier.setter
+    def extrusion_multiplier(self, value):
+        self._extrusion_multiplier = value
+        self._apply_print_settings()
+
+    @property
+    def print_speed(self):
+        return self._print_speed
+
+    @print_speed.setter
+    def print_speed(self, value):
+        self._print_speed = value
+        self._apply_print_settings()
+
+    @property
+    def retraction(self):
+        return self._retraction
+
+    @retraction.setter
+    def retraction(self, value):
+        self._retraction = value
+        self._apply_print_settings()
+
+    @property
+    def z_hop(self):
+        return self._z_hop
+
+    @z_hop.setter
+    def z_hop(self, value):
+        self._z_hop = value
+        self._apply_print_settings()
+
+    @property
+    def before_gcode(self):
+        return self._before_gcode
+
+    @before_gcode.setter
+    def before_gcode(self, value):
+        self._before_gcode = value
+        self._apply_print_settings()
+
+    @property
+    def after_gcode(self):
+        return self._after_gcode
+
+    @after_gcode.setter
+    def after_gcode(self, value):
+        self._after_gcode = value
+        self._apply_print_settings()
+
+    def _apply_print_settings(self):
+        for path in self.paths:
+            path.extrusion_multiplier = self.extrusion_multiplier
+            path.print_speed = self.print_speed
+            path.retraction = self.retraction
+            path.z_hop = self.z_hop
+            path.before_gcode = self.before_gcode
+            path.after_gcode = self.after_gcode
     
-    def set_print_settings(self):
-        #self.array_number = len(self.x)
-        self.extrusion_multiplier = None
-        #self.extrusion_multiplier_array = np.full(self.array_number, None)
-        self.print_speed = None
-        #self.print_speed_array = np.full(self.array_number, None)
-        self.retraction = None
-        self.z_hop = None
-        self.before_gcode = None
-        self.after_gcode = None
+    
 
 
-def flatten_paths(full_object):
-    paths = []
+def flatten_path_list(full_object):
+    flattened_paths = []
     for item in full_object:
-        if isinstance(item, Path):
-            paths.append(item)
-        elif isinstance(item, list):
-            paths.extend(flatten_paths(item))
-    return paths
+        if isinstance(item, PathList):
+            flattened_paths.extend(flatten_path_list(item.paths))
+        elif isinstance(item, Path):
+            flattened_paths.append(item)
+    return flattened_paths
 
 
 class Transform:
@@ -230,5 +290,5 @@ def gyroid_infill(path, z_height, resolution = 40, d = 1/2, value = 0):
                 z_coords = np.full_like(x_coords, z_height)
                 wall = Path(x_coords, y_coords, z_coords)
                 infill_path_list.append(wall)
-    return infill_path_list
+    return PathList(infill_path_list)
 
