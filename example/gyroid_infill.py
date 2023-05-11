@@ -3,29 +3,23 @@ import math
 import print_settings 
 from path_generator import *
 
-LAYER =50
+LAYER =80
 nozzle = print
-print('hoge')
+
 def object_modeling():
     full_object=[]
     for height in range(LAYER):
         arg = np.linspace(0, np.pi*2,100)
-        rad = 10
+        rad = 40 
         x = rad*np.cos(arg)
         y = rad*np.sin(arg)
         z = np.full_like(arg, height*print_settings.layer_height+0.2)
         wall = Path(x, y, z)
         outer_wall = Transform.offset(wall, 0.4)
-        full_object.append(wall)
+        infill = gyroid_infill(wall, height*0.2+0.2 ,resolution = 100, d = 2)
         full_object.append(outer_wall)
-        
-        if height <2 :
-            bottom = Transform.fill(wall, infill_distance = print_settings.nozzle_diameter, offset = -print_settings.nozzle_diameter)
-            bottom = Transform.rotate(bottom, np.pi/2*height)
-            bottom.print_speed = 400
-            bottom.z_hop = True
-            bottom.retraction = True
-            full_object.append(bottom)
+        full_object.append(wall)
+        full_object.append(infill)
             
 
 

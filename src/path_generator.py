@@ -3,7 +3,8 @@ import numpy as np
 import math
 #from print_settings import *
 import print_settings
-
+import matplotlib.pyplot as plt
+from matplotlib.path import Path as matlabPath
 
 
 class Path:
@@ -18,6 +19,7 @@ class Path:
         
     def coords_arrange(self):
         self.coords = np.column_stack([self.x, self.y, self.z])
+        self.center = np.array([np.mean(self.x), np.mean(self.y), np.mean(self.z)])
         return self.coords
     
     def set_print_settings(self):
@@ -37,9 +39,32 @@ class Path:
             Dis = math.sqrt((self.x[i+1]-self.x[i])**2 + (self.y[i+1]-self.y[i])**2 + (self.z[i+1]-self.z[i])**2)
             AREA=(print_settings.nozzle_diameter-print_settings.layer_height)*(print_settings.layer_height)+(print_settings.layer_height/2)**2*np.pi
             self.Eval = np.append(self.Eval, 4*AREA*Dis/(np.pi*print_settings.filament_diameter**2))
-        
 
 
+class PathList:
+    def __init__(self, paths):
+        self.paths = paths
+    
+    def set_print_settings(self):
+        #self.array_number = len(self.x)
+        self.extrusion_multiplier = None
+        #self.extrusion_multiplier_array = np.full(self.array_number, None)
+        self.print_speed = None
+        #self.print_speed_array = np.full(self.array_number, None)
+        self.retraction = None
+        self.z_hop = None
+        self.before_gcode = None
+        self.after_gcode = None
+
+
+def flatten_paths(full_object):
+    paths = []
+    for item in full_object:
+        if isinstance(item, Path):
+            paths.append(item)
+        elif isinstance(item, list):
+            paths.extend(flatten_paths(item))
+    return paths
 
 
 class Transform:
@@ -168,5 +193,42 @@ class Transform:
 
 
 
+def gyroid_infill(path, z_height, resolution = 40, d = 1/2, value = 0):
+    x_list = path.x
+    y_list = path.y
+    # Grid parameters
+      # Resolution of the grid
+    x = np.linspace(np.min(x_list), np.max(x_list), resolution)
+    y = np.linspace(np.min(y_list), np.max(y_list), resolution)
+    X, Y = np.meshgrid(x, y)
+    
+    # Equation for the Gyroid surface
+    theta = 0
+    #equation = np.sin(X/d) * np.cos(Y/d) + np.sin(Y/d) * np.cos(z_height) + np.sin(z_height) * np.cos(X/d)
+    equation = np.sin(X/d*np.cos(theta) + Y/d*np.sin(theta)) * np.cos(-X/d*np.sin(theta) + Y/d*np.cos(theta)) + np.sin(-X/d*np.sin(theta) + Y/d*np.cos(theta)) * np.cos(z_height/d) + np.sin(z_height/d) * np.cos(X/d*np.cos(theta) + Y/d*np.sin(theta))-value
 
+    # Determine the inside region
+    inside = np.ones_like(equation)
+    path = matlabPath(np.column_stack([x_list, y_list]))
+
+    points = np.column_stack((X.flatten(), Y.flatten()))
+    inside = path.contains_points(points)
+    inside = inside.reshape(X.shape).astype(float)
+    inside[inside == 0] = np.nan
+
+    # Plot the slices
+    slice_plane = equation * inside
+    contours = plt.contour(x, y, slice_plane, levels=[0], colors='black')
+
+    infill_path_list = []
+    for contour in contours.collections:
+            paths = contour.get_paths()
+            for path in paths:
+                points = path.vertices
+                x_coords = points[:, 0]
+                y_coords = points[:, 1]
+                z_coords = np.full_like(x_coords, z_height)
+                wall = Path(x_coords, y_coords, z_coords)
+                infill_path_list.append(wall)
+    return infill_path_list
 

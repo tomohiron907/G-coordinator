@@ -14,6 +14,7 @@ import syntax_pars
 from Gcode_process import Gcode
 import draw_object
 import configparser
+import path_generator
 from ui_settings import Ui_MainWindow
 import print_functions
 import print_settings
@@ -75,6 +76,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             #importlib.reload(modeling)  #reload updated modeling.py
             modeling = import_file('modeling.py')
             self.full_object=modeling.object_modeling()  # get the list of coordinate from modeling.py
+            self.full_object = path_generator.flatten_paths(self.full_object)
             self.message_console.setTextColor(QColor('#00bfff'))
             self.message_console.setText('object displyed')
             with open("modeling.py",'w') as f:
