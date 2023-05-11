@@ -20,6 +20,8 @@ class Path:
     def coords_arrange(self):
         self.coords = np.column_stack([self.x, self.y, self.z])
         self.center = np.array([np.mean(self.x), np.mean(self.y), np.mean(self.z)])
+        self.start_coord = self.coords[0]
+        self.end_coord = self.coords[-1]
         return self.coords
     
     def set_print_settings(self):
@@ -50,6 +52,7 @@ class PathList:
         self._z_hop = None
         self._before_gcode = None
         self._after_gcode = None
+        self.sort_paths()
 
     @property
     def extrusion_multiplier(self):
@@ -113,6 +116,31 @@ class PathList:
             path.z_hop = self.z_hop
             path.before_gcode = self.before_gcode
             path.after_gcode = self.after_gcode
+
+    def sort_paths(self):
+        sorted_paths = []
+        remaining_paths = self.paths.copy()
+
+        # 最初のパスを取り出し、ソート済みリストに追加
+        current_path = remaining_paths.pop(0)
+        sorted_paths.append(current_path)
+
+        while remaining_paths:
+            nearest_index = None
+            min_distance = float('inf')
+
+            # ソートされていないパスの中から最も近い始点を持つパスを探す
+            for i, path in enumerate(remaining_paths):
+                distance = np.linalg.norm(current_path.end_coord - path.start_coord)
+                if distance < min_distance:
+                    min_distance = distance
+                    nearest_index = i
+
+            # 最も近いパスを取り出し、ソート済みリストに追加
+            current_path = remaining_paths.pop(nearest_index)
+            sorted_paths.append(current_path)
+
+        self.paths = sorted_paths
     
     
 
