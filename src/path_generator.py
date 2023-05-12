@@ -281,9 +281,11 @@ class Transform:
 
 
 
-def gyroid_infill(path, z_height, resolution = 40, d = 1/2, value = 0):
+def gyroid_infill(path,  resolution = 100, density = 0.5, value = 0):
     x_list = path.x
     y_list = path.y
+    z_height = path.center[2]
+    density = -9.9 * density + 10
     # Grid parameters
       # Resolution of the grid
     x = np.linspace(np.min(x_list), np.max(x_list), resolution)
@@ -291,9 +293,9 @@ def gyroid_infill(path, z_height, resolution = 40, d = 1/2, value = 0):
     X, Y = np.meshgrid(x, y)
     
     # Equation for the Gyroid surface
-    theta = 0
+    theta = np.pi/4
     #equation = np.sin(X/d) * np.cos(Y/d) + np.sin(Y/d) * np.cos(z_height) + np.sin(z_height) * np.cos(X/d)
-    equation = np.sin(X/d*np.cos(theta) + Y/d*np.sin(theta)) * np.cos(-X/d*np.sin(theta) + Y/d*np.cos(theta)) + np.sin(-X/d*np.sin(theta) + Y/d*np.cos(theta)) * np.cos(z_height/d) + np.sin(z_height/d) * np.cos(X/d*np.cos(theta) + Y/d*np.sin(theta))-value
+    equation = np.sin(X/density*np.cos(theta) + Y/density*np.sin(theta)) * np.cos(-X/density*np.sin(theta) + Y/density*np.cos(theta)) + np.sin(-X/density*np.sin(theta) + Y/density*np.cos(theta)) * np.cos(z_height/density) + np.sin(z_height/density) * np.cos(X/density*np.cos(theta) + Y/density*np.sin(theta))-value
 
     # Determine the inside region
     inside = np.ones_like(equation)
