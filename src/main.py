@@ -11,7 +11,7 @@ import modeling
 import importlib
 from import_file import import_file
 import syntax_pars
-from Gcode_process import Gcode
+from gcode_process import Gcode
 import draw_object
 import configparser
 import path_generator
