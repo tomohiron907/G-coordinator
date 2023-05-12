@@ -3,7 +3,7 @@ import math
 import print_settings 
 from path_generator import *
 
-LAYER =80
+LAYER =100
 nozzle = print
 
 def object_modeling():
@@ -16,9 +16,7 @@ def object_modeling():
         z = np.full_like(arg, height*print_settings.layer_height+0.2)
         wall = Path(x, y, z)
         outer_wall = Transform.offset(wall, 0.4)
-        infill = gyroid_infill(wall, height*0.2+0.2 ,resolution = 100, d = 2)
-        infill.z_hop = True
-        
+        infill = gyroid_infill(wall, density = 0.7)
         full_object.append(outer_wall)
         full_object.append(wall)
         full_object.append(infill)
