@@ -17,7 +17,7 @@ import configparser
 import path_generator
 from ui_settings import Ui_MainWindow
 import print_functions
-import print_settings
+from print_settings import *
 
 
 
@@ -261,6 +261,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 {'name': 'end_gcode', 'type': 'str', 'value': str(self.print_setting['default_gcode']['end_gcode'])},
             ]},
         ]
+        items = kinematics.add_parameter_tree()
+        if items!=None:
+            for item in items:
+                self.params.append(item)
     
 
     def change(self, param, changes):

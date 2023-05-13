@@ -1,28 +1,24 @@
 import sys
 import numpy as np
 import math
-#from print_settings import *
+from print_settings import *
 import print_settings
 import matplotlib.pyplot as plt
 from matplotlib.path import Path as matlabPath
 
 
 class Path:
-    def __init__(self, x=0, y=0, z=0):
+    def __init__(self, x=0, y=0, z=0, rot=0, tilt=0):
         self.type = 'print'
         self.x = np.array(x)
         self.y = np.array(y)
         self.z = np.array(z)
-        self.coords_arrange()
+        self.tilt = np.array(tilt)
+        self.rot = np.array(rot)
+        kinematics.coords_arrange(self)
         self.set_print_settings()
-        self.e_calc()
+        kinematics.e_calc(self)
         
-    def coords_arrange(self):
-        self.coords = np.column_stack([self.x, self.y, self.z])
-        self.center = np.array([np.mean(self.x), np.mean(self.y), np.mean(self.z)])
-        self.start_coord = self.coords[0]
-        self.end_coord = self.coords[-1]
-        return self.coords
     
     def set_print_settings(self):
         self.array_number = len(self.x)
@@ -34,14 +30,6 @@ class Path:
         self.z_hop = None
         self.before_gcode = None
         self.after_gcode = None
-
-    def e_calc(self):
-        self.Eval = np.array([0])
-        for i in range(len(self.coords)-1):
-            Dis = math.sqrt((self.x[i+1]-self.x[i])**2 + (self.y[i+1]-self.y[i])**2 + (self.z[i+1]-self.z[i])**2)
-            AREA=(print_settings.nozzle_diameter-print_settings.layer_height)*(print_settings.layer_height)+(print_settings.layer_height/2)**2*np.pi
-            self.Eval = np.append(self.Eval, 4*AREA*Dis/(np.pi*print_settings.filament_diameter**2))
-
 
 class PathList:
     def __init__(self, paths):

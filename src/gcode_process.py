@@ -25,7 +25,12 @@ class Gcode:
 
     def print_full_object(self):
         print_setting.update()
-        prev_path = Path([0,0], [0,0], [0,0])
+        if kinematics.axes_count == 5:
+            prev_path = Path([0,0], [0,0], [0,0], [0,0], [0,0])
+        elif kinematics.axes_count == 4:
+            prev_path = Path([0,0], [0,0], [0,0], [0,0])
+        else:
+            prev_path = Path([0,0], [0,0], [0,0])
         for path in self.full_object:
 
             self.retract_setting(path)
@@ -34,9 +39,14 @@ class Gcode:
             feed_speed = self.feed_calc(path)
             self.before_path(path)
             self.travel(path, prev_path) # travel to the first point fo the path // if zhop is true in the previous path, z_hop_down()
-
-            for i in range(len(path.coords)-1):
-                self.f.write(f'G1 F{feed_speed[i+1]} X{path.x[i+1]+print_settings.x_origin:.5f} Y{path.y[i+1]+print_settings.y_origin:.5f} Z{path.z[i+1]:.5f} E{path.Eval[i+1] * extrusion_multiplier[i+1]:.5f}\n')
+            
+            for i in range(len(path.x)-1):
+                if kinematics.axes_count == 5:
+                    self.f.write(f'G1 F{feed_speed[i+1]} X{path.x[i+1]+print_settings.x_origin:.5f} Y{path.y[i+1]+print_settings.y_origin:.5f} Z{path.z[i+1]:.5f} {kinematics.tilt_code}{math.degrees(path.tilt[i+1]+kinematics.tilt_offset):.5f} {kinematics.rot_code}{math.degrees(path.rot[i+1]+kinematics.rot_offset):.5f} E{path.Eval[i+1] * extrusion_multiplier[i+1]:.5f}\n')
+                elif kinematics.axes_count == 4:
+                    self.f.write(f'G1 F{feed_speed[i+1]} X{path.x[i+1]+print_settings.x_origin:.5f} Y{path.y[i+1]+print_settings.y_origin:.5f} Z{path.z[i+1]:.5f} {kinematics.rot_code}{math.degrees(path.rot[i+1]+kinematics.rot_offset):.5f} E{path.Eval[i+1] * extrusion_multiplier[i+1]:.5f}\n')
+                else:
+                    self.f.write(f'G1 F{feed_speed[i+1]} X{path.x[i+1]+print_settings.x_origin:.5f} Y{path.y[i+1]+print_settings.y_origin:.5f} Z{path.z[i+1]:.5f} E{path.Eval[i+1] * extrusion_multiplier[i+1]:.5f}\n')
             if path.retraction:
                 self.retract()
             if path.z_hop:
@@ -115,9 +125,19 @@ class Gcode:
         Y = path.coords[0][1]
         Z = path.coords[0][2]
         if prev_path.z_hop:
-            self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z+print_settings.z_hop_distance:.5f}\n' )
+            if kinematics.axes_count == 5:
+                self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z+print_settings.z_hop_distance:.5f} {kinematics.tilt_code}{math.degrees(path.tilt[0]+kinematics.tilt_offset):.5f} {kinematics.rot_code}{math.degrees(path.rot[0]+kinematics.rot_offset):.5f}\n' )
+            elif kinematics.axes_count == 4:
+                self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z+print_settings.z_hop_distance:.5f} {kinematics.rot_code}{math.degrees(path.rot[0]+kinematics.rot_offset):.5f}\n' )
+            else:
+                self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z+print_settings.z_hop_distance:.5f}\n' )
         else:
-            self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z:.5f}\n' )
+            if kinematics.axes_count == 5:
+                self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z:.5f} {kinematics.tilt_code}{math.degrees(path.tilt[0]+kinematics.tilt_offset):.5f} {kinematics.rot_code}{math.degrees(path.rot[0]+kinematics.rot_offset):.5f}\n' )
+            elif kinematics.axes_count == 4:
+                self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z:.5f} {kinematics.rot_code}{math.degrees(path.rot[0]+kinematics.rot_offset):.5f}\n' )
+            else:
+                self.f.write(f'G0 F{print_settings.travel_speed} X{X+print_settings.x_origin:.5f} Y{Y+print_settings.y_origin:.5f} Z{Z:.5f}\n' )
 
         if prev_path.z_hop:
             self.z_hop_down()
