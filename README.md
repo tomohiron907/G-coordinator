@@ -1,3 +1,5 @@
+
+
 # G-coordinator
 
 日本語バージョンはQiitaで[ここ](https://qiita.com/tomohiron907/items/e14137fd15cb52a415dc)に載せています．
@@ -15,33 +17,27 @@ By drawing a python script in the editor on the left and executing it, the nozzl
 
 
 # Requirements
-To use G-coordinator, you need to have a good python environment. Some knowledge of python is also required for modeling.
-In the following article, VS-CODE is used, but of course, pycharm and the like are also acceptable.
+G-coordinator is currently available for macOS and Windows.
+G-coordinator can also be started by executing the python code main.py in the src directory. The following libraries are required to run main.py.
+```
+pyqt5
+pyqtgraph
+numpy
+pyopengl
+matplotlib
+```
+If you run G-coordinator from an .app or .exe executable file, you do not need to install these libraries.
+
+
 For the final check of the output G-cocde, software such as prusa-slicer or repetier would be useful.
 
 # G-coordinator installation procedure
-This section is intended for those who are not familiar with python, so those who are familiar with python can skip this section.
-The source code of G-coordinator is available on github [here](https://github.com/tomohiron907/G-coordinator). (You can download the zip file from the bottom of the green <>code button.) The main code is placed in the src directory, so after downloading and extracting, open the src file with an editor. In this directory, 'main.py' is the main pytnon script to be executed.
+Please download the software from [here](https://github.com/tomohiron907/G-coordinator/releases) according to your operating system.
 
-Then, install the necessary libraries by pip. The necessary items are listed in requiremets.txt.
-![img3](img/after_installation.png)
-
-
-Download the libraries needed to run the program by typing the following in a terminal.
-
-```pip install numpy```
-```pip install pyqt5```
-```pip install pyqtgraph```
-```pip install pyopengl```
-
-In some cases, you may need to install something that comes standard on a mac, but is not required on a win machine.
-If the error disappears and main.py is executed, the installation is complete.
-
-![img4](img/launch_G-coordinator.png)
-
+If you have a Python environment set up, please clone this GitHub repository and **make the current directory "src"**. Then, execute "main.py" in the command prompt. The necessary INI configuration file for execution is also included in the "src" directory.
 # How G-code works
 
-Before modeling, it is useful to understand the structure of a G-code briefly, so that you can model it in the future. The photo below shows a G-code opened in REPETIER.
+Before modeling, it is useful to understand the structure of a G-code briefly, so that you can model it in G-coordinator. The photo below shows a G-code opened in REPETIER.
 ![img5](img/reptier.png)
 
 
@@ -57,11 +53,13 @@ Now, let's start modeling with G-coordinator. First, let's create a cylinder wal
 In the folder downloaded from github, there is a folder named "Example". Open 'default_cylinder.py' in the "example" folder by clicking the "open file" button in the upper left corner.
 
 The code will be displayed in the editor on the left, and when you press the reload button, it will look like the picture below.
+
 ![img6](img/test_modeling.png)
 
-In G-coordinator, modeling is done in a function called object_modeling(). As mentioned earlier, what we want is a list of coordinates. Therefore, we create a 3D list that contains the coordinates of the points to be passed through.
+In G-coordinator, modeling is done in a function called object_modeling(). As mentioned earlier, what we want is a list of coordinates.
 
-The name "full_object" is the name of the 3D list, but the detailed structure of the list will be described in a separate article.
+
+
 ```ruby
 def object_modeling():
     full_object=[]
@@ -71,28 +69,39 @@ def object_modeling():
         x = rad*np.cos(arg)
         y = rad*np.sin(arg)
         z = np.full_like(arg, height*0.2+0.2)
-        layer = print_layer(x,y,z)
+        layer = Path(x,y,z)
         full_object.append(layer)
             
 
     return full_object
 ```
 
+
+In G-coordinator, we use the Path class object for modeling. This refers to the continuous trajectory along which the nozzle extrudes resin. In other words, in the case of the cylindrical example mentioned earlier, the nozzle follows a circular path while continuously extruding resin in a particular layer. Therefore, the trajectory of a single circle is represented as a Path object.
+
+![img7](img/nozzle_path.png)
+
+
 The following is a description of what is being done in the function.
 First, each layer is iterated using a for statement. The current number of layers is 10, so the function iterates from layer 0 to layer 9.
 
-
+<br>
 Next, to draw a circle, the angle (argument) is set in a numpy array in the range of 0 to 2π. The number of elements is set to 100, so exactly 99 regular angles are created.
 
+<br>
 If we fix the radius at 10, then
+
 The x-coordinate is ```radius * cos(arg)```
+
 The y-coordinate is ```radius * sin(arg)```.
+
 For the z-coordinate in the height direction, an array with the same number of elements as arg is initialized according to the height. 0.2 is added because we want the first layer to print at a height of 0.2, even if the height starts at 0.
 
+<br>
 
-```layer = print_layer(x,y,z)```
+```layer = Path(x,y,z)```
 
-This line is formatted to add an array of x-coordinates, an array of y-coordinates, and an array of z-coordinates to full_object. The content is similar to np.column_stack(), but F (speed) and E (coefficient of extrusion) can be added as arguments. We plan to write a separate article on this point.
+
 The end point of the nth layer and the start point of the n+1st layer are automatically traveled.
 For each layer, a layer is added to the list of full_objects and a full_object is set as the return value.
 
@@ -100,10 +109,22 @@ For each layer, a layer is added to the list of full_objects and a full_object i
 
 Once modeling is complete, prepare the G-code.
 
-![img7](img/print_parameter.png)
+<img src = "img/print_settings.png" width  = 50%>
 
 At this stage, it is not possible to make such complicated print settings. Only the minimum settings are available.
 As you can see, nozzle_diameter is the nozzle diameter and layer_height is the layer height.
+
+When you click on the "Machine Settings" button, a window for 3D printer hardware settings will appear.
+
+<img src = "img/machine_settings.png" width  = 50%>
+
+ Here, you have the option to select the kinematics. Generally, for a Cartesian system with three axes (X, Y, Z), please choose the Cartesian option. Additionally, there are other options available to support specific types of 3D printers and G-code, such as:
+
+- Nozzle Tilt: For robotic arm-type 3D printers or printers that support Hexa G-code.
+- Bed Tilt: For 3D printers where the bed tilts, similar to a machining center.
+- Bed Rotate: For 3D printers where the bed rotates.
+
+These options are provided to accommodate different types of 3D printers with specific functionalities.
 
 The Origin item requires a bit of attention. In general 3D printers, the origin is set to the front left of the bed, but in G-coordinator, the origin is set to the center of the bed to make it easier to write the formula for modeling.
 The bed of the 3D printer I am currently using is 210mm x 210mm, so I set the origin at 105mm from the center of the bed.
@@ -116,14 +137,13 @@ In travel_option, you can set whether or not retraction is used and the z-hop.
 
 In extrusion_multiplier, you can determine the factor by which the extrusion amount (E value) is multiplied.
 
+Please specify the absolute path of the .txt files containing the Start G-code and End G-code in the printing settings field. Once you have specified the paths, it is necessary to restart G-coordinator for the changes to take effect.
+
+For other printing settings, you don't need to restart G-coordinator every time you make changes. Once you modify the settings, they will take effect immediately without requiring a restart.
+
 # Export G-code
 When ready, press the Gcode Export button.
-When the message "Gcode Exported" appears in the message console in the lower left corner, the process is complete.
-A file named G-coordinator.gcode is generated in the src directory of the current directory.
 
-![img8](img/src_folder.png)
+<img src = "img/gcode_export_window.png" width  = 50%>
 
-It is recommended to check the generated G-code with other software, just to be sure.
-![img5](img/reptier.png)
-These are the steps to create a G-code with G-coordinator.
-We will update the examples and the scripts for them as needed.
+In this window, only the first 1000 lines of the generated G-code are displayed. However, when you click the save button, the entire G-code will be saved. When saving the G-code, please make sure to enter the name as "{name}.gcode" including the file extension.
