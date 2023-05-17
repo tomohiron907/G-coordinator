@@ -129,9 +129,11 @@ class Ui_MainWindow(object):
         self.central_layout.addLayout(self.layer_button_layout)
 
     def right_pane_setting(self, MainWindow):
+        self.machine_settings_button = QtWidgets.QPushButton(MainWindow)
         self.parameter_tree = ParameterTree(MainWindow)
         self.gcode_export_button = QtWidgets.QPushButton(MainWindow)
         self.right_layout = QtWidgets.QVBoxLayout()
+        self.right_layout.addWidget(self.machine_settings_button)
         self.right_layout.addWidget(self.parameter_tree)
         self.right_layout.addWidget(self.gcode_export_button)
     
@@ -147,6 +149,7 @@ class Ui_MainWindow(object):
         self.up_button.setText(_translate("MainWindow", "..."))
         self.down_button.setText(_translate("MainWindow", "..."))
         self.gcode_export_button.setText(_translate("MainWindow", "Gcode Export"))
+        self.machine_settings_button.setText(_translate("MainWindow", "Machine settings"))
     
     def signal_connecter(self, MainWindow):
         self.open_button.pressed.connect(MainWindow.file_open) # type: ignore
@@ -154,6 +157,8 @@ class Ui_MainWindow(object):
         self.save_as_button.pressed.connect(MainWindow.file_save_as) # type: ignore
         self.reload_button.pressed.connect(MainWindow.save_as_modeling) # type: ignore
         self.reload_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
+        self.machine_settings_button.pressed.connect(MainWindow.open_machine_settings_window) # type: ignore
+     
         self.gcode_export_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
         self.gcode_export_button.pressed.connect(MainWindow.Gcode_create) # type: ignore
         self.slider_layer.valueChanged['int'].connect(MainWindow.redraw_layer_object) # type: ignore
