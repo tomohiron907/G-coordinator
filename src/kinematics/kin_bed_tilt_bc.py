@@ -5,24 +5,15 @@ from kinematics.kin_base import *
 PRE_MOVE_DIV = 10
 
 class BedTiltBC(Kinematics):
-    def __init__(self, print_setting):
+    def __init__(self, machine_settings):
         self.axes_count = 5
-        self.tilt_code = print_setting['kinematics']['tilt_code']
-        self.rot_code = print_setting['kinematics']['rot_code']
-        self.tilt_offset = float(print_setting['kinematics']['tilt_offset'])
-        self.rot_offset = float(print_setting['kinematics']['rot_offset'])
-        self.div_distance = float(print_setting['kinematics']['div_distance'])
+        self.tilt_code = machine_settings['Kinematics']['bedtilt.tilt_code']
+        self.rot_code = machine_settings['Kinematics']['bedtilt.rot_code']
+        self.tilt_offset = float(machine_settings['Kinematics']['bedtilt.tilt_offset'])
+        self.rot_offset = float(machine_settings['Kinematics']['bedtilt.rot_offset'])
+        self.div_distance = float(machine_settings['Kinematics']['bedtilt.div_distance'])
         
-    def add_parameter_tree(self):
-        param = {'name': 'kinematics', 'type': 'group', 'children': [
-            {'name': 'kin_name', 'type': 'str', 'value': 'BedTiltBC'},
-            {'name': 'tilt_code', 'type': 'str', 'value': self.tilt_code},
-            {'name': 'rot_name', 'type': 'str', 'value': self.rot_code},
-            {'name': 'tilt_offset', 'type': 'float', 'value': self.tilt_offset},
-            {'name': 'rot_offset', 'type': 'float', 'value': self.rot_offset},
-            {'name': 'div_distance', 'type': 'float', 'value': self.div_distance},
-        ]},
-        return param
+   
         
     def e_calc(self, path):
         path.Eval = np.array([0])

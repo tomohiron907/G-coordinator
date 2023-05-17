@@ -4,22 +4,14 @@ import print_settings
 from kinematics.kin_base import *
 
 class NozzleTilt(Kinematics):
-    def __init__(self, print_setting):
+    def __init__(self, machine_settings):
         self.axes_count = 5
-        self.tilt_code = print_setting['kinematics']['tilt_code']
-        self.rot_code = print_setting['kinematics']['rot_code']
-        self.tilt_offset = float(print_setting['kinematics']['tilt_offset'])
-        self.rot_offset = float(print_setting['kinematics']['rot_offset'])
+        self.tilt_code = machine_settings['Kinematics']['nozzletilt.tilt_code']
+        self.rot_code = machine_settings['Kinematics']['nozzletilt.rot_code']
+        self.tilt_offset = float(machine_settings['Kinematics']['nozzletilt.tilt_offset'])
+        self.rot_offset = float(machine_settings['Kinematics']['nozzletilt.rot_offset'])
         
-    def add_parameter_tree(self):
-        param = {'name': 'kinematics', 'type': 'group', 'children': [
-            {'name': 'kin_name', 'type': 'str', 'value': 'NozzleTilt'},
-            {'name': 'tilt_code', 'type': 'str', 'value': self.tilt_code},
-            {'name': 'rot_name', 'type': 'str', 'value': self.rot_code},
-            {'name': 'tilt_offset', 'type': 'float', 'value': self.tilt_offset},
-            {'name': 'rot_offset', 'type': 'float', 'value': self.rot_offset},
-        ]},
-        return param
+
         
     def e_calc(self, path):
         path.Eval = np.array([0])

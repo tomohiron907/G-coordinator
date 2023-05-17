@@ -8,13 +8,20 @@ from matplotlib.path import Path as matlabPath
 
 
 class Path:
-    def __init__(self, x=0, y=0, z=0, rot=0, tilt=0):
+    def __init__(self, x=0, y=0, z=0, rot=None, tilt=None):
+        kin_name, kinematics = print_settings.reload_print_setting()
         self.type = 'print'
         self.x = np.array(x)
         self.y = np.array(y)
         self.z = np.array(z)
-        self.tilt = np.array(tilt)
-        self.rot = np.array(rot)
+        if tilt is None:
+            self.tilt = np.full_like(x, 0)
+        else:
+            self.tilt = np.array(tilt)
+        if rot is None:
+            self.rot = np.full_like(x, 0)
+        else:
+            self.rot = np.array(rot)
         kinematics.coords_arrange(self)
         self.set_print_settings()
         kinematics.e_calc(self)

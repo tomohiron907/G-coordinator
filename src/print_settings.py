@@ -1,5 +1,7 @@
 import sys
 import configparser
+import importlib
+
 from kinematics.kin_base import *
 from kinematics.kin_cartesian import *
 from kinematics.kin_nozzle_tilt import *
@@ -7,9 +9,13 @@ from kinematics.kin_bed_tilt_bc import *
 from kinematics.kin_bed_rotate import *
 
 ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' 
-CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' 
+CONFIG_PATH = ROUTE_PATH + '/print_settings.ini' 
+MACHINE_CONFIG_PATH = ROUTE_PATH + '/machine_settings.ini'
+
 print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)
+machine_settings = configparser.ConfigParser()
+machine_settings.read(MACHINE_CONFIG_PATH)
 
 def reload_print_setting():
     global nozzle_diameter, filament_diameter, layer_height, \
@@ -18,6 +24,7 @@ def reload_print_setting():
         retraction, retraction_distance, unretraction_distance, z_hop, z_hop_distance, \
         kin_name, kinematics
     print_setting.read(CONFIG_PATH)
+    machine_settings.read(MACHINE_CONFIG_PATH)
     nozzle_diameter = float(print_setting['nozzle']['nozzle_diameter'])
     filament_diameter = float(print_setting['nozzle']['filament_diameter'])
     layer_height = float(print_setting['layer']['layer_height'])
@@ -34,18 +41,24 @@ def reload_print_setting():
     unretraction_distance = float(print_setting['travel_option']['unretraction_distance'])
     z_hop = print_setting.getboolean('travel_option','z_hop')
     z_hop_distance = float(print_setting['travel_option']['z_hop_distance'])
-    kin_name = print_setting['kinematics']['kin_name']
+    kin_name = machine_settings['Printer']['kinematics']
+    #kin_name = print_setting['kinematics']['kin_name']
     if kin_name == 'Cartesian':
-        kinematics = Cartesian(print_setting)
+        #print('cartesian setting')
+        kinematics = Cartesian(machine_settings)
     elif kin_name == 'NozzleTilt':
-        kinematics = NozzleTilt(print_setting)
-    elif kin_name == 'BedTiltBC':
-        kinematics = BedTiltBC(print_setting)
+        #print('nozlle tilt setting')
+        kinematics = NozzleTilt(machine_settings)
+    elif kin_name == 'BedTilt':
+        #print('bed tilt setting')
+        kinematics = BedTiltBC(machine_settings)
     elif kin_name == 'BedRotate':
-        kinematics = BedRotate(print_setting)
+        #print('bed rotate setting')
+        kinematics = BedRotate(machine_settings)
     else:
-        kinematics = Kinematics(print_setting)
-
+        #print('else')
+        kinematics = Kinematics(machine_settings)
+    return kin_name, kinematics
 nozzle_diameter = None
 filament_diameter = None
 layer_height = None
@@ -64,5 +77,6 @@ z_hop = None
 z_hop_distance = None
 kin_name = None
 kinematics = None
+importlib.reload(sys.modules[__name__])
 
 reload_print_setting()

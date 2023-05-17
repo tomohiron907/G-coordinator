@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
-from pyqtgraph.parametertree import Parameter
+from pyqtgraph.parametertree import Parameter, ParameterTree
 import pyqtgraph.opengl as gl
 import modeling
 import importlib
@@ -16,7 +16,6 @@ import draw_object
 import configparser
 import path_generator
 from ui_settings import Ui_MainWindow
-import print_functions
 from print_settings import *
 
 
@@ -218,7 +217,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def read_setting(self):
         ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-        CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
+        CONFIG_PATH = ROUTE_PATH + '/print_settings.ini' # 編集
         self.print_setting = configparser.ConfigParser()
         self.print_setting.read(CONFIG_PATH)
 
@@ -261,10 +260,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 {'name': 'end_gcode', 'type': 'str', 'value': str(self.print_setting['default_gcode']['end_gcode'])},
             ]},
         ]
-        items = kinematics.add_parameter_tree()
-        if items!=None:
-            for item in items:
-                self.params.append(item)
+
     
 
     def change(self, param, changes):
@@ -273,18 +269,120 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             path = self.p.childPath(param)
             childName = '.'.join(path)
             self.print_setting.set(path[0],path[1],str(data))
-            with open('print_setting.ini', 'w') as file:
+            with open('print_settings.ini', 'w') as file:
                 self.print_setting.write(file)
             print('  parameter: %s'% childName)
             print('  change:    %s'% change)
             print('  data:      %s'% str(data))
             print('  ----------')
             print_settings.reload_print_setting()
+    
+    def open_machine_settings_window(self):
+        
+        self.machine_settings_dialog = MachineSettingsDialog()
+        self.machine_settings_dialog.show()
+
+
+
+class MachineSettingsDialog(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Machine Settings")
+        self.read_setting()
+
+        # Parameters
+        self.params = [
+            {'name': 'Printer', 'type': 'group', 'children': [
+                {'name': 'Kinematics', 'type': 'list', 'values': ['Cartesian', 'NozzleTilt', 'BedTilt', 'BedRotate'], 'value':str(self.machine_setting['Printer']['kinematics'])},
+                {'name': 'bed_size', 'type': 'group', 'children': [
+                    {'name': 'bed_size_x', 'type': 'int', 'value': float(self.machine_setting['Printer']['bed_size.bed_size_x'])},
+                    {'name': 'bed_size_y', 'type': 'int', 'value': float(self.machine_setting['Printer']['bed_size.bed_size_y'])},
+                    {'name': 'bed_size_z', 'type': 'int', 'value': float(self.machine_setting['Printer']['bed_size.bed_size_z'])}
+                ]},
+                {'name': 'origin', 'type': 'group', 'children': [
+                    {'name': 'origin_x', 'type': 'int', 'value': float(self.machine_setting['Printer']['origin.origin_x'])},
+                    {'name': 'origin_y', 'type': 'int', 'value': float(self.machine_setting['Printer']['origin.origin_y'])}
+                ]},
+            ]},
+            {'name': 'Kinematics', 'type': 'group', 'children': [
+                {'name': 'NozzleTilt', 'type': 'group', 'children': [
+                    {'name': 'tilt_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['NozzleTilt.tilt_code'])},
+                    {'name': 'rot_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['NozzleTilt.rot_code'])},
+                    {'name': 'tilt_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['NozzleTilt.tilt_offset'])},
+                    {'name': 'rot_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['NozzleTilt.rot_offset'])}
+                ]},
+                {'name': 'BedTilt', 'type': 'group', 'children': [
+                    {'name': 'tilt_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['BedTilt.tilt_code'])},
+                    {'name': 'rot_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['BedTilt.rot_code'])},
+                    {'name': 'tilt_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedTilt.tilt_offset'])},
+                    {'name': 'rot_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedTilt.rot_offset'])},
+                    {'name': 'div_distance', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedTilt.div_distance'])}
+                ]},
+                {'name': 'BedRotate', 'type': 'group', 'children': [
+                    {'name': 'rot_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['BedRotate.rot_code'])},
+                    {'name': 'rot_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedRotate.rot_offset'])},
+                    {'name': 'div_distance', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedRotate.div_distance'])},
+
+                ]},
+                
+            ], 'expanded': False},
+        ]
+        
+
+        self.init_ui()
+    
+    def init_ui(self):
+        layout = QVBoxLayout()
+        
+        # Parameter tree
+        self.parameter_tree = ParameterTree()
+        self.p = Parameter.create(name='params', type='group', children=self.params)
+        self.parameter_tree.setParameters(self.p)
+        self.p.sigTreeStateChanged.connect(self.change)
+        layout.addWidget(self.parameter_tree)
+
+        
+        # Save button
+        save_button = QPushButton("Save")
+        save_button.clicked.connect(self.save_settings)
+        layout.addWidget(save_button)
+        self.setLayout(layout)
+    
+    def read_setting(self):
+        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
+        CONFIG_PATH = ROUTE_PATH + '/machine_settings.ini' # 編集
+        self.machine_setting = configparser.ConfigParser()
+        self.machine_setting.read(CONFIG_PATH)
+
+    def change(self, param, changes):
+        print("machine tree changes:")
+        
+        for param, change, data in changes:
+            path = self.p.childPath(param)
+            childName = '.'.join(path)
+            # パスの階層を取得し、対応するセクションとキーを設定ファイルに書き込む
+            section, key = path[0], '.'.join(path[1:])
+            self.machine_setting.set(section, key, str(data))
+        
+        with open('machine_settings.ini', 'w') as file:
+            self.machine_setting.write(file)
+        print_settings.reload_print_setting()
+        print('  parameter: %s'% childName)
+        print('  change:    %s'% change)
+        print('  data:      %s'% str(data))
+        print('  ----------')
+
+
+    def save_settings(self):
+        print_settings.reload_print_setting()
+
+        self.close()
+
+
 
 
 
 class GcodeExportWindow(QWidget):
-
     def __init__(self):
         super().__init__()
         self.title = 'Save G-code file'

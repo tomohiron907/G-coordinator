@@ -24,6 +24,8 @@ class Gcode:
 
 
     def print_full_object(self):
+        kin_name, kinematics = print_settings.reload_print_setting()
+
         print_setting.update()
         if kinematics.axes_count == 5:
             prev_path = Path([0,0], [0,0], [0,0], [0,0], [0,0])
