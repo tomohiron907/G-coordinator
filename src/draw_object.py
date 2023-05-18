@@ -68,9 +68,10 @@ def draw_object_array(widget, full_object, slider_layer, slider_segment):
             color = np.zeros((len(coord), 4))
             for i in range(len(coord)):
                 z = coord[i][2]
-                r = ((1 - z / 200))
-                g = ((z / 200))
-                color[i] = (r, g, 0, 1)
+                r = ((1 - z / 100))
+                g = ((z / 100))
+                b = z/100
+                color[i] = (r, g, b, 1)
 
             coord = np.insert(coord, 1, coord[0], axis = 0)
             coord = np.append(coord, [coord[-1]], axis = 0)
