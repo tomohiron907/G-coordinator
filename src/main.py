@@ -49,8 +49,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # drawing grid in pyqtgraph widget
     def grid_draw(self):
+        
         gz = gl.GLGridItem()
-        gz.setSize(200,200)
+        gz.setSize(print_settings.bed_x, print_settings.bed_y)
         gz.setSpacing(10,10)
         axis = gl.GLAxisItem()
         axis.setSize(50,50,50)
@@ -230,10 +231,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             {'name': 'layer', 'type': 'group', 'children': [
                 {'name': 'layer_height', 'type': 'float', 'value': float(self.print_setting['layer']['layer_height'])},
             ]},
-            {'name': 'origin', 'type': 'group', 'children': [
-                {'name': 'x_origin', 'type': 'int', 'value': int(self.print_setting['origin']['x_origin'])},
-                {'name': 'y_origin', 'type': 'int', 'value': int(self.print_setting['origin']['y_origin'])},
-            ]},
+            
             {'name': 'speed', 'type': 'group', 'children': [
                 {'name': 'print_speed', 'type': 'int', 'value': int(self.print_setting['speed']['print_speed'])},
                 {'name': 'travel_speed', 'type': 'int', 'value': int(self.print_setting['speed']['travel_speed'])},

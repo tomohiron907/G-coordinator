@@ -22,14 +22,14 @@ def reload_print_setting():
         x_origin, y_origin, print_speed, travel_speed, fan_speed, \
         nozzle_temperature, bed_temperature, extrusion_multiplier, \
         retraction, retraction_distance, unretraction_distance, z_hop, z_hop_distance, \
-        kin_name, kinematics
+        kin_name, kinematics, bed_x, bed_y, origin_x, origin_y
     print_setting.read(CONFIG_PATH)
     machine_settings.read(MACHINE_CONFIG_PATH)
     nozzle_diameter = float(print_setting['nozzle']['nozzle_diameter'])
     filament_diameter = float(print_setting['nozzle']['filament_diameter'])
     layer_height = float(print_setting['layer']['layer_height'])
-    x_origin = int(print_setting['origin']['x_origin'])
-    y_origin = int(print_setting['origin']['y_origin'])
+    #x_origin = int(print_setting['origin']['x_origin'])
+    #y_origin = int(print_setting['origin']['y_origin'])
     print_speed = int(print_setting['speed']['print_speed'])
     travel_speed = int(print_setting['speed']['travel_speed'])
     fan_speed =  int(print_setting['fan_speed']['fan_speed'])
@@ -41,6 +41,13 @@ def reload_print_setting():
     unretraction_distance = float(print_setting['travel_option']['unretraction_distance'])
     z_hop = print_setting.getboolean('travel_option','z_hop')
     z_hop_distance = float(print_setting['travel_option']['z_hop_distance'])
+
+
+    bed_x = int(machine_settings['Printer']['bed_size.bed_size_x'])
+    bed_y = int(machine_settings['Printer']['bed_size.bed_size_y'])
+    x_origin = int(machine_settings['Printer']['origin.origin_x'])
+    y_origin = int(machine_settings['Printer']['origin.origin_y'])
+
     kin_name = machine_settings['Printer']['kinematics']
     #kin_name = print_setting['kinematics']['kin_name']
     if kin_name == 'Cartesian':
@@ -75,6 +82,11 @@ retraction_distance = None
 unretraction_distance = None
 z_hop = None
 z_hop_distance = None
+
+bed_x = None
+bed_y = None
+origin_x = None
+origin_y = None
 kin_name = None
 kinematics = None
 importlib.reload(sys.modules[__name__])
