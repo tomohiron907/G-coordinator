@@ -43,22 +43,7 @@ def draw_object_array(widget, full_object, slider_layer, slider_segment):
     # 3回メソッドが呼び出されてるのを修正？
     pos_array = []
     colors = []
-    '''for idx, path in enumerate(full_object):
-        #coords = path.coords
-        norms = path.norms
-        if idx == slider_layer - 1:
-            pos_array.append(coords[:slider_segment])
-            norm = norms[slider_segment - 1]
-        elif idx < slider_layer - 1:
-            pos_array.append(coords)
-            norm = norms[-1]
-        if len(coords) > 0:
-            z = coords[0][2]
-            r = int(255 * (1 - z / 200))
-            g = int(255 * (z / 200))
-            color = QColor(r, g, 0, 100)
-            vertex_colors = [color.getRgbF()] * (len(coords))
-            colors.extend(vertex_colors)'''
+
 
     for idx, path in enumerate(full_object):
         coord = path.coords
@@ -81,11 +66,7 @@ def draw_object_array(widget, full_object, slider_layer, slider_segment):
             pos_array.extend(coord)
             colors.extend(color)
         
-        '''elif idx == slider_layer:
-            pos_array.extend(coord[:slider_segment+1])
-            color = np.ones((slider_segment-1, 4))
-            colors.extend(color)'''
-        
+ 
     pos_array = np.array(pos_array)
     colors = np.array(colors)
     plt = gl.GLLinePlotItem(pos=pos_array, color=colors, width=0.5, antialias=True)
@@ -95,6 +76,8 @@ def draw_object_array(widget, full_object, slider_layer, slider_segment):
     current_path_plot_coords = current_path.coords[:slider_segment]
     plt_last = gl.GLLinePlotItem(pos= current_path_plot_coords, color = 'w', width = 1, antialias = True)
     widget.addItem(plt_last)
+    norm = current_path.norms[slider_segment - 1]
+
 
 
     if slider_layer > 1 and slider_segment > 0:
