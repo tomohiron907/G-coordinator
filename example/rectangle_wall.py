@@ -2,7 +2,7 @@ import numpy as np
 import math
 from path_generator import *
 
-LAYER=20
+LAYER=500
 
 
 
