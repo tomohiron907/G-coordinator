@@ -80,7 +80,7 @@ def draw_object_array(widget, full_object, slider_layer, slider_segment):
 
 
 
-    if slider_layer > 1 and slider_segment > 0:
+    if slider_layer > 0 and slider_segment > 0:
         mesh = gl.MeshData.cylinder(rows=8, cols=8, radius=[1.0, 5.0], length=10.0)
         plt = gl.GLMeshItem(meshdata=mesh, smooth=True, color=(1.0, 1.0, 1.0, 0.5), shader='shaded')
         plt.setGLOptions('translucent')
