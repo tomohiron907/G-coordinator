@@ -11,6 +11,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
+import colorsys
 
 ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
 CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
@@ -64,14 +65,14 @@ def draw_object_array(widget, full_object, slider_layer, slider_segment):
         norms = path.norms
         #norm = norms[slider_segment - 1]
         norm = (0, 0, 1)
-        if idx < slider_layer-1:
+        
+        if idx < slider_layer:
             color = np.zeros((len(coord), 4))
             for i in range(len(coord)):
                 z = coord[i][2]
-                r = ((1 - z / 100))
-                g = ((z / 100))
-                b = z/100
-                color[i] = (r, g, b, 1)
+                hue = z % 360  # 虹色の色相を計算
+                rgb = colorsys.hsv_to_rgb(hue/360, 1, 1)  # HSVからRGBに変換
+                color[i] = (*rgb, 1)  # RGBAの値を設定
 
             coord = np.insert(coord, 1, coord[0], axis = 0)
             coord = np.append(coord, [coord[-1]], axis = 0)
@@ -79,34 +80,34 @@ def draw_object_array(widget, full_object, slider_layer, slider_segment):
             color = np.append(color, [(1, 1, 1, 0.1)], axis = 0)
             pos_array.extend(coord)
             colors.extend(color)
-        elif idx == slider_layer:
-            pos_array.extend(coord[:slider_segment])
-            color = np.ones((slider_segment, 4))
-            colors.extend(color)
-    #pos_array = np.concatenate(pos_array, axis=0)
+        
+        '''elif idx == slider_layer:
+            pos_array.extend(coord[:slider_segment+1])
+            color = np.ones((slider_segment-1, 4))
+            colors.extend(color)'''
+        
     pos_array = np.array(pos_array)
     colors = np.array(colors)
-    #print(f'{pos_array=}')
-    #print(f'{colors=}')
-    #print(colors)
     plt = gl.GLLinePlotItem(pos=pos_array, color=colors, width=0.5, antialias=True)
     widget.addItem(plt)
+
+    current_path = full_object[slider_layer-1]
+    current_path_plot_coords = current_path.coords[:slider_segment]
+    plt_last = gl.GLLinePlotItem(pos= current_path_plot_coords, color = 'w', width = 1, antialias = True)
+    widget.addItem(plt_last)
+
 
     if slider_layer > 1 and slider_segment > 0:
         mesh = gl.MeshData.cylinder(rows=8, cols=8, radius=[1.0, 5.0], length=10.0)
         plt = gl.GLMeshItem(meshdata=mesh, smooth=True, color=(1.0, 1.0, 1.0, 0.5), shader='shaded')
         plt.setGLOptions('translucent')
-        pos_x = pos_array[-1][0]
-        pos_y = pos_array[-1][1]
-        pos_z = pos_array[-1][2]
+        pos_x = current_path_plot_coords[-1][0]
+        pos_y = current_path_plot_coords[-1][1]
+        pos_z = current_path_plot_coords[-1][2]
         (cross, ang) = vecA_to_vecB((0, 0, 1), norm)
         plt.rotate(math.degrees(ang), cross[0], cross[1], cross[2])
         plt.translate(pos_x, pos_y, pos_z)
         widget.addItem(plt)
 
-def qcolor_to_rgb(qcolor):
-    r = qcolor.red()
-    g = qcolor.green()
-    b = qcolor.blue()
-    return [r, g, b]
+
     
