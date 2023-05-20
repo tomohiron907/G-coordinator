@@ -40,7 +40,6 @@ def vecA_to_vecB(a, b):
 
 
 def draw_object_array(widget, full_object, slider_layer, slider_segment):
-    # 3回メソッドが呼び出されてるのを修正？
     pos_array = []
     colors = []
 
@@ -48,16 +47,15 @@ def draw_object_array(widget, full_object, slider_layer, slider_segment):
     for idx, path in enumerate(full_object):
         coord = path.coords
         norms = path.norms
-        #norm = norms[slider_segment - 1]
         norm = (0, 0, 1)
         
         if idx < slider_layer:
             color = np.zeros((len(coord), 4))
             for i in range(len(coord)):
                 z = coord[i][2]
-                hue = z % 360  # 虹色の色相を計算
-                rgb = colorsys.hsv_to_rgb(hue/360, 1, 1)  # HSVからRGBに変換
-                color[i] = (*rgb, 1)  # RGBAの値を設定
+                hue = z % 360  
+                rgb = colorsys.hsv_to_rgb(hue/360, 1, 1)  
+                color[i] = (*rgb, 1)  
 
             coord = np.insert(coord, 1, coord[0], axis = 0)
             coord = np.append(coord, [coord[-1]], axis = 0)

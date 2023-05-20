@@ -276,6 +276,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.machine_settings_dialog = MachineSettingsDialog()
         self.machine_settings_dialog.show()
+    
+    def closeEvent(self, event):
+        with open('G-coordinator.gcode', 'w') as file:
+            file.write('')
+
+        event.accept()
 
 
 
