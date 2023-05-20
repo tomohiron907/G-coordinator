@@ -14,7 +14,7 @@ from PyQt5.QtPrintSupport import *
 import colorsys
 
 ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-CONFIG_PATH = ROUTE_PATH + '/print_setting.ini' # 編集
+CONFIG_PATH = ROUTE_PATH + '/settings/print_setting.ini' # 編集
 print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)
 

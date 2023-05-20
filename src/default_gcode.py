@@ -7,7 +7,7 @@ import sys
 '''print_setting = configparser.ConfigParser()
 print_setting.read('print_setting.ini')'''
 ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-CONFIG_PATH = ROUTE_PATH + '/print_settings.ini' # 編集
+CONFIG_PATH = ROUTE_PATH + '/settings/print_settings.ini' # 編集
 print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)
 

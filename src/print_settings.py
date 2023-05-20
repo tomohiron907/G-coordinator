@@ -9,8 +9,8 @@ from kinematics.kin_bed_tilt_bc import *
 from kinematics.kin_bed_rotate import *
 
 ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' 
-CONFIG_PATH = ROUTE_PATH + '/print_settings.ini' 
-MACHINE_CONFIG_PATH = ROUTE_PATH + '/machine_settings.ini'
+CONFIG_PATH = ROUTE_PATH + '/settings/print_settings.ini' 
+MACHINE_CONFIG_PATH = ROUTE_PATH + '/settings/machine_settings.ini'
 
 print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)

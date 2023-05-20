@@ -218,7 +218,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def read_setting(self):
         ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-        CONFIG_PATH = ROUTE_PATH + '/print_settings.ini' # 編集
+        CONFIG_PATH = ROUTE_PATH + '/settings/print_settings.ini' # 編集
         self.print_setting = configparser.ConfigParser()
         self.print_setting.read(CONFIG_PATH)
 
@@ -267,7 +267,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             path = self.p.childPath(param)
             childName = '.'.join(path)
             self.print_setting.set(path[0],path[1],str(data))
-            with open('print_settings.ini', 'w') as file:
+            with open('settings/print_settings.ini', 'w') as file:
                 self.print_setting.write(file)
             print('  parameter: %s'% childName)
             print('  change:    %s'% change)
@@ -348,7 +348,7 @@ class MachineSettingsDialog(QWidget):
     
     def read_setting(self):
         ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-        CONFIG_PATH = ROUTE_PATH + '/machine_settings.ini' # 編集
+        CONFIG_PATH = ROUTE_PATH + '/settings/machine_settings.ini' # 編集
         self.machine_setting = configparser.ConfigParser()
         self.machine_setting.read(CONFIG_PATH)
 
@@ -362,7 +362,7 @@ class MachineSettingsDialog(QWidget):
             section, key = path[0], '.'.join(path[1:])
             self.machine_setting.set(section, key, str(data))
         
-        with open('machine_settings.ini', 'w') as file:
+        with open('settings/machine_settings.ini', 'w') as file:
             self.machine_setting.write(file)
         print_settings.reload_print_setting()
         print('  parameter: %s'% childName)
