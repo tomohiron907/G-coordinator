@@ -157,7 +157,7 @@ class Gcode:
     def start_gcode(self):
         with open('settings/start_gcode.txt', 'r') as file:
             start_gcode = file.read()
-        self.f.write(start_gcode)
+        self.f.write(start_gcode+'\n')
 
     def set_temperature(self):
         self.f.write(f'''M140 S{print_settings.bed_temperature}
@@ -172,7 +172,7 @@ M109 S{print_settings.nozzle_temperature}
     def end_gcode(self):
         with open('settings/end_gcode.txt', 'r') as file:
             end_gcode = file.read()
-        self.f.write(end_gcode)
+        self.f.write('\n'+end_gcode)
 
 
     def file_close(self):
