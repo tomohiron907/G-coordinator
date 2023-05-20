@@ -253,10 +253,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             {'name': 'extrusion_option', 'type': 'group', 'children': [
                 {'name': 'extrusion_multiplier', 'type': 'float', 'value': float(self.print_setting['extrusion_option']['extrusion_multiplier'])},
             ]},
-            {'name': 'default_gcode', 'type': 'group', 'children': [
-                {'name': 'start_gcode', 'type': 'str', 'value': str(self.print_setting['default_gcode']['start_gcode'])},
-                {'name': 'end_gcode', 'type': 'str', 'value': str(self.print_setting['default_gcode']['end_gcode'])},
-            ]},
+            
         ]
 
     
@@ -339,7 +336,29 @@ class MachineSettingsDialog(QWidget):
         self.p.sigTreeStateChanged.connect(self.change)
         layout.addWidget(self.parameter_tree)
 
+        start_label = QLabel('Start Gcode Editor', self)
+        layout.addWidget(start_label)
+        self.start_edit = QPlainTextEdit(self)
+        layout.addWidget(self.start_edit)
+
+        start_file_path = 'settings/start_gcode.txt'
+        with open(start_file_path, 'r') as file:
+            content = file.read()
+            self.start_edit.setPlainText(content)
+
         
+        end_label = QLabel('End Gcode Editor', self)
+        layout.addWidget(end_label)
+        self.end_edit = QPlainTextEdit(self)
+        layout.addWidget(self.end_edit)
+
+        end_file_path = 'settings/end_gcode.txt'
+        with open(end_file_path, 'r') as file:
+            content = file.read()
+            self.end_edit.setPlainText(content)
+
+
+
         # Save button
         save_button = QPushButton("Save")
         save_button.clicked.connect(self.save_settings)
@@ -374,7 +393,20 @@ class MachineSettingsDialog(QWidget):
     def save_settings(self):
         print_settings.reload_print_setting()
 
+        start_file_path = 'settings/start_gcode.txt'
+        content = self.start_edit.toPlainText()
+        with open(start_file_path, 'w') as file:
+            file.write(content)
+
+
+        end_file_path = 'settings/end_gcode.txt'
+        content = self.end_edit.toPlainText()
+        with open(end_file_path, 'w') as file:
+            file.write(content)
+
         self.close()
+
+ 
 
 
 

@@ -2,7 +2,7 @@ import os
 import sys
 import numpy as np
 import math
-import default_gcode
+#import default_gcode
 import configparser
 import print_settings
 from print_settings import *
@@ -155,7 +155,9 @@ class Gcode:
         self.f = open('G-coordinator.gcode', 'w', encoding="UTF-8")
 
     def start_gcode(self):
-        self.f.write(default_gcode.startGcode)
+        with open('settings/start_gcode.txt', 'r') as file:
+            start_gcode = file.read()
+        self.f.write(start_gcode)
 
     def set_temperature(self):
         self.f.write(f'''M140 S{print_settings.bed_temperature}
@@ -168,7 +170,10 @@ M109 S{print_settings.nozzle_temperature}
         self.f.write(f'M106 S{print_settings.fan_speed}\n''')
         
     def end_gcode(self):
-        self.f.write(default_gcode.endGcode)
+        with open('settings/end_gcode.txt', 'r') as file:
+            end_gcode = file.read()
+        self.f.write(end_gcode)
+
 
     def file_close(self):
         self.f.close()
