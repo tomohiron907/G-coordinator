@@ -152,7 +152,7 @@ class Gcode:
     def file_open(self):
         '''with open ('G-coordinator.gcode', 'w', encoding="UTF-8")as f:
             self.f ='''
-        self.f = open('G-coordinator.gcode', 'w', encoding="UTF-8")
+        self.f = open('buffer/G-coordinator.gcode', 'w', encoding="UTF-8")
 
     def start_gcode(self):
         with open('settings/start_gcode.txt', 'r') as file:

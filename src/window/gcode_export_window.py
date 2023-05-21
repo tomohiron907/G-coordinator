@@ -41,7 +41,7 @@ class GcodeExportWindow(QWidget):
         self.show()
 
     def showGCodePreview(self):
-        with open("G-coordinator.gcode", 'r') as f:
+        with open("buffer/G-coordinator.gcode", 'r') as f:
             content = f.readlines()
             if len(content) > 1000:
                 content = content[:1000]
@@ -53,7 +53,7 @@ class GcodeExportWindow(QWidget):
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getSaveFileName(self,"Save G-code file","","G-code Files (*.gcode);;All Files (*)", options=options)
         if fileName:
-            with open("G-coordinator.gcode", 'r') as f:
+            with open("buffer/G-coordinator.gcode", 'r') as f:
                 content = f.read()
                 with open(fileName, 'w') as new_f:
                     new_f.write(content)

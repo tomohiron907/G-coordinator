@@ -73,19 +73,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grid_draw()
         try:
             #importlib.reload(modeling)  #reload updated modeling.py
-            modeling = import_file('modeling.py')
+            modeling = import_file('buffer/modeling.py')
             self.full_object=modeling.object_modeling()  # get the list of coordinate from modeling.py
             self.full_object = path_generator.flatten_path_list(self.full_object)
             self.message_console.setTextColor(QColor('#00bfff'))
             self.message_console.setText('object displyed')
-            with open("modeling.py",'w') as f:
+            with open("buffer/modeling.py",'w') as f:
                 pass
         except:
             print('syntax error!!')
             self.message_console.setTextColor(QColor('#FF6347'))
             print(str(traceback.format_exc()))
             self.message_console.setText(traceback.format_exc())
-            with open("modeling.py",'w') as f:
+            with open("buffer/modeling.py",'w') as f:
                 pass
         
         #draw_object.set_object_array(self.full_object)
@@ -157,7 +157,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         text = self.editor.toPlainText()
         # try catch block
         # opening file to write
-        with open('modeling.py', 'w') as f:
+        with open('buffer/modeling.py', 'w') as f:
             # write text in the file
             f.write(text)
         #self.draw_object()
@@ -277,7 +277,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.machine_settings_dialog.show()
     
     def closeEvent(self, event):
-        with open('G-coordinator.gcode', 'w') as file:
+        with open('buffer/G-coordinator.gcode', 'w') as file:
             file.write('')
 
         event.accept()
