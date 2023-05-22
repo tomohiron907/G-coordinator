@@ -53,11 +53,26 @@ class Ui_MainWindow(object):
         
     
     def left_pane_setting(self,MainWindow):
-
+        self.button_style_sheet = """
+                                        QPushButton {
+                                            background-color: #CCCCCC;
+                                            color: #333333;
+                                            border: none;
+                                            padding: 10px 20px;
+                                            border-radius: 10px;
+                                        }
+                                        QPushButton:hover {
+                                            background-color: #AAAAAA;
+                                        }
+                                    """
         self.open_button = QtWidgets.QPushButton(MainWindow)
+        self.open_button.setStyleSheet(self.button_style_sheet)
         self.open_button.setObjectName("open_button")
         self.save_button = QtWidgets.QPushButton(MainWindow)
         self.save_as_button = QtWidgets.QPushButton(MainWindow)
+
+        self.save_as_button.setStyleSheet(self.button_style_sheet)
+        self.save_button.setStyleSheet(self.button_style_sheet)
         self.button_horizontal_layout =  QtWidgets.QHBoxLayout()# ボタン用のレイアウト
         self.button_horizontal_layout.addWidget(self.open_button)
         self.button_horizontal_layout.addWidget(self.save_button)
@@ -78,6 +93,7 @@ class Ui_MainWindow(object):
         self.editor_layout.addWidget(self.editor)
         self.editor_layout.setSpacing(0)
         self.reload_button = QtWidgets.QPushButton(MainWindow)
+        self.reload_button.setStyleSheet(self.button_style_sheet)
         
         self.editor_button_layout = QtWidgets.QVBoxLayout()
         self.editor_button_layout.addLayout(self.button_horizontal_layout)
@@ -132,6 +148,7 @@ class Ui_MainWindow(object):
         self.machine_settings_button = QtWidgets.QPushButton(MainWindow)
         self.parameter_tree = ParameterTree(MainWindow)
         self.gcode_export_button = QtWidgets.QPushButton(MainWindow)
+        self.gcode_export_button.setStyleSheet(self.button_style_sheet)
         self.right_layout = QtWidgets.QVBoxLayout()
         self.right_layout.addWidget(self.machine_settings_button)
         self.right_layout.addWidget(self.parameter_tree)

@@ -35,7 +35,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.graphicsView.setCameraPosition(distance=120)
         self.message_console.setReadOnly(True)
         self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
+        arrow_style_sheet = """
+                            QPushButton {
+                                background-color: #3498db;
+                                color: #ffffff;
+                                border: none;
+                                padding: 10px 20px;
+                            }
+                            QPushButton::up-arrow {
+                                image: url("custom_arrow.png");  /* カスタムの矢印画像を指定 */
+                                width: 20px;  /* 矢印の幅を指定 */
+                                height: 20px;  /* 矢印の高さを指定 */
+                            }
+                        """
         self.up_button.setArrowType(Qt.UpArrow)
+        self.up_button.setStyleSheet(arrow_style_sheet)
         self.down_button.setArrowType(Qt.DownArrow)
         self.left_button.setArrowType(Qt.LeftArrow)
         self.right_button.setArrowType(Qt.RightArrow)
