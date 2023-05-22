@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 
-a = 35
+a = 38
 resolution = a*2
 density = 4
 

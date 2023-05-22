@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from print_functions import *
+from path_generator import *
 LAYER=100
 d = 0.8
 gr = 1/1.618

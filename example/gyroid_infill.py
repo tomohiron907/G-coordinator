@@ -3,22 +3,24 @@ import math
 import print_settings 
 from path_generator import *
 
-LAYER =100
+LAYER =75
 nozzle = print
 
 def object_modeling():
     full_object=[]
     for height in range(LAYER):
-        arg = np.linspace(0, np.pi*2,100)
-        rad = 40 
-        x = rad*np.cos(arg)
+        arg = np.linspace(np.pi/4, np.pi/4+np.pi*2,5)
+        rad = 70 
+        x = rad*np.cos(arg)*1.618
         y = rad*np.sin(arg)
         z = np.full_like(arg, height*print_settings.layer_height+0.2)
         wall = Path(x, y, z)
-        outer_wall = Transform.offset(wall, 0.4)
-        infill = gyroid_infill(wall, density = 0.7)
-        full_object.append(outer_wall)
+        inner_wall = Transform.offset(wall, -0.7)
+        infill = gyroid_infill(wall, density = 0.6, resolution = 200)
+        wall.z_hop = False
+        wall.retraction = False
         full_object.append(wall)
+        full_object.append(inner_wall)
         full_object.append(infill)
             
 
