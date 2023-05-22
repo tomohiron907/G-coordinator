@@ -25,6 +25,11 @@ from window.main_window import *
 
 if __name__ == '__main__':
     app = QApplication(sys.argv) 
-    main_window = MainWindow() 
+    main_window = MainWindow()
+    
+    icon_path = '../img/G-coordinator.png'
+    app_icon = QIcon(icon_path)
+    app.setWindowIcon(app_icon) 
+
     main_window.show() 
     sys.exit(app.exec_())
