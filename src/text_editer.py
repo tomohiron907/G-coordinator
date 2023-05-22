@@ -174,6 +174,28 @@ class TextEditer(QTextEdit):
             if event.modifiers() == Qt.ShiftModifier:  # Shiftが同時に押されているかをチェック
                 self.unindent()
                 return
+            
+
+        if event.key() in [Qt.Key_Delete, Qt.Key_Backspace]:
+            cursor = self.textCursor()
+            position = cursor.position()
+
+            # カーソルの前の4文字を取得
+            cursor.movePosition(QTextCursor.Left, QTextCursor.KeepAnchor, 4)
+            text = cursor.selectedText()
+
+            if text == ' ' * 4:
+                # カーソル位置を修正
+                new_position = position - 4
+                cursor.setPosition(new_position)
+
+                # 4つのスペースを一括削除
+                cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 4)
+                cursor.removeSelectedText()
+
+                self.setTextCursor(cursor)
+                return
+
 
         super(TextEditer, self).keyPressEvent(event)
         cursor_position = self.textCursor().position()
