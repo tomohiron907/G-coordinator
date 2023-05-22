@@ -170,6 +170,33 @@ class Transform:
         z = path.z
         rotated_path = Path(x, y, z)
         return  rotated_path
+    
+    @staticmethod
+    def move(path, x=0, y=0, z=0, roll=0, pitch=0, yaw=0):
+        translation_vector = np.array([x, y, z])
+
+        rotation_matrix = np.array([[np.cos(yaw) * np.cos(pitch),
+                                    np.cos(yaw) * np.sin(pitch) * np.sin(roll) - np.sin(yaw) * np.cos(roll),
+                                    np.cos(yaw) * np.sin(pitch) * np.cos(roll) + np.sin(yaw) * np.sin(roll)],
+                                    [np.sin(yaw) * np.cos(pitch),
+                                    np.sin(yaw) * np.sin(pitch) * np.sin(roll) + np.cos(yaw) * np.cos(roll),
+                                    np.sin(yaw) * np.sin(pitch) * np.cos(roll) - np.cos(yaw) * np.sin(roll)],
+                                    [-np.sin(pitch),
+                                    np.cos(pitch) * np.sin(roll),
+                                    np.cos(pitch) * np.cos(roll)]])
+
+        path_coords = np.array(path.coords)
+
+        translated_coords = path_coords + translation_vector
+
+        transformed_coords = np.dot(rotation_matrix, np.transpose(translated_coords))
+
+        x_coords = transformed_coords[0]
+        y_coords = transformed_coords[1]
+        z_coords = transformed_coords[2]
+
+        moved_path = Path(x_coords, y_coords, z_coords)
+        return moved_path
         
     @staticmethod
     def offset(path, d):
