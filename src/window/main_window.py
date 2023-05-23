@@ -33,8 +33,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #シンタックス表示
         self.highlight=syntax_pars.PythonHighlighter(self.editor.document())
         self.graphicsView.setCameraPosition(distance=120)
-        self.message_console.setReadOnly(True)
-        self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
+        #self.message_console.setReadOnly(True)
+        #self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
         arrow_style_sheet = """
                             QPushButton {
                                 background-color: #3498db;

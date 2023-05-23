@@ -18,6 +18,7 @@ from PyQt5.QtPrintSupport import *
 from pyqtgraph import opengl
 from pyqtgraph.parametertree import ParameterTree
 from text_editer import TextEditer
+from terminal import TerminalWidget
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -101,15 +102,17 @@ class Ui_MainWindow(object):
         self.editor_button_layout.addWidget(self.reload_button)
         #self.editor_button_layout.setSpacing(0)
 
-        self.message_console = QtWidgets.QTextEdit(MainWindow)
-        self.message_console.setMinimumHeight(10)
+        #self.message_console = QtWidgets.QTextEdit(MainWindow)
+        self.terminal = TerminalWidget()
+        self.message_console = self.terminal.text_edit
+        self.terminal.setMinimumHeight(10)
 
         self.left_pane_widget = QWidget(MainWindow)
         self.message_splitter = QSplitter()
         self.message_splitter.setOrientation(Qt.Vertical)#splitterの方向を横に設定
         self.message_splitter.addWidget(QWidget())
         self.message_splitter.widget(0).setLayout(self.editor_button_layout)
-        self.message_splitter.addWidget(self.message_console)
+        self.message_splitter.addWidget(self.terminal)
         self.message_splitter.setSizes([10,1])
         
         self.left_pane_layout = QVBoxLayout()
