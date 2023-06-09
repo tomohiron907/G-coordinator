@@ -5,7 +5,7 @@ from print_settings import *
 import print_settings
 import matplotlib.pyplot as plt
 from matplotlib.path import Path as matlabPath
-from shapely.geometry import Polygon
+#from shapely.geometry import Polygon
 
 
 class Path:
@@ -305,49 +305,13 @@ class Transform:
 
 
 
-'''def gyroid_infill(path,  resolution = 100, density = 0.5, value = 0):
-    x_list = path.x
-    y_list = path.y
-    z_height = path.center[2]
-    density = -9.9 * density + 10
-    # Grid parameters
-    # Resolution of the grid
-    x = np.linspace(np.min(x_list), np.max(x_list), resolution)
-    y = np.linspace(np.min(y_list), np.max(y_list), resolution)
-    X, Y = np.meshgrid(x, y)
-    
-    # Equation for the Gyroid surface
-    theta = np.pi/4
-    #equation = np.sin(X/d) * np.cos(Y/d) + np.sin(Y/d) * np.cos(z_height) + np.sin(z_height) * np.cos(X/d)
-    equation = np.sin(X/density*np.cos(theta) + Y/density*np.sin(theta)) * np.cos(-X/density*np.sin(theta) + Y/density*np.cos(theta)) + np.sin(-X/density*np.sin(theta) + Y/density*np.cos(theta)) * np.cos(z_height/density) + np.sin(z_height/density) * np.cos(X/density*np.cos(theta) + Y/density*np.sin(theta))-value
-
-    # Determine the inside region
-    inside = np.ones_like(equation)
-    path = matlabPath(np.column_stack([x_list, y_list]))
-
-    points = np.column_stack((X.flatten(), Y.flatten()))
-    inside = path.contains_points(points)
-    inside = inside.reshape(X.shape).astype(float)
-    inside[inside == 0] = np.nan
-
-    # Plot the slices
-    slice_plane = equation * inside
-    contours = plt.contour(x, y, slice_plane, levels=[0], colors='black')
-
-    infill_path_list = []
-    for contour in contours.collections:
-            paths = contour.get_paths()
-            for path in paths:
-                points = path.vertices
-                x_coords = points[:, 0]
-                y_coords = points[:, 1]
-                z_coords = np.full_like(x_coords, z_height)
-                wall = Path(x_coords, y_coords, z_coords)
-                infill_path_list.append(wall)
-    return PathList(infill_path_list)'''
 
 
-def gyroid_infill(path_list, density=0.5, value=0):
+def gyroid_infill(path, density=0.5, value=0):
+    if isinstance(path, Path):
+        path_list = PathList([path])
+    elif isinstance(path, PathList):
+        path_list = path
     # 初期値を設定
     min_x = float('inf')
     max_x = float('-inf')
@@ -376,6 +340,77 @@ def gyroid_infill(path_list, density=0.5, value=0):
     # Equation for the Gyroid surface
     theta = np.pi/4
     equation = np.sin(X/density*np.cos(theta) + Y/density*np.sin(theta)) * np.cos(-X/density*np.sin(theta) + Y/density*np.cos(theta)) + np.sin(-X/density*np.sin(theta) + Y/density*np.cos(theta)) * np.cos(z_height/density) + np.sin(z_height/density) * np.cos(X/density*np.cos(theta) + Y/density*np.sin(theta))-value
+    insides = []
+    for path in path_list.paths:
+        x_list = path.x
+        y_list = path.y
+        #z_height = path.center[2]
+        
+        # Determine the inside region
+        inside = np.ones_like(equation) # outside = 1
+        path = matlabPath(np.column_stack([x_list, y_list]))
+        
+        points = np.column_stack((X.flatten(), Y.flatten()))
+        inside = path.contains_points(points) # inside = 0
+        inside = inside.reshape(X.shape).astype(float)
+        inside[inside == 1] = -1 # change inside to -1
+        inside[inside == 0] = 1  # Change outside  to 1
+        insides.append(inside)
+        #print(inside)
+
+    result = insides[0]  # 最初のndarrayを初期値として設定
+
+    for i in range(1, len(insides)):
+        result = np.multiply(result, insides[i])  # アダマール積を計算
+
+
+    # Replace -1 with np.nan
+    result[result == 1] = np.nan
+
+
+
+    # Plot the slices
+    slice_plane = equation * result
+    contours = plt.contour(x, y, slice_plane, levels=[0], colors='black')
+    
+    infill_path_list = []
+    for contour in contours.collections:
+        paths = contour.get_paths()
+        for path in paths:
+            points = path.vertices
+            x_coords = points[:, 0]
+            y_coords = points[:, 1]
+            z_coords = np.full_like(x_coords, z_height)
+            wall = Path(x_coords, y_coords, z_coords)
+            infill_path_list.append(wall)
+    
+    return PathList(infill_path_list)
+
+
+def line_infill(path, density=0.5, angle=np.pi/4):
+    if isinstance(path, Path):
+        path_list = PathList([path])
+    elif isinstance(path, PathList):
+        path_list = path
+
+
+    x_coords = np.concatenate([path.x for path in path_list.paths if len(path.x) > 0])
+    y_coords = np.concatenate([path.y for path in path_list.paths if len(path.y) > 0])
+    min_x = np.min(x_coords) if len(x_coords) > 0 else float('inf')
+    max_x = np.max(x_coords) if len(x_coords) > 0 else float('-inf')
+    min_y = np.min(y_coords) if len(y_coords) > 0 else float('inf')
+    max_y = np.max(y_coords) if len(y_coords) > 0 else float('-inf')
+
+    
+    z_height = path_list.paths[0].center[2]
+    # Grid parameters
+    # Resolution of the grid
+    x = np.linspace(min_x, max_x, 250)
+    y = np.linspace(min_y, max_y, 250)
+    X, Y = np.meshgrid(x, y)
+    density = -9.9 * density + 10
+    # Equation for the Gyroid surface
+    equation = np.sin(X/density + Y/density*np.tan(angle))
     insides = []
     for path in path_list.paths:
         x_list = path.x

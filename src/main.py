@@ -30,6 +30,6 @@ if __name__ == '__main__':
     icon_path = '../img/G-coordinator.png'
     app_icon = QIcon(icon_path)
     app.setWindowIcon(app_icon) 
-
+    
     main_window.show() 
     sys.exit(app.exec_())
