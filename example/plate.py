@@ -1,5 +1,6 @@
 import numpy as np
 from path_generator import *
+from infill_generator import *
 import print_settings
 
 nozzle = print_settings.nozzle_diameter

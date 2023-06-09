@@ -3,6 +3,7 @@ import math
 import print_settings 
 import trimesh
 from path_generator import *
+from infill_generator import *
 from stl_slice import *
 
 LAYER =40
