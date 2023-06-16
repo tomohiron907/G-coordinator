@@ -54,8 +54,8 @@ class PythonHighlighter(QSyntaxHighlighter):
     keywords = [
         'and', 'assert', 'break', 'class', 'continue', 'def',
         'del',   'except', 'exec', 'finally',
-         'from', 'global',   'in',
-        'is', 'lambda', 'not', 'or', 'pass', 'print',
+        'from', 'global',   'in',
+        'is', 'lambda', 'not', 'or', 'pass',
         'raise',  'try', 'while', 'yield',
         'None', 'True', 'False',
     ]

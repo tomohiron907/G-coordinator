@@ -20,12 +20,11 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
-from window.main_window import *
+from window.main_window import main_window, app
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv) 
-    main_window = MainWindow()
+
     
     icon_path = '../img/G-coordinator.png'
     app_icon = QIcon(icon_path)

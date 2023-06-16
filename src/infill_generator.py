@@ -6,8 +6,7 @@ import print_settings
 import matplotlib.pyplot as plt
 from matplotlib.path import Path as matlabPath
 from path_generator import Path, PathList
-
-
+from window.main_window import *
 
 
 
@@ -158,5 +157,4 @@ def line_infill(path, density=0.5, angle=np.pi/4):
             z_coords = np.full_like(x_coords, z_height)
             wall = Path(x_coords, y_coords, z_coords)
             infill_path_list.append(wall)
-    
     return PathList(infill_path_list)

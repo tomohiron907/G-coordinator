@@ -3,11 +3,14 @@ import numpy as np
 import math
 from print_settings import *
 import print_settings
-
+import console
 
 
 class Path:
+    count = 0
     def __init__(self, x=0, y=0, z=0, rot=None, tilt=None):
+        self.path_number = Path.count
+        Path.count += 1 
         kin_name, kinematics = print_settings.reload_print_setting()
         self.type = 'print'
         self.x = np.array(x)
@@ -24,6 +27,7 @@ class Path:
         kinematics.coords_arrange(self)
         self.set_print_settings()
         kinematics.e_calc(self)
+        #console.print(f'path generated : Path number {self.path_number}')
         
     
     def set_print_settings(self):

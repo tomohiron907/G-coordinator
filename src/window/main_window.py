@@ -16,6 +16,7 @@ import path_generator
 from ui_settings import Ui_MainWindow
 from window.gcode_export_window import *
 from window.machine_settings_window import *
+from path_generator import Path
 
 
 
@@ -82,6 +83,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
     # reload and draw update object in pyqtgraph widget
     def draw_updated_object(self):
+        Path.count = 0
         print('draw_object')
         self.graphicsView.clear()  # initialize pyqtgraph widget
         self.grid_draw()
@@ -91,14 +93,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.full_object=modeling.object_modeling()  # get the list of coordinate from modeling.py
             self.full_object = path_generator.flatten_path_list(self.full_object)
             self.message_console.setTextColor(QColor('#00bfff'))
-            self.message_console.setText('object displyed')
+            self.message_console.append('object displyed')
             with open("buffer/modeling.py",'w') as f:
                 pass
         except:
             print('syntax error!!')
             self.message_console.setTextColor(QColor('#FF6347'))
             print(str(traceback.format_exc()))
-            self.message_console.setText(traceback.format_exc())
+            self.message_console.append(traceback.format_exc())
             with open("buffer/modeling.py",'w') as f:
                 pass
         
@@ -109,6 +111,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()-1].coords))
         draw_object.draw_object_array(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
         self.file_save()
+
+    def print_console(self, message):
+        self.message_console.setTextColor(QColor('#ffffff'))
+        self.message_console.append(message)
+        self.message_console.moveCursor(QTextCursor.End)
+
 
     def Gcode_create(self):
         Gcode(self.full_object)
@@ -295,3 +303,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             file.write('')
 
         event.accept()
+
+app = QApplication(sys.argv) 
+main_window = MainWindow()
+
+
