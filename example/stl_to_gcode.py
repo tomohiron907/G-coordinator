@@ -9,7 +9,6 @@ import trimesh
 from path_generator import *
 from infill_generator import *
 from stl_slice import *
-from tqdm import tqdm
 
 LAYER = 150 # Please edit this number according to the height of the STL file.
 # If you specify a slice position higher than the height of the STL, an error will occur.
