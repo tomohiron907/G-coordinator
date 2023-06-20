@@ -65,8 +65,7 @@ def object_modeling():
             z = np.full_like(x,(height)*0.2+0.2)
             layer = Path(x, y, z)
             full_object.append(layer)
-        
-   
+
 
     return full_object
 

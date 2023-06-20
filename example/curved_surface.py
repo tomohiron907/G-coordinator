@@ -1,12 +1,11 @@
+# This code requires the installation of the 'noise' module.
+
+
 import numpy as np
 import math
 from path_generator import *
 import noise
 
-'''
-NOZZLE = 0.4
-layer height = 0.2
-'''
 
 
 LAYER=500
@@ -51,19 +50,5 @@ def object_modeling():
             connect_wall = Path(x, y, z)
             full_object.append(connect_wall )
         
-
-        
-        
-
-        
-        
-        
-
-        
-
-
-        
-        
-
     return full_object
 

@@ -20,12 +20,6 @@ def object_modeling():
     for i in range(20):
         offset = Transform.offset(offset, - print_settings.nozzle_diameter)
         full_object.append(offset)
-        
-
-
-
-        
-        
 
     return full_object
 

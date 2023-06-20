@@ -23,7 +23,6 @@ def object_modeling():
         wall = Path(x, y, z)
         full_object.append(wall)
 
-        
 
 
         # _c means inner wall

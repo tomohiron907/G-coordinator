@@ -20,12 +20,7 @@ def object_modeling():
         wall_2 = Transform.move(wall, pitch = np.pi/2)
         full_object.append(wall)
         full_object.append(wall_2)
-        
-            
 
-
-
-        
 
     return full_object
 

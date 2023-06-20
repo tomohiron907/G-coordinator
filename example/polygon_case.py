@@ -20,12 +20,7 @@ def object_modeling():
         if height==0:
             bottom = Transform.fill(wall, infill_distance = 0.4, offset = -0.4)
             full_object.append(bottom)
-            
 
-
-
-        
-        
 
     return full_object
 

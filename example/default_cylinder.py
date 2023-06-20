@@ -1,16 +1,14 @@
 import numpy as np
 import math
 import print_settings 
-from tqdm import tqdm
 from path_generator import *
-from console import *
+
 
 LAYER =50
-nozzle = print
-print('hoge')
+
 def object_modeling():
     full_object=[]
-    for height in tqdm(range(LAYER)):
+    for height in range(LAYER):
         arg = np.linspace(0, np.pi*2,100)
         rad = 10
         x = rad*np.cos(arg)

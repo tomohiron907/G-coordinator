@@ -2,6 +2,7 @@ import numpy as np
 import math
 import print_settings 
 from path_generator import *
+from infill_generator import *
 
 LAYER =400
 nozzle = print
@@ -17,14 +18,9 @@ def object_modeling():
         wall = Path(x, y, z)
         outer_wall = Transform.offset(wall, 0.4)
         infill = gyroid_infill(wall, density = 0.6)
-        #full_object.append(outer_wall)
-        #full_object.append(wall)
         full_object.append(infill)
-            
 
 
-
-        
 
     return full_object
 

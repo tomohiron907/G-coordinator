@@ -47,7 +47,6 @@ def object_modeling():
         y = [points[i][1] - (R * math.sin(th / 2)) for i in range(len(points) - 1)] 
         z = np.full_like(x, height*0.2)
         wall = Path(x, y, z)
-        #wall = Transform.rotate(wall, height)
         full_object.append(wall)
         
 

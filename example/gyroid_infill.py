@@ -2,6 +2,7 @@ import numpy as np
 import math
 import print_settings 
 from path_generator import *
+from infill_generator import *
 
 LAYER =75
 nozzle = print

@@ -7,10 +7,11 @@ from infill_generator import *
 from stl_slice import *
 from tqdm import tqdm
 
-LAYER = 150
+LAYER = 150 # Please edit this number according to the height of the STL file.
+# If you specify a slice position higher than the height of the STL, an error will occur.
 
-
-mesh = trimesh.load('/Users/taniguchitomohiro/Documents/Fusion 360/stl/3DBenchy.stl', merge_norm=True, merge_tex=True)
+stl_path = 'PATH TO YOUR STL FILE'
+mesh = trimesh.load(stl_path, merge_norm=True, merge_tex=True)
 
 
 def object_modeling():

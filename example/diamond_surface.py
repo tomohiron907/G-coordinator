@@ -48,11 +48,7 @@ def object_modeling():
                 wall = Path(x_coords, y_coords, z_coords)
                 full_object.append(wall)
 
-                
-    
 
-
-        
 
     return full_object
 

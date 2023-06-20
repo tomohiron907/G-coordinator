@@ -35,4 +35,3 @@ def object_modeling():
 
 
     return full_object
-    

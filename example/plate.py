@@ -2,7 +2,6 @@ import numpy as np
 from path_generator import *
 from infill_generator import *
 import print_settings
-import console
 nozzle = print_settings.nozzle_diameter
 thickness = print_settings.layer_height
 #ext_multiplier = 1.2
@@ -15,11 +14,9 @@ def object_modeling():
         y = np.array([100,100,-100,-100,100], dtype = float)
         z = np.full_like(x, (height+1)*thickness)
         wall = Path(x, y, z)
-        #infill = Transform.fill(wall, offset = - nozzle , infill_distance = nozzle , angle = np.pi/4 + np.pi/2 *height)
         infill = line_infill(wall, density = 1)
-        console.print_(wall)
         full_object.append(wall)
         full_object.append(infill)
         
-      
+        
     return full_object

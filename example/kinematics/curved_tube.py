@@ -1,3 +1,8 @@
+# Please execute this code after changing the machine setting's 
+# kinematics to 'nozzle_tilt'.
+
+
+
 import numpy as np
 import math
 import print_settings 
@@ -17,7 +22,6 @@ def object_modeling():
         circle = Path(x, y, z)
 
         circle = Transform.move(circle, pitch = -np.pi/2*height/LAYER)
-        #circle = Transform.move(circle, z = height*0.2, x = height*0.2)
         circle = Transform.move(circle, x = 50-50*np.cos(np.pi/2*height/LAYER))
         full_object.append(circle)
         

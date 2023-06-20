@@ -1,3 +1,10 @@
+
+
+# Please execute this code after changing the machine setting's 
+# kinematics to 'nozzle_tilt'.
+# Author: @_gear_geek_'
+
+
 import numpy as np
 import math
 import print_settings 
