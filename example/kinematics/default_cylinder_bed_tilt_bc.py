@@ -11,8 +11,7 @@ import print_settings
 from path_generator import *
 
 LAYER =50
-nozzle = print
-print('hoge')
+
 def object_modeling():
     full_object=[]
     for height in range(LAYER):
