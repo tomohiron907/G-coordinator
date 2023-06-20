@@ -2,7 +2,6 @@ import numpy as np
 import math
 from path_generator import *
 from infill_generator import *
-from tqdm import tqdm
 
 LAYER=56
 nozzle = print_settings.nozzle_diameter
@@ -17,7 +16,7 @@ def quarter_func(arg, L):
 
 def object_modeling():
     full_object=[]
-    for height in tqdm(range(LAYER)):
+    for height in range(LAYER):
         t = np.linspace(0, 2*np.pi, 200)
         rad = quarter_func(t, 40)
         x = rad * np.cos(t)
