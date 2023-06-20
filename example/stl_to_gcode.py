@@ -1,3 +1,7 @@
+# This code can slice and convert stl data into Gcode. 
+# However, this function is still in beta version and its behavior is unstable. 
+# For better performance, please wait for the next update.
+
 import numpy as np
 import math
 import print_settings 
