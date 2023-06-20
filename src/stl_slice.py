@@ -11,10 +11,7 @@ def slice(mesh, z_height):
 
     slice = mesh.section_multiplane(plane_origin=[0, 0, 0], plane_normal=[0, 0, 1], heights=[z_height])
 
-    # plot the slices
-    #for s in slice:
     s = slice[0]
-    #vertices = s.vertices  # ポリゴンの頂点座標のリスト
     path_num = len(s.discrete)
     path_list = []
     for i in range(path_num):
@@ -27,10 +24,7 @@ def slice(mesh, z_height):
         z = np.full_like(x, z_height)
         path = path_generator.Path(x, y, z)
         path_list.append(path)
-        #print(x)
-        #print(y)
-    #s.show()
-    #plt.show()
+
     path_list = path_generator.PathList(path_list)
     return path_list
 
