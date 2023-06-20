@@ -2,6 +2,7 @@ import numpy as np
 import math
 import print_settings 
 from path_generator import *
+from console import *
 
 
 LAYER =50
@@ -16,6 +17,7 @@ def object_modeling():
         z = np.full_like(arg, height*print_settings.layer_height+0.2)
         wall = Path(x, y, z)
         full_object.append(wall)
+        print(f'wall at height {height}')
 
 
 
