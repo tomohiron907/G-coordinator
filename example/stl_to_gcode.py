@@ -21,7 +21,6 @@ def object_modeling():
         wall = slice(mesh, height*0.2)
         full_object.append(wall)
 
-        
 
     return full_object
 
