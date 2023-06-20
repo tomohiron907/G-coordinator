@@ -19,6 +19,25 @@ from window.machine_settings_window import *
 from path_generator import Path
 
 
+class OutputCapturer:
+    def __init__(self):
+        self.stdout = sys.stdout
+        self.text_edit = None
+
+    def start_capture(self, text_edit):
+        self.text_edit = text_edit
+        sys.stdout = self
+
+    def stop_capture(self):
+        sys.stdout = self.stdout
+
+    def write(self, text):
+        self.text_edit.moveCursor(QTextCursor.End)
+        self.text_edit.insertPlainText(text)
+
+    def flush(self):
+        pass
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -26,6 +45,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.initUI()
         self.grid_draw()
+        self.output_capturer = OutputCapturer()
+        self.output_capturer.start_capture(self.message_console)
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_text)
+        self.timer.start(100)
+
+    @pyqtSlot()
+    def update_text(self):
+        self.message_console.repaint()
+
+    @pyqtSlot()
+    def closeEvent(self, event):
+        self.output_capturer.stop_capture()
+        event.accept()
     
     def initUI(self):
         self.editor.setStyleSheet("""QTextEdit{ 
