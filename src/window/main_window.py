@@ -13,7 +13,7 @@ from gcode_process import Gcode
 import draw_object
 import configparser
 import path_generator
-from ui_settings import Ui_MainWindow
+from window.ui_settings import Ui_MainWindow
 from window.gcode_export_window import *
 from window.machine_settings_window import *
 from path_generator import Path
