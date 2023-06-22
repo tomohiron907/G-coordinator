@@ -16,6 +16,7 @@ class Gcode:
         self.start_gcode()
         self.set_temperature()
         self.set_fan_speed()
+        self.set_relative()
         self.print_full_object()
         self.end_gcode()
         self.file_close()
@@ -165,6 +166,9 @@ M190 S{print_settings.bed_temperature}
 M104 S{print_settings.nozzle_temperature}
 M109 S{print_settings.nozzle_temperature}
 ''')
+    
+    def set_relative(self):
+        self.f.write('M83\n')
 
     def set_fan_speed(self):
         self.f.write(f'M106 S{print_settings.fan_speed}\n''')
