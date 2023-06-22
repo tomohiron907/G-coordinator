@@ -117,6 +117,8 @@ class Ui_MainWindow(object):
 
     def cetral_pane_setting(self, MainWindow):
         self.graphicsView = opengl.GLViewWidget(MainWindow)
+        #self.graphicsView.setStyleSheet("border-radius: 10px;")
+        self.graphicsView.setBackgroundColor(QtGui.QColor(30, 30, 30))
         self.segment_button_layout = QtWidgets.QHBoxLayout()
         self.slider_segment =  QtWidgets.QSlider(MainWindow)
         self.slider_segment.setOrientation(QtCore.Qt.Horizontal)
