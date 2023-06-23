@@ -28,6 +28,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grid_draw()
     
     def initUI(self):
+
+        menubar = self.menuBar()
+
+        file_menu = menubar.addMenu('File')
+        file_actions = {
+            'New': {'shortcut': 'Ctrl+N', 'triggered': self.new},
+            'Open': {'shortcut': 'Ctrl+O', 'triggered': self.file_open},
+            'Save': {'shortcut': 'Ctrl+S', 'triggered': self.file_save},
+            'Save As': {'shortcut': 'Ctrl+Shift+S', 'triggered': self.file_save_as},
+        }
+        for action_name, action_data in file_actions.items():
+            action = QAction(action_name, self)
+            action.setShortcut(action_data['shortcut'])
+            action.triggered.connect(action_data['triggered'])
+            action.setShortcutVisibleInContextMenu(True)
+            file_menu.addAction(action)
+        
+
+        run_menu = menubar.addMenu('Run')
+        run_actions = {
+            'Run': {'shortcut': 'Ctrl+R', 'triggered': self.run},
+            
+        }
+        for action_name, action_data in run_actions.items():
+            action = QAction(action_name, self)
+            action.setShortcut(action_data['shortcut'])
+            action.triggered.connect(action_data['triggered'])
+            action.setShortcutVisibleInContextMenu(True)
+            run_menu.addAction(action)
+
         self.editor.setStyleSheet("""QTextEdit{ 
             color: #ccc; 
             background-color: #2b2b2b;}""")
@@ -60,6 +90,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.p.sigTreeStateChanged.connect(self.change)
         self.parameter_tree.setParameters(self.p, showTop=True)
         self.parameter_tree.resize(250,540)
+        self.new()
 
     # drawing grid in pyqtgraph widget
     def grid_draw(self):
@@ -80,7 +111,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.graphicsView.addItem(y_text)
         self.graphicsView.addItem(z_text)
         self.graphicsView.addItem(gz)
-        
+    
+    def run(self):
+        self.save_as_modeling()
+        self.draw_updated_object()
+
+
     # reload and draw update object in pyqtgraph widget
     def draw_updated_object(self):
         Path.count = 0
@@ -148,6 +184,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def right_button_pressed(self):
         self.slider_segment.setValue(self.slider_segment.value()+1)
+
+    def new(self):
+        #self._save_to_path()
+        self.path = None
+        with open('window/default_start.py', 'r') as file:
+            code_str = file.read()
+
+        self.editor.setPlainText(code_str)
+        self.update_title()
         
     def file_open(self):
         # getting path and bool value

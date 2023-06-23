@@ -174,8 +174,8 @@ class Ui_MainWindow(object):
         self.open_button.pressed.connect(MainWindow.file_open) # type: ignore
         self.save_button.pressed.connect(MainWindow.file_save) # type: ignore
         self.save_as_button.pressed.connect(MainWindow.file_save_as) # type: ignore
-        self.reload_button.pressed.connect(MainWindow.save_as_modeling) # type: ignore
-        self.reload_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
+        self.reload_button.pressed.connect(MainWindow.run) # type: ignore
+        #self.reload_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
         self.machine_settings_button.pressed.connect(MainWindow.open_machine_settings_window) # type: ignore
      
         self.gcode_export_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
