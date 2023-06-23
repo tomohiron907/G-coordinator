@@ -29,7 +29,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def initUI(self):
 
-        menubar = self.menuBar()
+        '''menubar = self.menuBar()
 
         file_menu = menubar.addMenu('File')
         file_actions = {
@@ -56,7 +56,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             action.setShortcut(action_data['shortcut'])
             action.triggered.connect(action_data['triggered'])
             action.setShortcutVisibleInContextMenu(True)
-            run_menu.addAction(action)
+            run_menu.addAction(action)'''
+        
+        menubar = self.menuBar()
+
+        menu_data = {
+            'File': {
+                'New': {'shortcut': 'Ctrl+N', 'triggered': self.new},
+                'Open': {'shortcut': 'Ctrl+O', 'triggered': self.file_open},
+                'Save': {'shortcut': 'Ctrl+S', 'triggered': self.file_save},
+                'Save As': {'shortcut': 'Ctrl+Shift+S', 'triggered': self.file_save_as}
+            },
+            'Edit': {
+                'Cut': {'shortcut': 'Ctrl+X'},
+                'Copy': {'shortcut': 'Ctrl+C'},
+                'Paste': {'shortcut': 'Ctrl+V'},
+                'Undo': {'shortcut': 'Ctrl+Z'},
+                'Redo': {'shortcut': 'Ctrl+Y'}
+            },
+            'Run': {
+                'Run': {'shortcut': 'Ctrl+R', 'triggered': self.run}
+            },
+            'View': {
+                'Change Theme': {},
+                'Set Font': {},
+                'Resize Window': {}
+            },
+            'Help': {
+                'Documentation': {'triggered': self.documentation},
+                'Version Information': {'triggered': self.version_info},
+                'Contact Us': {'triggered': self.contact_us}
+            }
+        }
+
+        for menu_name, actions in menu_data.items():
+            menu = menubar.addMenu(menu_name)
+            for action_name, action_data in actions.items():
+                action = QAction(action_name, self)
+                shortcut = action_data.get('shortcut', None)
+                triggered = action_data.get('triggered', None)
+                if shortcut:
+                    action.setShortcut(shortcut)
+                if triggered:
+                    action.triggered.connect(triggered)
+                menu.addAction(action)
+
 
         self.editor.setStyleSheet("""QTextEdit{ 
             color: #ccc; 
@@ -91,6 +135,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.parameter_tree.setParameters(self.p, showTop=True)
         self.parameter_tree.resize(250,540)
         self.new()
+
+    def documentation(self):
+        # README.mdの表示
+        QMessageBox.information(self, 'Documentation', 'Display README.md here')
+
+    def version_info(self):
+        # バージョン情報の表示
+        version = 'G-coordinator 2.2.0'
+        QMessageBox.information(self, 'Version Information', f'Version: {version}')
+
+    def contact_us(self):
+        # 連絡先情報の表示
+        contact = 'tomohiron907@gmail.com'
+        QMessageBox.information(self, 'Contact Us', f'Contact: {contact}')
+
 
     # drawing grid in pyqtgraph widget
     def grid_draw(self):
