@@ -17,8 +17,22 @@ from window.ui_settings import Ui_MainWindow
 from window.gcode_export_window import *
 from window.machine_settings_window import *
 from path_generator import Path
+from window.app_settings import SettingsWindow
+import markdown2
 
+class ReadmeDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("README")
 
+        layout = QVBoxLayout()
+        self.text_edit = QTextEdit(self)
+        layout.addWidget(self.text_edit)
+        self.setLayout(layout)
+
+    def set_readme_text(self, readme_text):
+        html = markdown2.markdown(readme_text)
+        self.text_edit.setHtml(html)
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -27,37 +41,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.initUI()
         self.grid_draw()
     
-    def initUI(self):
-
-        '''menubar = self.menuBar()
-
-        file_menu = menubar.addMenu('File')
-        file_actions = {
-            'New': {'shortcut': 'Ctrl+N', 'triggered': self.new},
-            'Open': {'shortcut': 'Ctrl+O', 'triggered': self.file_open},
-            'Save': {'shortcut': 'Ctrl+S', 'triggered': self.file_save},
-            'Save As': {'shortcut': 'Ctrl+Shift+S', 'triggered': self.file_save_as},
-        }
-        for action_name, action_data in file_actions.items():
-            action = QAction(action_name, self)
-            action.setShortcut(action_data['shortcut'])
-            action.triggered.connect(action_data['triggered'])
-            action.setShortcutVisibleInContextMenu(True)
-            file_menu.addAction(action)
-        
-
-        run_menu = menubar.addMenu('Run')
-        run_actions = {
-            'Run': {'shortcut': 'Ctrl+R', 'triggered': self.run},
-            
-        }
-        for action_name, action_data in run_actions.items():
-            action = QAction(action_name, self)
-            action.setShortcut(action_data['shortcut'])
-            action.triggered.connect(action_data['triggered'])
-            action.setShortcutVisibleInContextMenu(True)
-            run_menu.addAction(action)'''
-        
+    def initUI(self):        
         menubar = self.menuBar()
 
         menu_data = {
@@ -66,6 +50,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 'Open': {'shortcut': 'Ctrl+O', 'triggered': self.file_open},
                 'Save': {'shortcut': 'Ctrl+S', 'triggered': self.file_save},
                 'Save As': {'shortcut': 'Ctrl+Shift+S', 'triggered': self.file_save_as}
+            },
+            'Settings': {
+                'Settings': {'shortcut': 'Ctrl+,', 'triggered': self.settings}
             },
             'Edit': {
                 'Cut': {'shortcut': 'Ctrl+X'},
@@ -77,13 +64,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'Run': {
                 'Run': {'shortcut': 'Ctrl+R', 'triggered': self.run}
             },
-            'View': {
-                'Change Theme': {},
-                'Set Font': {},
-                'Resize Window': {}
-            },
             'Help': {
-                'Documentation': {'triggered': self.documentation},
+                #'Documentation': {'triggered': self.documentation},
                 'Version Information': {'triggered': self.version_info},
                 'Contact Us': {'triggered': self.contact_us}
             }
@@ -136,19 +118,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.parameter_tree.resize(250,540)
         self.new()
 
+    def settings(self):
+        settings_window = SettingsWindow()
+        settings_window.exec_()
+
     def documentation(self):
-        # README.mdの表示
-        QMessageBox.information(self, 'Documentation', 'Display README.md here')
+        # The document menu was once hidden due to problems with the README display,
+        #  such as img not being displayed, code highlighting not being done, etc. 
+        with open('../README.md', 'r') as file:
+            readme_text = file.read()
+
+        dialog = ReadmeDialog(self)
+        dialog.set_readme_text(readme_text)
+        dialog.exec_()
 
     def version_info(self):
-        # バージョン情報の表示
         version = 'G-coordinator 2.2.0'
         QMessageBox.information(self, 'Version Information', f'Version: {version}')
 
     def contact_us(self):
-        # 連絡先情報の表示
         contact = 'tomohiron907@gmail.com'
-        QMessageBox.information(self, 'Contact Us', f'Contact: {contact}')
+        QMessageBox.information(self, 'Contact', f'Contact: {contact}\n Twitter: @tamutamu3D')
 
 
     # drawing grid in pyqtgraph widget
