@@ -251,13 +251,14 @@ class LineNumberWidget(QTextBrowser):
         self.styleInit()
 
     def styleInit(self):
-        style = f'''
-            QTextBrowser {{
-                background: #2b2b2b;
+        style = '''
+            QTextBrowser {
+                background: transparent;
                 border: none;
                 color: #AAA;
-                font: {self.fontSize}pt;
-            }}
+                font: ''' + str(self.fontSize) + '''pt;
+                text-align: right;
+            }
         '''
         self.setStyleSheet(style)
         '''if self.lineCount<99:
