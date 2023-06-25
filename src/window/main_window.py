@@ -19,6 +19,7 @@ from window.machine_settings_window import *
 from path_generator import Path
 from window.app_settings import SettingsWindow
 import markdown2
+import qdarktheme
 
 class ReadmeDialog(QDialog):
     def __init__(self, parent=None):
@@ -41,7 +42,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.initUI()
         self.grid_draw()
     
-    def initUI(self):        
+    def initUI(self):
+        #self.setStyleSheet("background-color: rgb(26, 26, 26);")
         menubar = self.menuBar()
 
         menu_data = {
@@ -121,6 +123,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def settings(self):
         settings_window = SettingsWindow()
         settings_window.exec_()
+        self.apply_settings()
+
+    
+    def apply_settings(self):
+        settings = QSettings('settings/app_settings.ini', QSettings.IniFormat)
+        theme = settings.value('theme')
+        font_size = settings.value('editor/font_size')
+        console_font_size = settings.value('console/font_size')
+        qdarktheme.setup_theme(theme)
+        font = QFont('Arial', int(font_size))
+        console_font = QFont('Arial', int(console_font_size))
+        self.editor.setFont(font)
+        self.line_number_widget.setFontSize(int(font_size))
+        self.message_console.setFont(console_font)
+
 
     def documentation(self):
         # The document menu was once hidden due to problems with the README display,
@@ -400,5 +417,4 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 app = QApplication(sys.argv) 
 main_window = MainWindow()
-
-
+main_window.apply_settings()

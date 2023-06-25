@@ -260,10 +260,10 @@ class LineNumberWidget(QTextBrowser):
             }}
         '''
         self.setStyleSheet(style)
-        if self.lineCount<99:
+        '''if self.lineCount<99:
             self.setFixedWidth(self.fontSize * 2)
-        else:
-            self.setFixedWidth(self.fontSize * 3)
+        else:'''
+        self.setFixedWidth(self.fontSize * 3)
 
 
     def updateLineCount(self):
