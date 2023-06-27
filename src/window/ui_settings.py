@@ -18,6 +18,7 @@ from PyQt5.QtPrintSupport import *
 from pyqtgraph import opengl
 from pyqtgraph.parametertree import ParameterTree
 from text_editer import TextEditer
+from window.button.svg_button import SvgButton
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -65,9 +66,11 @@ class Ui_MainWindow(object):
                                             background-color: #AAAAAA;
                                         }
                                     """
-        self.open_button = QtWidgets.QPushButton(MainWindow)
+        '''self.open_button = QtWidgets.QPushButton(MainWindow)
         self.open_button.setStyleSheet(self.button_style_sheet)
-        self.open_button.setObjectName("open_button")
+        self.open_button.setObjectName("open_button")'''
+        self.open_button = SvgButton('window/button/open_file.svg')
+        
         self.save_button = QtWidgets.QPushButton(MainWindow)
         self.save_as_button = QtWidgets.QPushButton(MainWindow)
 
@@ -92,9 +95,10 @@ class Ui_MainWindow(object):
         self.editor_layout.addWidget(self.line_number_widget)
         self.editor_layout.addWidget(self.editor)
         self.editor_layout.setSpacing(0)
-        self.reload_button = QtWidgets.QPushButton(MainWindow)
-        self.reload_button.setStyleSheet(self.button_style_sheet)
-        
+        '''self.reload_button = QtWidgets.QPushButton(MainWindow)
+        self.reload_button.setStyleSheet(self.button_style_sheet)'''
+        self.reload_button = SvgButton('window/button/play.svg')
+        self.reload_button.resize(0.6)
         self.editor_button_layout = QtWidgets.QVBoxLayout()
         self.editor_button_layout.addLayout(self.button_horizontal_layout)
         self.editor_button_layout.addLayout(self.editor_layout)
@@ -159,10 +163,10 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.open_button.setText(_translate("MainWindow", "       Open File       "))
+        #self.open_button.setText(_translate("MainWindow", "       Open File       "))
         self.save_button.setText(_translate("MainWindow", "Save"))
         self.save_as_button.setText(_translate("MainWindow", "Save As"))
-        self.reload_button.setText(_translate("MainWindow", "reload"))
+        #self.reload_button.setText(_translate("MainWindow", "reload"))
         self.left_button.setText(_translate("MainWindow", "..."))
         self.right_button.setText(_translate("MainWindow", "..."))
         self.up_button.setText(_translate("MainWindow", "..."))
@@ -177,7 +181,7 @@ class Ui_MainWindow(object):
         self.reload_button.pressed.connect(MainWindow.run) # type: ignore
         #self.reload_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
         self.machine_settings_button.pressed.connect(MainWindow.open_machine_settings_window) # type: ignore
-     
+        
         self.gcode_export_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
         self.gcode_export_button.pressed.connect(MainWindow.Gcode_create) # type: ignore
         self.slider_layer.valueChanged['int'].connect(MainWindow.redraw_layer_object) # type: ignore
