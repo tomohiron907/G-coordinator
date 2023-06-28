@@ -6,8 +6,8 @@ import sys
 
 
 class SvgButton(QPushButton):
-    def __init__(self, svg_path):
-        super().__init__()
+    def __init__(self, svg_path, parent=None):
+        super().__init__(parent)
 
         # QSvgRendererを使用してSVGファイルをロード
         self.svg_renderer = QSvgRenderer(svg_path)
@@ -70,9 +70,18 @@ class SvgButton(QPushButton):
 
 if __name__ == '__main__':
     app = QApplication([])
-    svg_path = "open_file.svg"
+    
+    svg_path = "window/button/open_file.svg"
 
-    button = SvgButton(svg_path)
-    button.show()
+    
+    
+    window = QMainWindow()
+    window.setGeometry(100, 100, 200, 200)  # ウィンドウの位置とサイズを設定
 
-    app.exec()
+    button = SvgButton(svg_path, window)
+
+    button.setGeometry(0, 0, 100, 100)  # ボタンの位置とサイズを設定
+
+    #button.setParent(window)
+    window.show()
+    sys.exit(app.exec_())

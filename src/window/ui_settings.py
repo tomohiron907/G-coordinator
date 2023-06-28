@@ -39,7 +39,7 @@ class Ui_MainWindow(object):
         self.splitter.widget(0).setLayout(self.left_pane_layout)
         self.splitter.widget(1).setLayout(self.central_layout)
         self.splitter.widget(2).setLayout(self.right_layout)
-        self.splitter.setSizes([100, 600, 220])
+        self.splitter.setSizes([300, 600, 220])
 
         self.main_layout = QVBoxLayout()
         self.main_layout.addWidget(self.splitter)
@@ -48,9 +48,17 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(central_widget)
         
         MainWindow.setWindowTitle('Splitter with handle')
+        
+        self.open_button = SvgButton('window/button/open_file.svg', MainWindow)
+        #self.open_button.resize(0.15)
+        self.open_button.setGeometry(18, 10, 60, 60)
+        self.open_button.resize(0.16)
+        self.reload_button = SvgButton('window/button/play.svg', MainWindow)
+        self.reload_button.resize(0.4)
+        self.reload_button.setGeometry(78, 10, 60, 60)
+
         self.retranslateUi(MainWindow)
         self.signal_connecter(MainWindow)
-
         
     
     def left_pane_setting(self,MainWindow):
@@ -66,20 +74,8 @@ class Ui_MainWindow(object):
                                             background-color: #AAAAAA;
                                         }
                                     """
-        '''self.open_button = QtWidgets.QPushButton(MainWindow)
-        self.open_button.setStyleSheet(self.button_style_sheet)
-        self.open_button.setObjectName("open_button")'''
-        self.open_button = SvgButton('window/button/open_file.svg')
         
-        self.save_button = QtWidgets.QPushButton(MainWindow)
-        self.save_as_button = QtWidgets.QPushButton(MainWindow)
-
-        self.save_as_button.setStyleSheet(self.button_style_sheet)
-        self.save_button.setStyleSheet(self.button_style_sheet)
-        self.button_horizontal_layout =  QtWidgets.QHBoxLayout()# ボタン用のレイアウト
-        self.button_horizontal_layout.addWidget(self.open_button)
-        self.button_horizontal_layout.addWidget(self.save_button)
-        self.button_horizontal_layout.addWidget(self.save_as_button)
+        
 
         self.editor = TextEditer(MainWindow)
         self.editor.setLineWrapMode(TextEditer.LineWrapMode.NoWrap)
@@ -90,23 +86,19 @@ class Ui_MainWindow(object):
         self.editor.setFont(QFont("Arial", 14))
         self.line_number_widget = LineNumberWidget(self.editor)
         self.line_number_widget.setFontSize(14)
-        #self.line_number_widget.setFixedWidth(30)
         self.editor_layout = QtWidgets.QHBoxLayout()
         self.editor_layout.addWidget(self.line_number_widget)
         self.editor_layout.addWidget(self.editor)
         self.editor_layout.setSpacing(0)
-        '''self.reload_button = QtWidgets.QPushButton(MainWindow)
-        self.reload_button.setStyleSheet(self.button_style_sheet)'''
-        self.reload_button = SvgButton('window/button/play.svg')
-        self.reload_button.resize(0.6)
+
+        
+
         self.editor_button_layout = QtWidgets.QVBoxLayout()
-        self.editor_button_layout.addLayout(self.button_horizontal_layout)
         self.editor_button_layout.addLayout(self.editor_layout)
-        self.editor_button_layout.addWidget(self.reload_button)
-        #self.editor_button_layout.setSpacing(0)
+
 
         self.message_console = QtWidgets.QTextEdit(MainWindow)
-        self.message_console.setMinimumHeight(10)
+        self.message_console.setMinimumHeight(30)
 
         self.left_pane_widget = QWidget(MainWindow)
         self.message_splitter = QSplitter()
@@ -117,6 +109,10 @@ class Ui_MainWindow(object):
         self.message_splitter.setSizes([10,1])
         
         self.left_pane_layout = QVBoxLayout()
+        spacer_widget = QtWidgets.QWidget()
+        spacer_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        spacer_widget.setFixedSize(100, 30)
+        self.left_pane_layout.addWidget(spacer_widget)
         self.left_pane_layout.addWidget(self.message_splitter)
 
     def cetral_pane_setting(self, MainWindow):
@@ -163,10 +159,6 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        #self.open_button.setText(_translate("MainWindow", "       Open File       "))
-        self.save_button.setText(_translate("MainWindow", "Save"))
-        self.save_as_button.setText(_translate("MainWindow", "Save As"))
-        #self.reload_button.setText(_translate("MainWindow", "reload"))
         self.left_button.setText(_translate("MainWindow", "..."))
         self.right_button.setText(_translate("MainWindow", "..."))
         self.up_button.setText(_translate("MainWindow", "..."))
@@ -176,10 +168,7 @@ class Ui_MainWindow(object):
     
     def signal_connecter(self, MainWindow):
         self.open_button.pressed.connect(MainWindow.file_open) # type: ignore
-        self.save_button.pressed.connect(MainWindow.file_save) # type: ignore
-        self.save_as_button.pressed.connect(MainWindow.file_save_as) # type: ignore
         self.reload_button.pressed.connect(MainWindow.run) # type: ignore
-        #self.reload_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
         self.machine_settings_button.pressed.connect(MainWindow.open_machine_settings_window) # type: ignore
         
         self.gcode_export_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
