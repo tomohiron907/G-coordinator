@@ -51,11 +51,11 @@ class Ui_MainWindow(object):
         
         self.open_button = SvgButton('window/button/open_file.svg', MainWindow)
         #self.open_button.resize(0.15)
-        self.open_button.setGeometry(18, 10, 60, 60)
-        self.open_button.resize(0.16)
+        self.open_button.setGeometry(18, 10, 60, 50)
+        self.open_button.resize(0.12)
         self.reload_button = SvgButton('window/button/play.svg', MainWindow)
-        self.reload_button.resize(0.4)
-        self.reload_button.setGeometry(78, 10, 60, 60)
+        self.reload_button.resize(0.3)
+        self.reload_button.setGeometry(78, 10, 60, 50)
 
         self.retranslateUi(MainWindow)
         self.signal_connecter(MainWindow)
@@ -111,7 +111,7 @@ class Ui_MainWindow(object):
         self.left_pane_layout = QVBoxLayout()
         spacer_widget = QtWidgets.QWidget()
         spacer_widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        spacer_widget.setFixedSize(100, 30)
+        spacer_widget.setFixedSize(100, 20)
         self.left_pane_layout.addWidget(spacer_widget)
         self.left_pane_layout.addWidget(self.message_splitter)
 
