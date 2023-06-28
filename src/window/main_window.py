@@ -18,7 +18,7 @@ from window.gcode_export_window import *
 from window.machine_settings_window import *
 from path_generator import Path
 from window.app_settings import SettingsWindow
-import markdown2
+#import markdown2
 import qdarktheme
 
 class ReadmeDialog(QDialog):
@@ -32,8 +32,10 @@ class ReadmeDialog(QDialog):
         self.setLayout(layout)
 
     def set_readme_text(self, readme_text):
-        html = markdown2.markdown(readme_text)
-        self.text_edit.setHtml(html)
+        pass
+        # Dialog to display readme (not yet completed)
+        #html = markdown2.markdown(readme_text)
+        #self.text_edit.setHtml(html)
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):

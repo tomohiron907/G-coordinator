@@ -30,7 +30,7 @@ class SvgButton(QPushButton):
         self.setStyleSheet("border: none; background-color: transparent;")
 
         # ボタンがクリックされたときの処理を定義
-        self.clicked.connect(self.on_button_clicked)
+        #self.clicked.connect(self.on_button_clicked)
 
     def resize(self, s):
         icon_size = self.svg_renderer.defaultSize() * s  # サイズを2倍にする例
@@ -65,8 +65,7 @@ class SvgButton(QPushButton):
         icon = QIcon(self.default_pixmap)
         self.setIcon(icon)
 
-    def on_button_clicked(self):
-        print("Button Clicked")
+    
 
 if __name__ == '__main__':
     app = QApplication([])
