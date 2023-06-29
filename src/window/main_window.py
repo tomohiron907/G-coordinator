@@ -1,6 +1,7 @@
 import sys
 import os
 import traceback
+import platform
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -134,7 +135,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         font_size = settings.value('editor/font_size')
         console_font_size = settings.value('console/font_size')
         qdarktheme.setup_theme(theme)
-        font = QFont('Arial', int(font_size))
+        # qtextedit font size changes according to a platform (Don't know why)
+        # This is a workaround for now.
+        if platform.system() == "Darwin":
+            font = QFont('Arial', int(font_size))
+        else:
+            font = QFont('Arial', int(font_size)-2)
         console_font = QFont('Arial', int(console_font_size))
         self.editor.setFont(font)
         self.line_number_widget.setFontSize(int(font_size))
