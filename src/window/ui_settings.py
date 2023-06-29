@@ -9,6 +9,7 @@
 
 
 import sys
+import platform
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -51,11 +52,16 @@ class Ui_MainWindow(object):
         
         self.open_button = SvgButton('window/button/open_file.svg', MainWindow)
         #self.open_button.resize(0.15)
-        self.open_button.setGeometry(18, 10, 60, 50)
         self.open_button.resize(0.12)
         self.reload_button = SvgButton('window/button/play.svg', MainWindow)
         self.reload_button.resize(0.3)
-        self.reload_button.setGeometry(78, 10, 60, 50)
+        if platform.system() == "Darwin":
+            self.open_button.setGeometry(18, 10, 60, 50)
+            self.reload_button.setGeometry(78, 10, 60, 50)
+        else:
+            self.open_button.setGeometry(18, 30, 60, 50)
+            self.reload_button.setGeometry(78, 30, 60, 50)
+
 
         self.retranslateUi(MainWindow)
         self.signal_connecter(MainWindow)
