@@ -8,8 +8,13 @@ To use a 3D printer, it is basically necessary to prepare a 3D model, run it thr
 ![gif_img1](img/modeling.gif)
 By creating G-codes directly, you can easily create shapes and forms that would be difficult to achieve using conventional methods of creating 3D models. For example, the following weave shape can be realized.
 
+
+
+<img src="img/wave_tray.JPG" width=80%>
 <img src="img/printted_thing.jpg" width=70%>
-<img src="img/wave_tray.JPG" width=70%>
+<br>
+ - [OTHER WORKS](#works-anchor)
+
 
 <br>
 While Grasshopper in Rhinoceros can do the same thing with visual programming, G-coordinator uses python to achieve the same thing. This allows a high degree of freedom in modeling.
@@ -20,13 +25,12 @@ By drawing a python script in the editor on the left and executing it, the nozzl
 
 # Requirements
 G-coordinator is currently available for macOS and Windows.
-G-coordinator can also be started by executing the python code main.py in the src directory. The following libraries are required to run main.py.
+G-coordinator can also be started by executing the python code main.py in the src directory.
+
+To install the required libraries, enter the following command．
+
 ```
-pyqt5
-pyqtgraph
-numpy
-pyopengl
-matplotlib
+pip install -r requirements.txt
 ```
 If you run G-coordinator from an .app or .exe executable file, you do not need to install these libraries.
 
@@ -36,7 +40,7 @@ For the final check of the output G-cocde, software such as prusa-slicer or repe
 # G-coordinator installation procedure
 Please download the software from [here](https://github.com/tomohiron907/G-coordinator/releases) according to your operating system.
 
-If you have a Python environment set up, please clone this GitHub repository and **make the current directory "src"**. Then, execute "main.py" in the command prompt. The necessary INI configuration file for execution is also included in the "src" directory.
+If you have a Python environment set up, please clone this GitHub repository and <span style="color: Crimson; ">make the current directory "src"</span>. Then, execute "main.py" in the command prompt. The necessary INI configuration file for execution is also included in the "src" directory.
 # How G-code works
 
 Before modeling, it is useful to understand the structure of a G-code briefly, so that you can model it in G-coordinator. The photo below shows a G-code opened in REPETIER.
@@ -58,7 +62,7 @@ The code will be displayed in the editor on the left, and when you press the rel
 
 ![img6](img/test_modeling.png)
 
-In G-coordinator, modeling is done in a function called object_modeling(). As mentioned earlier, what we want is a list of coordinates.
+In G-coordinator, modeling is done in a function  object_modeling(). As mentioned earlier, what we want is a list of coordinates.
 
 
 
@@ -157,6 +161,28 @@ In this window, only the first 1000 lines of the generated G-code are displayed.
 
 There are few people who have an interest in both coding/mathematics for fabrication and 3D printing. Therefore, when using G-coordinator, it can be challenging for individuals to start the fabrication process from scratch, resulting in a limited user base. To address this, I encourage users to actively tweet about their creations or modifications made using G-coordinator, and include the hashtag #Gcoordinator (without hyphen). This will contribute to the activation of the community and foster greater engagement.
 
+### Works
+<a id="works-anchor"></a>
+
+
+<img src = "img/works/sin_wall.jpg" width  = 50%>
+<img src = "img/works/light_fixture.jpg" width  = 50%>
+<img src = "img/works/clock.jpg" width  = 50%>
+<img src = "img/works/light_cup.jpg" width  = 50%>
+<img src = "img/works/gyroid_coaster.jpg" width  = 50%>
+<img src = "img/works/wave_cup_2.jpg" width  = 50%>
+<img src = "img/works/wave_cup.jpg" width  = 50%>
+<img src = "img/works/wave_tray_1.jpg" width  = 50%>
+<img src = "img/works/wave_bottle_2.jpg" width  = 50%>
+<img src = "img/works/wave_wall_1.jpg" width  = 50%>
+<img src = "img/works/envelope_2.jpg" width  = 50%>
+<img src = "img/works/lissajous_1.jpg" width  = 50%>
+<img src = "img/works/lissajous_2.jpg" width  = 50%>
+<img src = "img/works/audrey.jpg" width  = 50%>
+<img src = "img/works/audrey_2.jpg" width  = 50%>
+<img src = "img/works/envelope_1.jpg" width  = 50%>
+<img src = "img/works/others.jpg" width  = 50%>
+
 <br>
 <br>
 
@@ -173,8 +199,9 @@ There are few people who have an interest in both coding/mathematics for fabrica
 
 直接G-codeを作成することにより，従来の3Dモデルを作成する方法では実現が困難であった形状や造形を，容易に作り出すことができます．例えば，下のような編み形状を実現できます．
 
+<img src="img/wave_tray.JPG" width=80%>
 <img src="img/printted_thing.jpg" width=70%>
-<img src="img/wave_tray.JPG" width=70%>
+
 
 <br>
 RhinocerosのGrasshopperではビジュアルプログラミングにて同様のことは可能ですが，G-coordinatorではそれをpythonで実現します．
@@ -188,13 +215,9 @@ RhinocerosのGrasshopperではビジュアルプログラミングにて同様�
 # 必要事項
 G-coordinatorは現在，macOSとWindowsに対応しています．
 また，pythonファイルを直接実行することでも起動できます．
-その場合には，以下のライブラリをインストールしてください．
+その場合には，以下のコマンドでライブラリを一括インストールできます．
 ```
-pyqt5
-pyqtgraph
-numpy
-pyopengl
-matplotlib
+pip install -r requirements.txt
 ```
 .appや.exeなどの実行ファイルとしてG-coordinatorを起動した場合にはライブラリのインストールは必要ありません．
 出力されたG-codeを確認するために，Prusa slicerやReptierなどのソフトがあれば便利です．
@@ -204,7 +227,7 @@ matplotlib
 [ここ](https://github.com/tomohiron907/G-coordinator/releases)から，お使いのOSにあったものをダウンロードしてください．
 
 
-python環境が整っている場合には，このgithubリポジトリのクローンを作成し，カレントディレクトリをsrcにして，main.pyを実行してください．実行に必要なini設定ファイルもsrcの中に入っているからです．
+python環境が整っている場合には，このgithubリポジトリのクローンを作成し，<span style="color: Crimson; ">カレントディレクトリをsrcにして，</span>main.pyを実行してください．実行に必要なini設定ファイルもsrcの中に入っているからです．
 
 また，インストール手順をまとめた動画もyoutube にアップしています．
 https://www.youtube.com/watch?v=LqZGno-BWG0
@@ -224,7 +247,7 @@ https://www.youtube.com/watch?v=LqZGno-BWG0
 こういった行が大量に繰り返されています．
 これは，現在の位置からX114.97987 Y105.63424 Z2.00000の位置まで，分速800ｍｍで移動しながら，フィラメントを0.00589mm押し出すという命令です．
 
-つまり，突き詰めれば，G-codeで制御すべき要素は，座標（x, y, z)の三要素とスピード，押し出し量の計５つです．さらに，スピードと，押し出しはG-coordinator から自動で決定できる（もちろん細かく個別に指定することも可能）なので，考えるべきは，どの位置にノズルが動くかという座標のみで良いです．
+つまり，突き詰めれば，G-codeで制御すべき要素は，座標(x, y, z)の三要素とスピード，押し出し量の計５つです．さらに，スピードと，押し出しはG-coordinator から自動で決定できる（もちろん細かく個別に指定することも可能）なので，考えるべきは，どの位置にノズルが動くかという座標のみで良いです．
 
 # テスト造形（円柱）
 では，いよいよ，G-coordinatorで造形をしていきましょう．まずは，最も簡単なモデルとして，円柱の壁を作ります．
@@ -284,8 +307,8 @@ y座標は，
 ```layer = Path(x,y,z)```
 
 <br>
-なお，n段目のレイヤーの終点とn+1段目のレイヤーの始点とは，自動でトラベルするようになっています．
-そして，各レイヤーごとに，full_objectのlist にlayerを追加し，full_objectを返り値として設定しています．
+なお，n段目のPathの終点とn+1段目のPathの始点とは，自動でトラベルするようになっています．
+そして，各レイヤーごとに，full_objectのlist にPathを追加し，full_objectを返り値として設定しています．
 
 <br>
 
@@ -315,7 +338,7 @@ y座標は，
 自分の今使用している3Dプリンタのベッドが210mm×210mmなので，その中心の105mm を原点と設定しています．
 
 <br>
-G-coordinator上で（10,-20)の座標が，G-code上では(115, 85)に変換されて記録されるイメージです．
+G-coordinator上で(10,-20)の座標が，G-code上では(115, 85)に変換されて記録されるイメージです．
 
 <br>
 他には，スピードの項目も設けています．ここでのプリントスピードは，何も設定しなかった場合のデフォルト値であり，エディタで細かくスピードを指定した場合には，そちらが優先されます．これは，一番下の項目のExtrusion_multiplierでも同様です．
@@ -326,11 +349,6 @@ travel_optionでは，リトラクションの有無とｚホップの設定が�
 <br>
 extrusion_multiplier では，押し出し量（E値）に掛ける係数を決定できます．
 
-<br>
-
-スタートGcodeとエンドGcodeに関しては，それぞれを記録した.txt　のファイルが置いてある場所の絶対パスを印刷設定欄に指定してください．これに関しては，パスを指定した後，G-coordinatorの再起動が必要です.
-
-他の印刷設定に関しては，設定を変えるごとに，再起動の必要はありません.
 
 # G-codeの出力
 
@@ -345,3 +363,22 @@ extrusion_multiplier では，押し出し量（E値）に掛ける係数を決�
 # 最後に
 
 G-coodinatorを使うにあたり，造形のためのコードや数学と3Dプリンタの両方に興味のある人が少ないこともあり，なかなか自分で1から造形をおこなうのは難しく，ユーザも限られてしまいます．そこで，G-coordinatorで造形をおこなったり，改造して印刷をおこなったりしたものを積極的に　#Gcoordinator（ハイフンなしに注意）でツイートしてもらえると，よりコミュニティの活性化につながると思っています．
+
+# 作品
+<img src = "img/works/sin_wall.jpg" width  = 50%>
+<img src = "img/works/light_fixture.jpg" width  = 50%>
+<img src = "img/works/clock.jpg" width  = 50%>
+<img src = "img/works/light_cup.jpg" width  = 50%>
+<img src = "img/works/gyroid_coaster.jpg" width  = 50%>
+<img src = "img/works/wave_cup_2.jpg" width  = 50%>
+<img src = "img/works/wave_cup.jpg" width  = 50%>
+<img src = "img/works/wave_tray_1.jpg" width  = 50%>
+<img src = "img/works/wave_bottle_2.jpg" width  = 50%>
+<img src = "img/works/wave_wall_1.jpg" width  = 50%>
+<img src = "img/works/envelope_2.jpg" width  = 50%>
+<img src = "img/works/lissajous_1.jpg" width  = 50%>
+<img src = "img/works/lissajous_2.jpg" width  = 50%>
+<img src = "img/works/audrey.jpg" width  = 50%>
+<img src = "img/works/audrey_2.jpg" width  = 50%>
+<img src = "img/works/envelope_1.jpg" width  = 50%>
+<img src = "img/works/others.jpg" width  = 50%>

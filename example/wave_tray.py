@@ -9,8 +9,8 @@ Print_speed = 500
 Ext_multiplier = 1.4
 '''
 
-LAYER=40
-base_rad = 60
+LAYER=60
+base_rad = 80
 
 
 def object_modeling():
