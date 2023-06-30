@@ -10,10 +10,18 @@ By creating G-codes directly, you can easily create shapes and forms that would 
 
 
 
-<img src="img/wave_tray.JPG" width=80%>
-<img src="img/printted_thing.jpg" width=70%>
+<table>
+  <tr>
+    <td><img src="img/printted_thing.jpg" width="100%"></td>
+    <td><img src="img/wave_tray.JPG" width="100%"></td>
+
+    
+  </tr>
+</table>
+
+
 <br>
- - [OTHER WORKS](#works-anchor)
+
 
 
 <br>
@@ -161,27 +169,44 @@ In this window, only the first 1000 lines of the generated G-code are displayed.
 
 There are few people who have an interest in both coding/mathematics for fabrication and 3D printing. Therefore, when using G-coordinator, it can be challenging for individuals to start the fabrication process from scratch, resulting in a limited user base. To address this, I encourage users to actively tweet about their creations or modifications made using G-coordinator, and include the hashtag #Gcoordinator (without hyphen). This will contribute to the activation of the community and foster greater engagement.
 
-### Works
+# Works
 <a id="works-anchor"></a>
 
 
-<img src = "img/works/sin_wall.jpg" width  = 50%>
-<img src = "img/works/light_fixture.jpg" width  = 50%>
-<img src = "img/works/clock.jpg" width  = 50%>
-<img src = "img/works/light_cup.jpg" width  = 50%>
-<img src = "img/works/gyroid_coaster.jpg" width  = 50%>
-<img src = "img/works/wave_cup_2.jpg" width  = 50%>
-<img src = "img/works/wave_cup.jpg" width  = 50%>
-<img src = "img/works/wave_tray_1.jpg" width  = 50%>
-<img src = "img/works/wave_bottle_2.jpg" width  = 50%>
-<img src = "img/works/wave_wall_1.jpg" width  = 50%>
-<img src = "img/works/envelope_2.jpg" width  = 50%>
-<img src = "img/works/lissajous_1.jpg" width  = 50%>
-<img src = "img/works/lissajous_2.jpg" width  = 50%>
-<img src = "img/works/audrey.jpg" width  = 50%>
-<img src = "img/works/audrey_2.jpg" width  = 50%>
-<img src = "img/works/envelope_1.jpg" width  = 50%>
-<img src = "img/works/others.jpg" width  = 50%>
+<table>
+  <tr>
+    <td><img src="img/works/sin_wall.jpg" width="100%"></td>
+    <td><img src="img/works/gyroid_coaster.jpg" width="100%"></td>
+    <td><img src="img/works/clock.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="img/works/light_cup.jpg" width="100%"></td>
+    <td><img src="img/works/light_fixture.jpg" width="100%"></td>
+    <td><img src="img/works/wave_cup_2.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="img/works/wave_cup.jpg" width="100%"></td>
+    <td><img src="img/works/wave_bottle_2.jpg" width="100%"></td>
+    <td><img src="img/works/wave_wall_1.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="img/works/wave_tray_1.jpg" width="100%"></td>
+    <td><img src="img/works/envelope_2.jpg" width="100%"></td>
+    <td><img src="img/works/lissajous_1.jpg" width="100%"></td>
+  </tr>
+
+  <tr>
+    <td colspan="3"><img src="img/works/audrey_2.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="img/works/envelope_1.jpg" width="100%"></td>
+    <td><img src="img/works/others.jpg" width="100%"></td>
+    <td><img src="img/works/audrey.jpg" width="100%"></td>
+  </tr>
+
+</table>
+
+
 
 <br>
 <br>
@@ -199,8 +224,14 @@ There are few people who have an interest in both coding/mathematics for fabrica
 
 直接G-codeを作成することにより，従来の3Dモデルを作成する方法では実現が困難であった形状や造形を，容易に作り出すことができます．例えば，下のような編み形状を実現できます．
 
-<img src="img/wave_tray.JPG" width=80%>
-<img src="img/printted_thing.jpg" width=70%>
+<table>
+  <tr>
+    <td><img src="img/printted_thing.jpg" width="100%"></td>
+    <td><img src="img/wave_tray.JPG" width="100%"></td>
+
+    
+  </tr>
+</table>
 
 
 <br>
@@ -365,20 +396,35 @@ extrusion_multiplier では，押し出し量（E値）に掛ける係数を決�
 G-coodinatorを使うにあたり，造形のためのコードや数学と3Dプリンタの両方に興味のある人が少ないこともあり，なかなか自分で1から造形をおこなうのは難しく，ユーザも限られてしまいます．そこで，G-coordinatorで造形をおこなったり，改造して印刷をおこなったりしたものを積極的に　#Gcoordinator（ハイフンなしに注意）でツイートしてもらえると，よりコミュニティの活性化につながると思っています．
 
 # 作品
-<img src = "img/works/sin_wall.jpg" width  = 50%>
-<img src = "img/works/light_fixture.jpg" width  = 50%>
-<img src = "img/works/clock.jpg" width  = 50%>
-<img src = "img/works/light_cup.jpg" width  = 50%>
-<img src = "img/works/gyroid_coaster.jpg" width  = 50%>
-<img src = "img/works/wave_cup_2.jpg" width  = 50%>
-<img src = "img/works/wave_cup.jpg" width  = 50%>
-<img src = "img/works/wave_tray_1.jpg" width  = 50%>
-<img src = "img/works/wave_bottle_2.jpg" width  = 50%>
-<img src = "img/works/wave_wall_1.jpg" width  = 50%>
-<img src = "img/works/envelope_2.jpg" width  = 50%>
-<img src = "img/works/lissajous_1.jpg" width  = 50%>
-<img src = "img/works/lissajous_2.jpg" width  = 50%>
-<img src = "img/works/audrey.jpg" width  = 50%>
-<img src = "img/works/audrey_2.jpg" width  = 50%>
-<img src = "img/works/envelope_1.jpg" width  = 50%>
-<img src = "img/works/others.jpg" width  = 50%>
+<table>
+  <tr>
+    <td><img src="img/works/sin_wall.jpg" width="100%"></td>
+    <td><img src="img/works/gyroid_coaster.jpg" width="100%"></td>
+    <td><img src="img/works/clock.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="img/works/light_cup.jpg" width="100%"></td>
+    <td><img src="img/works/light_fixture.jpg" width="100%"></td>
+    <td><img src="img/works/wave_cup_2.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="img/works/wave_cup.jpg" width="100%"></td>
+    <td><img src="img/works/wave_bottle_2.jpg" width="100%"></td>
+    <td><img src="img/works/wave_wall_1.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="img/works/wave_tray_1.jpg" width="100%"></td>
+    <td><img src="img/works/envelope_2.jpg" width="100%"></td>
+    <td><img src="img/works/lissajous_1.jpg" width="100%"></td>
+  </tr>
+
+  <tr>
+    <td colspan="3"><img src="img/works/audrey_2.jpg" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="img/works/envelope_1.jpg" width="100%"></td>
+    <td><img src="img/works/others.jpg" width="100%"></td>
+    <td><img src="img/works/audrey.jpg" width="100%"></td>
+  </tr>
+
+</table>
