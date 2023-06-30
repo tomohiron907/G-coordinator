@@ -89,7 +89,7 @@ In G-coordinator, we use the Path class object for modeling. This refers to the 
 
 
 The following is a description of what is being done in the function.
-First, each layer is iterated using a for statement. The current number of layers is 10, so the function iterates from layer 0 to layer 9.
+First, each layer is iterated using a for statement. The current number of layers is 100, so the function iterates from layer 0 to layer 99.
 
 <br>
 Next, to draw a circle, the angle (argument) is set in a numpy array in the range of 0 to 2π. The number of elements is set to 100, so exactly 99 regular angles are created.
@@ -115,14 +115,14 @@ For each layer, a layer is added to the list of full_objects and a full_object i
 
 Once modeling is complete, prepare the G-code.
 
-<img src = "img/print_settings.png" width  = 50%>
+<img src = "img/print_settings.png" width  = 30%>
 
 At this stage, it is not possible to make such complicated print settings. Only the minimum settings are available.
 As you can see, nozzle_diameter is the nozzle diameter and layer_height is the layer height.
 
 When you click on the "Machine Settings" button, a window for 3D printer hardware settings will appear.
 
-<img src = "img/machine_settings.png" width  = 50%>
+<img src = "img/machine_settings.png" width  = 30%>
 
  Here, you have the option to select the kinematics. Generally, for a Cartesian system with three axes (X, Y, Z), please choose the Cartesian option. Additionally, there are other options available to support specific types of 3D printers and G-code, such as:
 
@@ -291,7 +291,7 @@ G-coordinatorの中では，Pathクラスのオブジェクトをモデリング
 
 <br>
 関数内で何をしているかについてです．
-まず，for文で各レイヤーについて繰り返しをしています．現在のレイヤー数は10なので，0層目から9層目まで繰り返されるイメージです．
+まず，for文で各レイヤーについて繰り返しをしています．現在のレイヤー数は100なので，0層目から99層目まで繰り返されるイメージです．
 
 <br>
 次に，円を描くために，角度（argument)をnumpy arrayで0から2πの範囲で設定しています．要素数は100としているため，正確には，正99角形が造形されます．
@@ -316,7 +316,7 @@ y座標は，
 
 造形が完了すれば，G-codeの準備をします．
 
-<img src = "img/print_settings.png" width  = 50%>
+<img src = "img/print_settings.png" width  = 30%>
 
 現段階では，そこまで，複雑な印刷設定ができないです．最低限の設定項目のみです．
 読んで字のごとくですが，nozzle_daimeterはノズル径，layer_heightはレイヤーの高さです．
@@ -324,7 +324,7 @@ y座標は，
 一番上のmachine settingsのボタンを押すと，3Dプリンタのハードウェア設定のウィンドウが出てきます．
 
 <br>
-<img src = "img/machine_settings.png" width  = 50%>
+<img src = "img/machine_settings.png" width  = 30%>
 
 ここでは，kinematicsを選択することが可能です．一般的には3軸x, y, zのCartesianの項目を選択してください．ここでは，他に，
 - ロボットアーム型やHexaといった3Dプリンタ用のGcodeをサポートするために，Nozzle Tilt
