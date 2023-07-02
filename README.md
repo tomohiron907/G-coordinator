@@ -172,9 +172,8 @@ To foster community engagement and encourage more users, it would be beneficial 
     <td><img src="img/works/clock.jpg" width="100%"></td>
   </tr>
   <tr>
-    <td><img src="img/works/light_cup.jpg" width="100%"></td>
     <td><img src="img/works/light_fixture.jpg" width="100%"></td>
-    <td><img src="img/works/wave_cup_2.jpg" width="100%"></td>
+    <td colspan="2"><img src="img/works/wave_wall.gif" width="100%"></td>
   </tr>
   <tr>
     <td><img src="img/works/wave_cup.jpg" width="100%"></td>
@@ -184,7 +183,8 @@ To foster community engagement and encourage more users, it would be beneficial 
   <tr>
     <td><img src="img/works/wave_tray_1.jpg" width="100%"></td>
     <td><img src="img/works/envelope_2.jpg" width="100%"></td>
-    <td><img src="img/works/lissajous_1.jpg" width="100%"></td>
+    <td><img src="img/works/wave_cup_2.jpg" width="100%"></td>
+
   </tr>
 
   <tr>
@@ -195,7 +195,11 @@ To foster community engagement and encourage more users, it would be beneficial 
     <td><img src="img/works/others.jpg" width="100%"></td>
     <td><img src="img/works/audrey.jpg" width="100%"></td>
   </tr>
-
+  <tr>
+    <td><img src="img/works/lissajous_1.jpg" width="100%"></td>
+    <td><img src="img/works/gyroid_wall.jpg" width="100%"></td>
+    <td><img src="img/works/light_cup.jpg" width="100%"></td>
+  </tr>
 </table>
 
 
@@ -395,9 +399,8 @@ G-coodinatorを使うにあたり，造形のためのコードや数学と3Dプ
     <td><img src="img/works/clock.jpg" width="100%"></td>
   </tr>
   <tr>
-    <td><img src="img/works/light_cup.jpg" width="100%"></td>
     <td><img src="img/works/light_fixture.jpg" width="100%"></td>
-    <td><img src="img/works/wave_cup_2.jpg" width="100%"></td>
+    <td colspan="2"><img src="img/works/wave_wall.gif" width="100%"></td>
   </tr>
   <tr>
     <td><img src="img/works/wave_cup.jpg" width="100%"></td>
@@ -407,7 +410,8 @@ G-coodinatorを使うにあたり，造形のためのコードや数学と3Dプ
   <tr>
     <td><img src="img/works/wave_tray_1.jpg" width="100%"></td>
     <td><img src="img/works/envelope_2.jpg" width="100%"></td>
-    <td><img src="img/works/lissajous_1.jpg" width="100%"></td>
+    <td><img src="img/works/wave_cup_2.jpg" width="100%"></td>
+
   </tr>
 
   <tr>
@@ -418,5 +422,9 @@ G-coodinatorを使うにあたり，造形のためのコードや数学と3Dプ
     <td><img src="img/works/others.jpg" width="100%"></td>
     <td><img src="img/works/audrey.jpg" width="100%"></td>
   </tr>
-
+  <tr>
+    <td><img src="img/works/lissajous_1.jpg" width="100%"></td>
+    <td><img src="img/works/gyroid_wall.jpg" width="100%"></td>
+    <td><img src="img/works/light_cup.jpg" width="100%"></td>
+  </tr>
 </table>
