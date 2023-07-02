@@ -262,7 +262,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def new(self):
         #self._save_to_path()
         self.path = None
-        with open('window/default_start.py', 'r') as file:
+        with open('buffer/default_start.py', 'r') as file:
             code_str = file.read()
 
         self.editor.setPlainText(code_str)
