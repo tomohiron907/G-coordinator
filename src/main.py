@@ -1,5 +1,5 @@
 '''
-G-coordinator ver 2.1.0
+G-coordinator ver 2.3.0
 License: MIT
 Author: Tomohiro Taniguchi
 Usage: 
@@ -24,13 +24,13 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from window.main_window import main_window, app
 
-
-if __name__ == '__main__':
-
-    
+def launch():
     icon_path = '../img/G-coordinator.png'
     app_icon = QIcon(icon_path)
     app.setWindowIcon(app_icon) 
     
     main_window.show() 
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    launch()
