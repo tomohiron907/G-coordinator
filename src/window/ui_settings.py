@@ -142,15 +142,26 @@ class Ui_MainWindow(object):
         self.layer_button_layout = QtWidgets.QVBoxLayout()
         self.slider_layer =  QtWidgets.QSlider(MainWindow)
         self.slider_layer.setOrientation(QtCore.Qt.Vertical)
+        self.slider_layout = QtWidgets.QHBoxLayout()
+        self.slider_layout.addWidget(self.slider_layer)
+
+
+        self.slider_layout.setContentsMargins(0, 0, 0, 0)
+
         self.up_button = QtWidgets.QToolButton(MainWindow)
         self.down_button = QtWidgets.QToolButton(MainWindow)
-        self.layer_button_layout.addWidget(self.slider_layer)
         self.layer_button_layout.addWidget(self.up_button)
         self.layer_button_layout.addWidget(self.down_button)
 
+        self.layer_layout = QtWidgets.QVBoxLayout()
+        self.layer_layout.addLayout(self.slider_layout)
+        self.layer_layout.addLayout(self.layer_button_layout)
+
+
+
         self.central_layout =  QtWidgets.QHBoxLayout()
         self.central_layout.addLayout(self.graphic_seg_layout)
-        self.central_layout.addLayout(self.layer_button_layout)
+        self.central_layout.addLayout(self.layer_layout)
 
     def right_pane_setting(self, MainWindow):
         self.machine_settings_button = QtWidgets.QPushButton(MainWindow)
