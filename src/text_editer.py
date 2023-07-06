@@ -33,7 +33,14 @@ class TextEditer(QTextEdit):
         self.completer.setCaseSensitivity(Qt.CaseInsensitive)
         self.completer.activated.connect(self.insertCompletion)
         self.trigger = ''
-    
+        popup = self.completer.popup()
+
+        popup.setStyleSheet("""
+            background-color: rgb(32, 33, 36);
+            color: white;
+            selection-background-color: rgb(142, 177, 250); /* 選択されているアイテムの背景色 */
+            selection-color: black; /* 選択されているアイテムの文字色 */
+        """)
 
     
 
