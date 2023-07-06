@@ -141,7 +141,11 @@ class TextEditer(QTextEdit):
                 self.variable_list.append(f'print_settings.{name}')
 
 
-    
+    def pastePlainText(self):
+        clipboard = QApplication.clipboard()
+        plain_text = clipboard.text()
+        print(plain_text)
+        self.insertPlainText(plain_text)
 
     def keyPressEvent(self, event):
         if self.completer.popup().isVisible():
@@ -195,9 +199,11 @@ class TextEditer(QTextEdit):
 
                 self.setTextCursor(cursor)
                 return
-
-
-        super(TextEditer, self).keyPressEvent(event)
+        if event.matches(QKeySequence.Paste):
+            print('pasta plain')
+            self.pastePlainText()
+        else:
+            super(TextEditer, self).keyPressEvent(event)
         cursor_position = self.textCursor().position()
         if cursor_position == 0:
             self.completer.popup().hide()
