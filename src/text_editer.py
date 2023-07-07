@@ -42,6 +42,9 @@ class TextEditer(QTextEdit):
             selection-color: black; /* 選択されているアイテムの文字色 */
         """)
 
+    def repaint_editor(self):
+        print('repaint')
+        
     
 
     def indent(self):

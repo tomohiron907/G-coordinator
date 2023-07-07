@@ -41,6 +41,7 @@ class Ui_MainWindow(object):
         self.splitter.widget(1).setLayout(self.central_layout)
         self.splitter.widget(2).setLayout(self.right_layout)
         self.splitter.setSizes([300, 600, 220])
+        self.splitter.splitterMoved.connect(self.editor.repaint_editor)
 
         self.main_layout = QVBoxLayout()
         self.main_layout.addWidget(self.splitter)
