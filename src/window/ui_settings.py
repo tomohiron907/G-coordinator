@@ -216,6 +216,8 @@ class LineNumberWidget(QTextBrowser):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setTextInteractionFlags(Qt.NoTextInteraction)
         self.verticalScrollBar().setEnabled(False)
+        self.verticalScrollBar().setValue(0)
+
         self.widget.verticalScrollBar().valueChanged.connect(self.__changeLineWidgetScrollAsTargetedWidgetScrollChanged)
         self.widget.installEventFilter(self)
         self.initLineCount()
@@ -252,6 +254,8 @@ class LineNumberWidget(QTextBrowser):
 
         self.lineCount = n
         self.styleInit()
+        self.verticalScrollBar().setValue(0)
+
 
     def setValue(self, v):
         self.verticalScrollBar().setValue(v)
