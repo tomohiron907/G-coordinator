@@ -41,7 +41,6 @@ class Ui_MainWindow(object):
         self.splitter.widget(1).setLayout(self.central_layout)
         self.splitter.widget(2).setLayout(self.right_layout)
         self.splitter.setSizes([300, 600, 220])
-        self.splitter.splitterMoved.connect(self.editor.repaint_editor)
 
         self.main_layout = QVBoxLayout()
         self.main_layout.addWidget(self.splitter)
@@ -52,7 +51,6 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle('Splitter with handle')
         
         self.open_button = SvgButton('window/button/open_file.svg', MainWindow)
-        #self.open_button.resize(0.15)
         self.open_button.resize(0.12)
         self.reload_button = SvgButton('window/button/play.svg', MainWindow)
         self.reload_button.resize(0.3)
@@ -83,8 +81,9 @@ class Ui_MainWindow(object):
                                     """
         
         
+        self.editor =  TextEditer(MainWindow)
 
-        self.editor = TextEditer(MainWindow)
+        
         self.editor.setLineWrapMode(TextEditer.LineWrapMode.NoWrap)
         self.editor.textChanged.connect(self.__line_widget_line_count_changed)
         self.editor.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
@@ -92,16 +91,13 @@ class Ui_MainWindow(object):
 
         self.editor.setFont(QFont("Arial", 14))
         self.line_number_widget = LineNumberWidget(self.editor)
+
+
         self.line_number_widget.setFontSize(14)
         self.editor_layout = QtWidgets.QHBoxLayout()
         self.editor_layout.addWidget(self.line_number_widget)
         self.editor_layout.addWidget(self.editor)
         self.editor_layout.setSpacing(0)
-
-        
-
-        self.editor_button_layout = QtWidgets.QVBoxLayout()
-        self.editor_button_layout.addLayout(self.editor_layout)
 
 
         self.message_console = QtWidgets.QTextEdit(MainWindow)
@@ -111,7 +107,7 @@ class Ui_MainWindow(object):
         self.message_splitter = QSplitter()
         self.message_splitter.setOrientation(Qt.Vertical)#splitterの方向を横に設定
         self.message_splitter.addWidget(QWidget())
-        self.message_splitter.widget(0).setLayout(self.editor_button_layout)
+        self.message_splitter.widget(0).setLayout(self.editor_layout)
         self.message_splitter.addWidget(self.message_console)
         self.message_splitter.setSizes([10,1])
         
@@ -207,7 +203,7 @@ class Ui_MainWindow(object):
 
 
 class LineNumberWidget(QTextBrowser):
-    def __init__(self, widget: QPlainTextEdit):
+    def __init__(self, widget: QTextEdit):
         super().__init__()
         self.widget = widget
         self.lineCount = widget.document().blockCount()
@@ -220,7 +216,6 @@ class LineNumberWidget(QTextBrowser):
         self.verticalScrollBar().setValue(0)
 
         self.widget.verticalScrollBar().valueChanged.connect(self.__changeLineWidgetScrollAsTargetedWidgetScrollChanged)
-        self.widget.installEventFilter(self)
         self.initLineCount()
 
     def __changeLineWidgetScrollAsTargetedWidgetScrollChanged(self, v):
