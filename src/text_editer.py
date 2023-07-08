@@ -44,6 +44,7 @@ class TextEditer(QTextEdit):
 
     def repaint_editor(self):
         print('repaint')
+        self.update()
         
     
 
