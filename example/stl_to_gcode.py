@@ -9,21 +9,24 @@ import trimesh
 from path_generator import *
 from infill_generator import *
 from stl_slice import *
+from console import *
+import time
 
-LAYER = 150 # Please edit this number according to the height of the STL file.
+
+LAYER = 100 # Please edit this number according to the height of the STL file.
 # If you specify a slice position higher than the height of the STL, an error will occur.
 
-stl_path = 'PATH TO YOUR STL FILE'
+stl_path = '/Users/taniguchitomohiro/Documents/Fusion 360/stl/3DBenchy.stl'
 mesh = trimesh.load(stl_path, merge_norm=True, merge_tex=True)
 
 
 def object_modeling():
     full_object=[]
-    
+    start_time = time.time()
+ #print(start_time)
     for height in range(LAYER):
         wall = slice(mesh, height*0.2)
         full_object.append(wall)
-
-
+        print(f'slice time :{time.time() - start_time}')
+        start_time = time.time()
     return full_object
-
