@@ -41,21 +41,23 @@ def vecA_to_vecB(a, b):
 
 
 def draw_full_object(widget, full_object):
+    """
+    In this method, we are flattening the elements of the path in the full_object into a coordinate sequence and then drawing that sequence.
+    The coordinate sequence includes additional vertices at the starting and ending points of the path, which have the same coordinates.
+    This is done to achieve smooth color transitions during traversal.
+    """
     global pos_array,colors
     pos_array = []
     colors = []
-    '''print(f'{slider_layer = }')
-    print(f'{slider_segment = }')'''
-    start_time = time.time()
     for idx, path in enumerate(full_object):
         coord = path.coords
         norms = path.norms
-        
-        #if idx < slider_layer:
-        z = coord[:, 2]
-        hue = z % 360  
-        rgb = np.array([colorsys.hsv_to_rgb(h/360, 1, 1) for h in hue])  
-        color = np.column_stack((rgb, np.ones(len(coord))))
+        color = np.zeros((len(coord), 4))
+        for i in range(len(coord)):
+            z = coord[i][2]
+            hue = z % 360  
+            rgb = colorsys.hsv_to_rgb(hue/360, 1, 1)  
+            color[i] = (*rgb, 1)  
 
         coord = np.insert(coord, 1, coord[0], axis=0)
         coord = np.append(coord, [coord[-1]], axis=0)
@@ -68,35 +70,18 @@ def draw_full_object(widget, full_object):
     
     pos_array = np.concatenate(pos_array)
     colors = np.concatenate(colors)
-    
-    
-    print(time.time() - start_time)
-
-
-    
-    '''segment_number = 0
-    for idx in range(slider_layer):
-        seg_num_each_path = len(full_object[idx].coords)
-        segment_number += seg_num_each_path
-    segment_number += slider_segment'''
-
-    '''start_time = time.time()
-    pos_array = np.array(pos_array)
-    colors = np.array(colors)
-    print(time.time() - start_time)'''
 
     plt = gl.GLLinePlotItem(pos=pos_array, color=colors, width=0.5, antialias=True)
     
     widget.addItem(plt)
-
-    '''current_path = full_object[slider_layer-1]
+    slider_layer = len(full_object)-1
+    slider_segment = len(full_object[-1].coords)
+    current_path = full_object[slider_layer]
     current_path_plot_coords = current_path.coords[:slider_segment]
     plt_last = gl.GLLinePlotItem(pos= current_path_plot_coords, color = 'w', width = 1, antialias = True)
     widget.addItem(plt_last)
     norm = current_path.norms[slider_segment - 1]
-
-
-
+    
     if slider_layer > 0 and slider_segment > 0:
         mesh = gl.MeshData.cylinder(rows=8, cols=8, radius=[1.0, 5.0], length=10.0)
         plt = gl.GLMeshItem(meshdata=mesh, smooth=True, color=(1.0, 1.0, 1.0, 0.5), shader='shaded')
@@ -107,10 +92,15 @@ def draw_full_object(widget, full_object):
         (cross, ang) = vecA_to_vecB((0, 0, 1), norm)
         plt.rotate(math.degrees(ang), cross[0], cross[1], cross[2])
         plt.translate(pos_x, pos_y, pos_z)
-        widget.addItem(plt)'''
+        widget.addItem(plt)
+
 
 
 def draw_object_slider(widget, full_object, slider_layer, slider_segment):
+    """
+    In this method, we calculate which segment to draw based on the value of the slider.
+    We then make the color of the segments transparent in the existing color ndarray, starting from the value of the slider onwards.
+    """     
     global pos_array, colors
     colors_copy = np.copy(colors)
     segment_each_path = 0
@@ -120,11 +110,26 @@ def draw_object_slider(widget, full_object, slider_layer, slider_segment):
             segment_each_path += len((full_object[idx].coords))
             segment_each_path += 2
     segment_each_path += slider_segment
-    print(segment_each_path)
     colors_copy[segment_each_path:, 3] = 0.0
-    #segmentとlayerの数字から，何番目のsemgnet かを計算して，そこから先のcolorsを透明に設定
     plt = gl.GLLinePlotItem(pos=pos_array, color=colors_copy, width=0.5, antialias=True)
     
     widget.addItem(plt)
+    current_path = full_object[slider_layer]
+    current_path_plot_coords = current_path.coords[:slider_segment]
+    plt_last = gl.GLLinePlotItem(pos= current_path_plot_coords, color = 'w', width = 1, antialias = True)
+    widget.addItem(plt_last)
+    norm = current_path.norms[slider_segment - 1]
+    
+    if slider_layer > 0 and slider_segment > 0:
+        mesh = gl.MeshData.cylinder(rows=8, cols=8, radius=[1.0, 5.0], length=10.0)
+        plt = gl.GLMeshItem(meshdata=mesh, smooth=True, color=(1.0, 1.0, 1.0, 0.5), shader='shaded')
+        plt.setGLOptions('translucent')
+        pos_x = current_path_plot_coords[-1][0]
+        pos_y = current_path_plot_coords[-1][1]
+        pos_z = current_path_plot_coords[-1][2]
+        (cross, ang) = vecA_to_vecB((0, 0, 1), norm)
+        plt.rotate(math.degrees(ang), cross[0], cross[1], cross[2])
+        plt.translate(pos_x, pos_y, pos_z)
+        widget.addItem(plt)
 
 

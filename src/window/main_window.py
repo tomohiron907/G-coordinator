@@ -11,7 +11,7 @@ import pyqtgraph.opengl as gl
 from import_file import import_file
 import syntax_pars
 from gcode_process import Gcode
-from  draw.draw_object import draw_full_object, draw_object_slider
+from  draw_object import draw_full_object, draw_object_slider
 import configparser
 import path_generator
 from window.ui_settings import Ui_MainWindow
@@ -195,8 +195,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def draw_updated_object(self):
         Path.count = 0
         print('draw_object')
-        self.graphicsView.clear()  # initialize pyqtgraph widget
-        self.grid_draw()
+        
         try:
             #importlib.reload(modeling)  #reload updated modeling.py
             modeling = import_file('buffer/modeling.py')
@@ -215,11 +214,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 pass
         
         #draw_object.set_object_array(self.full_object)
-        self.slider_layer.setRange(0, len(self.full_object))  # set slider range
-        self.slider_layer.setValue(len(self.full_object))
-        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()-1].coords))
-        self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()-1].coords))
+        
+        self.graphicsView.clear()  # initialize pyqtgraph widget
+        self.grid_draw()
         draw_full_object(self.graphicsView,self.full_object)  #redraw updated objects in modeling.py
+        self.slider_layer.setRange(0, len(self.full_object)-1)  # set slider range
+        self.slider_layer.setValue(len(self.full_object)-1)
+        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
+        self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()].coords))
         self.file_save()
 
     def print_console(self, message):
@@ -238,8 +240,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def redraw_layer_object(self): 
         self.graphicsView.clear()  # initialize pyqtgraph widget
         self.grid_draw()
-        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()-1].coords))
-        self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()-1].coords))
+        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
+        self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()].coords))
         draw_object_slider(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
 
     def redraw_segment_object(self): 
