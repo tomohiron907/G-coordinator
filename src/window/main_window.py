@@ -11,7 +11,7 @@ import pyqtgraph.opengl as gl
 from import_file import import_file
 import window.syntax_pars
 from gcode_process import Gcode
-from  draw_object import draw_full_object, draw_object_slider
+from  window.draw_object import draw_full_object, draw_object_slider
 import configparser
 import path_generator
 from window.ui_settings import Ui_MainWindow
