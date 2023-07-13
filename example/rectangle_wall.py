@@ -2,7 +2,7 @@ import numpy as np
 import math
 from path_generator import *
 
-LAYER=3
+LAYER=4
 
 def object_modeling():
     full_object=[]
