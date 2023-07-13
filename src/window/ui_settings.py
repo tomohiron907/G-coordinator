@@ -33,6 +33,18 @@ class Ui_MainWindow(object):
 
 
         self.splitter = QSplitter()
+        splitter_style_sheet = """
+            QSplitter::handle {
+                background: gray;
+            }
+            QSplitter::handle:horizontal {
+                width: 1px;
+            }
+            QSplitter::handle:vertical {
+                height: 1px;
+            }
+        """
+        self.splitter.setStyleSheet(splitter_style_sheet)
         self.splitter.setOrientation(Qt.Horizontal)
         self.splitter.addWidget(QWidget())
         self.splitter.addWidget(QWidget())
