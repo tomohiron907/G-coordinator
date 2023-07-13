@@ -18,7 +18,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from pyqtgraph import opengl
 from pyqtgraph.parametertree import ParameterTree
-from text_editer import TextEditer
+from window.text_editer import TextEditer
 from window.button.svg_button import SvgButton
 
 class Ui_MainWindow(object):
