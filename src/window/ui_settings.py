@@ -18,7 +18,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from pyqtgraph import opengl
 from pyqtgraph.parametertree import ParameterTree
-from window.text_editer import TextEditer
+from window.text_editor import TextEditor
 from window.button.svg_button import SvgButton
 
 class Ui_MainWindow(object):
@@ -81,10 +81,10 @@ class Ui_MainWindow(object):
                                     """
         
         
-        self.editor =  TextEditer(MainWindow)
+        self.editor =  TextEditor(MainWindow)
 
         
-        self.editor.setLineWrapMode(TextEditer.LineWrapMode.NoWrap)
+        self.editor.setLineWrapMode(TextEditor.LineWrapMode.NoWrap)
         self.editor.textChanged.connect(self.__line_widget_line_count_changed)
         self.editor.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.editor.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)

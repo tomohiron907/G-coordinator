@@ -12,7 +12,7 @@ import inspect
 
 
 
-class TextEditer(QTextEdit):
+class TextEditor(QTextEdit):
     def __init__(self,  parent=None):
         super().__init__(parent)
         
@@ -214,7 +214,7 @@ class TextEditer(QTextEdit):
             print('pasta plain')
             self.pastePlainText()
         else:
-            super(TextEditer, self).keyPressEvent(event)
+            super(TextEditor, self).keyPressEvent(event)
         cursor_position = self.textCursor().position()
         if cursor_position == 0:
             self.completer.popup().hide()
