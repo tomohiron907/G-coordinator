@@ -22,6 +22,7 @@ def draw_koch_snowflake(order, length, angle, x, y):
         draw_koch_snowflake(order - 1, length, angle - 60, x, y)  
         x = x + length * np.cos(np.radians(angle - 60))
         y = y + length * np.sin(np.radians(angle - 60))
+        draw_koch_snowflake(order - 1, length, angle + 60, x, y)  
         x = x + length * np.cos(np.radians(angle + 60))
         y = y + length * np.sin(np.radians(angle + 60))
         draw_koch_snowflake(order - 1, length, angle, x, y)
