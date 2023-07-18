@@ -1,6 +1,6 @@
 import numpy as np
 from path_generator import *
-from modeling_tool import eq_to_path
+from modeling_toolbox.function_to_path import eq_to_path
 
 
 def equation(x, y, z):

@@ -1,2 +1,0 @@
-from modeling_toolbox.function_to_path import eq_to_path
-from modeling_toolbox.stl_slice import slice
