@@ -8,7 +8,7 @@ import print_settings
 import trimesh
 from path_generator import *
 from infill_generator import *
-from modeling_toolbox.stl_slice import slice
+from modeling_tool import slice
 from console import *
 import time
 
