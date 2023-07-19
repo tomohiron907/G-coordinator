@@ -10,7 +10,7 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 import pyqtgraph.opengl as gl
 from window.import_file import import_file
 import window.syntax_pars
-from gcode_process import Gcode
+from gcode.gcode_process import Gcode
 from  window.draw_object import draw_full_object, draw_object_slider
 import configparser
 import path_generator
