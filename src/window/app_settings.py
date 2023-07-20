@@ -4,6 +4,11 @@ from PyQt5.QtCore import QSettings, Qt
 
 
 class SettingsWindow(QDialog):
+    """G-coordinator application settings window
+
+    Args:
+        QDialog (_type_): _description_
+    """
     def __init__(self):
         super().__init__()
         self.initUI()
