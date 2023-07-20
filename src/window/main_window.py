@@ -19,6 +19,7 @@ from window.gcode_export_window import *
 from window.machine_settings_window import *
 from path_generator import Path
 from window.app_settings_window import SettingsWindow
+from window.file_operations import FileOperation
 #import markdown2
 import qdarktheme
 
@@ -44,6 +45,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.initUI()
         grid_draw(self.graphicsView)
+        self.file_operation = FileOperation()
     
     def initUI(self):
         #self.setStyleSheet("background-color: rgb(26, 26, 26);")
@@ -253,84 +255,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_title()
         
     def file_open(self):
-        # getting path and bool value
-        path, _ = QFileDialog.getOpenFileName(self, "Open file", "",
-                             "Text documents (*.txt);All files (*.*)")
-        # if path is true
-        if path:
-            # try opening path
-            try:
-                with open(path, 'r') as f:
-                    # read the file
-                    text = f.read()
-            # if some error occurred
-            except Exception as e:
-                # show error using critical method
-                self.dialog_critical(str(e))
-            # else
-            else:
-                # update path value
-                self.path = path
-                # update the text
-                self.editor.setPlainText(text)
-                # update the title
-                self.update_title()
+        self.file_operation.open(self)
 
 
     def save_as_modeling(self):
-        # get the text
-        text = self.editor.toPlainText()
-        # try catch block
-        # opening file to write
-        with open('buffer/modeling.py', 'w') as f:
-            # write text in the file
-            f.write(text)
-        #self.draw_object()
+        self.file_operation.save_as_modeling(self)
 
     def file_save(self):
-        # if there is no save path
-        if self.path is None:
-            # call save as method
-            return self.file_save_as()
-        # else call save to path method
-        self._save_to_path(self.path)
-        # action called by save as action
+        self.file_operation.save(self)
 
     def file_save_as(self):
-        # opening path
-        path, _ = QFileDialog.getSaveFileName(self, "Save file", "",
-                             "Text documents (*.txt);All files (*.*)")
-        # if dialog is cancelled i.e no path is selected
-        if not path:
-            # return this method
-            # i.e no action performed
-            return
- 
-        # else call save to path method
-        self._save_to_path(path)
- 
-    # save to path method
-    def _save_to_path(self, path):
-        # get the text
-        text = self.editor.toPlainText()
-        # try catch block
-        try:
-            # opening file to write
-            with open(path, 'w') as f:
-                # write text in the file
-                f.write(text)
- 
-        # if error occurs
-        except Exception as e:
-            # show error using critical
-            self.dialog_critical(str(e))
- 
-        # else do this
-        else:
-            # change path
-            self.path = path
-            # update the title
-            self.update_title()
+        self.file_operation.save_as(self)
+
 
     def update_title(self):
         # setting window title with prefix as file name
