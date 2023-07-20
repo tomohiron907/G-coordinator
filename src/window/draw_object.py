@@ -20,6 +20,15 @@ print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)
 
 def vecA_to_vecB(a, b):
+    """Calculation of direction and angle of nozzle drawing direction
+
+    Args:
+        a (tuple): original normal vector
+        b (tuple): normal vector
+
+    Returns:
+        tuple: direction and angle of nozzle drawing direction
+    """
     cross = np.zeros(3)
     cross[0] = a[1]*b[2] - a[2]*b[1]
     cross[1] = a[2]*b[0] - a[0]*b[2]
@@ -41,10 +50,11 @@ def vecA_to_vecB(a, b):
 
 
 def draw_full_object(widget, full_object):
-    """
-    In this method, we are flattening the elements of the path in the full_object into a coordinate sequence and then drawing that sequence.
-    The coordinate sequence includes additional vertices at the starting and ending points of the path, which have the same coordinates.
-    This is done to achieve smooth color transitions during traversal.
+    """Create and draw a sequence of coordinates that the nozzle moves through the entire list of full_objects
+
+    Args:
+        widget (GLViewWidget): widget of graphics view
+        full_object (list): list of path objects
     """
     global pos_array,colors
     pos_array = []
@@ -97,10 +107,14 @@ def draw_full_object(widget, full_object):
 
 
 def draw_object_slider(widget, full_object, slider_layer, slider_segment):
+    """Calculates how many segments to draw from the slider value and sets subsequent segments as transparent
+
+    Args:
+        widget (GLViewWidget): widget of graphics view
+        full_object (list): list of path objects
+        slider_layer (int): slider_layer value
+        slider_segment (int): segment_layer value
     """
-    In this method, we calculate which segment to draw based on the value of the slider.
-    We then make the color of the segments transparent in the existing color ndarray, starting from the value of the slider onwards.
-    """     
     global pos_array, colors
     colors_copy = np.copy(colors)
     segment_each_path = 0
