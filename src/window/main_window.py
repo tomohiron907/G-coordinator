@@ -9,7 +9,7 @@ from PyQt5.QtPrintSupport import *
 from pyqtgraph.parametertree import Parameter, ParameterTree
 import pyqtgraph.opengl as gl
 from window.import_file import import_file
-import window.syntax_pars
+import window.editor.syntax_pars
 from gcode.gcode_process import Gcode
 from  window.draw_object import draw_full_object, draw_object_slider
 import configparser
@@ -18,7 +18,7 @@ from window.ui_settings import Ui_MainWindow
 from window.gcode_export_window import *
 from window.machine_settings_window import *
 from path_generator import Path
-from window.app_settings import SettingsWindow
+from window.app_settings_window import SettingsWindow
 #import markdown2
 import qdarktheme
 
@@ -93,7 +93,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             color: #ccc; 
             background-color: #2b2b2b;}""")
         #シンタックス表示
-        self.highlight=window.syntax_pars.PythonHighlighter(self.editor.document())
+        self.highlight=window.editor.syntax_pars.PythonHighlighter(self.editor.document())
         self.graphicsView.setCameraPosition(distance=120)
         self.message_console.setReadOnly(True)
         self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
