@@ -11,7 +11,7 @@ import pyqtgraph.opengl as gl
 from window.import_file import import_file
 import window.editor.syntax_pars
 from gcode.gcode_process import Gcode
-from  window.draw_object import draw_full_object, draw_object_slider
+from  window.draw_object import draw_full_object, draw_object_slider, grid_draw
 import configparser
 import path_generator
 from window.ui_settings import Ui_MainWindow
@@ -43,7 +43,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
         self.initUI()
-        self.grid_draw()
+        grid_draw(self.graphicsView)
     
     def initUI(self):
         #self.setStyleSheet("background-color: rgb(26, 26, 26);")
@@ -166,25 +166,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         QMessageBox.information(self, 'Contact', f'Contact: {contact}\n Twitter: @tamutamu3D')
 
 
-    # drawing grid in pyqtgraph widget
-    def grid_draw(self):
-        
-        gz = gl.GLGridItem()
-        gz.setSize(print_settings.bed_x, print_settings.bed_y)
-        gz.setSpacing(10,10)
-        axis = gl.GLAxisItem()
-        axis.setSize(50,50,50)
-        x_text = gl.GLTextItem()
-        x_text.setData(pos=(50,0,0),text = 'x')
-        y_text = gl.GLTextItem()
-        y_text.setData(pos=(0,50,0),text = 'y')
-        z_text = gl.GLTextItem()
-        z_text.setData(pos=(0,0,50),text = 'z')
-        self.graphicsView.addItem(axis)
-        self.graphicsView.addItem(x_text)
-        self.graphicsView.addItem(y_text)
-        self.graphicsView.addItem(z_text)
-        self.graphicsView.addItem(gz)
+
     
     def run(self):
         self.save_as_modeling()
@@ -216,7 +198,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #draw_object.set_object_array(self.full_object)
         
         self.graphicsView.clear()  # initialize pyqtgraph widget
-        self.grid_draw()
+        grid_draw(self.graphicsView)
         draw_full_object(self.graphicsView,self.full_object)  #redraw updated objects in modeling.py
         self.slider_layer.setRange(0, len(self.full_object)-1)  # set slider range
         self.slider_layer.setValue(len(self.full_object)-1)
@@ -239,14 +221,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def redraw_layer_object(self): 
         self.graphicsView.clear()  # initialize pyqtgraph widget
-        self.grid_draw()
+        grid_draw(self.graphicsView)
         self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
         self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()].coords))
         draw_object_slider(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
 
     def redraw_segment_object(self): 
         self.graphicsView.clear()  # initialize pyqtgraph widget
-        self.grid_draw()
+        grid_draw(self.graphicsView)
         draw_object_slider(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
     
     def up_button_pressed(self):

@@ -19,6 +19,26 @@ CONFIG_PATH = ROUTE_PATH + '/settings/print_setting.ini' # 編集
 print_setting = configparser.ConfigParser()
 print_setting.read(CONFIG_PATH)
 
+
+def grid_draw(widget):
+        
+        gz = gl.GLGridItem()
+        gz.setSize(print_settings.bed_x, print_settings.bed_y)
+        gz.setSpacing(10,10)
+        axis = gl.GLAxisItem()
+        axis.setSize(50,50,50)
+        x_text = gl.GLTextItem()
+        x_text.setData(pos=(50,0,0),text = 'x')
+        y_text = gl.GLTextItem()
+        y_text.setData(pos=(0,50,0),text = 'y')
+        z_text = gl.GLTextItem()
+        z_text.setData(pos=(0,0,50),text = 'z')
+        widget.addItem(axis)
+        widget.addItem(x_text)
+        widget.addItem(y_text)
+        widget.addItem(z_text)
+        widget.addItem(gz)
+
 def vecA_to_vecB(a, b):
     """Calculation of direction and angle of nozzle drawing direction
 
