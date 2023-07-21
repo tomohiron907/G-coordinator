@@ -6,7 +6,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
-from pyqtgraph.parametertree import Parameter, ParameterTree
 import pyqtgraph.opengl as gl
 from window.import_file import import_file
 import window.editor.syntax_pars
@@ -20,6 +19,7 @@ from window.machine_settings_window import *
 from path_generator import Path
 from window.app_settings_window import SettingsWindow
 from window.file_operations import FileOperation
+from window.parameter_tree import ParameterTree
 import qdarktheme
 
 
@@ -32,12 +32,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.file_operation = FileOperation()
     
     def initUI(self):
-        self.read_setting()
-        self.parameter_tree_setting()
-        self.p = Parameter.create(name='params', type='group', children=self.params)
-        self.p.sigTreeStateChanged.connect(self.change)
-        self.parameter_tree.setParameters(self.p, showTop=True)
-        self.parameter_tree.resize(250,540)
         self.new()
 
     def settings(self):

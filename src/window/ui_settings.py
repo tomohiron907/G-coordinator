@@ -17,11 +17,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
 from pyqtgraph import opengl
-from pyqtgraph.parametertree import ParameterTree
+#from pyqtgraph.parametertree import ParameterTree as pgParameterTree
 from window.editor.text_editor import TextEditor
 from window.button.svg_button import SvgButton
 from window.editor.line_number import LineNumberWidget
 from window.editor.syntax_pars import PythonHighlighter
+from window.parameter_tree import ParameterTree
+
 from window.menu_bar import MenuBar
 
 class Ui_MainWindow(object):
@@ -194,7 +196,13 @@ class Ui_MainWindow(object):
 
     def right_pane_setting(self, MainWindow):
         self.machine_settings_button = QtWidgets.QPushButton(MainWindow)
-        self.parameter_tree = ParameterTree(MainWindow)
+        #self.parameter_tree = pgParameterTree(MainWindow)
+        self.parameter_tree = ParameterTree()
+        self.parameter_tree.read_setting()
+        self.parameter_tree.parameter_tree_setting()
+        self.parameter_tree.setParameters(self.parameter_tree.p, showTop=True)
+        self.parameter_tree.resize(250,540)
+
         self.gcode_export_button = QtWidgets.QPushButton(MainWindow)
         self.gcode_export_button.setStyleSheet(self.button_style_sheet)
         self.right_layout = QtWidgets.QVBoxLayout()
