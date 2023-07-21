@@ -48,7 +48,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.file_operation = FileOperation()
     
     def initUI(self):
-        #self.setStyleSheet("background-color: rgb(26, 26, 26);")
+        """#self.setStyleSheet("background-color: rgb(26, 26, 26);")
         menubar = self.menuBar()
 
         menu_data = {
@@ -88,7 +88,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     action.setShortcut(shortcut)
                 if triggered:
                     action.triggered.connect(triggered)
-                menu.addAction(action)
+                menu.addAction(action)"""
 
 
         self.editor.setStyleSheet("""QTextEdit{ 

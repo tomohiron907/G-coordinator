@@ -32,6 +32,8 @@ class Ui_MainWindow(object):
 
         self.right_pane_setting(MainWindow)
 
+        self.menu_bar_settings(MainWindow)
+
 
         self.splitter = QSplitter()
         splitter_style_sheet = """
@@ -182,6 +184,48 @@ class Ui_MainWindow(object):
         self.right_layout.addWidget(self.machine_settings_button)
         self.right_layout.addWidget(self.parameter_tree)
         self.right_layout.addWidget(self.gcode_export_button)
+
+    def menu_bar_settings(self, MainWindow):
+        menubar = self.menuBar()
+
+        menu_data = {
+            'File': {
+                'New': {'shortcut': 'Ctrl+N', 'triggered': self.new},
+                'Open': {'shortcut': 'Ctrl+O', 'triggered': self.file_open},
+                'Save': {'shortcut': 'Ctrl+S', 'triggered': self.file_save},
+                'Save As': {'shortcut': 'Ctrl+Shift+S', 'triggered': self.file_save_as}
+            },
+            'Settings': {
+                'Settings': {'shortcut': 'Ctrl+,', 'triggered': self.settings}
+            },
+            'Edit': {
+                'Cut': {'shortcut': 'Ctrl+X'},
+                'Copy': {'shortcut': 'Ctrl+C'},
+                'Paste': {'shortcut': 'Ctrl+V'},
+                'Undo': {'shortcut': 'Ctrl+Z'},
+                'Redo': {'shortcut': 'Ctrl+Y'}
+            },
+            'Run': {
+                'Run': {'shortcut': 'Ctrl+R', 'triggered': self.run}
+            },
+            'Help': {
+                #'Documentation': {'triggered': self.documentation},
+                'Version Information': {'triggered': self.version_info},
+                'Contact Us': {'triggered': self.contact_us}
+            }
+        }
+
+        for menu_name, actions in menu_data.items():
+            menu = menubar.addMenu(menu_name)
+            for action_name, action_data in actions.items():
+                action = QAction(action_name, self)
+                shortcut = action_data.get('shortcut', None)
+                triggered = action_data.get('triggered', None)
+                if shortcut:
+                    action.setShortcut(shortcut)
+                if triggered:
+                    action.triggered.connect(triggered)
+                menu.addAction(action)
     
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
