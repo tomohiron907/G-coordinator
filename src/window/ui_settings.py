@@ -21,6 +21,8 @@ from pyqtgraph.parametertree import ParameterTree
 from window.editor.text_editor import TextEditor
 from window.button.svg_button import SvgButton
 from window.editor.line_number import LineNumberWidget
+from window.editor.syntax_pars import PythonHighlighter
+from window.menu_bar import MenuBar
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -32,8 +34,9 @@ class Ui_MainWindow(object):
 
         self.right_pane_setting(MainWindow)
 
-        self.menu_bar_settings(MainWindow)
-
+        #self.menu_bar_settings(MainWindow)
+        self.menu_bar = MenuBar()
+        self.menu_bar.settings(self)
 
         self.splitter = QSplitter()
         splitter_style_sheet = """
@@ -105,6 +108,12 @@ class Ui_MainWindow(object):
         self.editor.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
 
         self.editor.setFont(QFont("Arial", 14))
+
+        self.editor.setStyleSheet("""QTextEdit{ 
+            color: #ccc; 
+            background-color: #2b2b2b;}""")
+        #シンタックス表示
+        self.highlight=PythonHighlighter(self.editor.document())
         self.line_number_widget = LineNumberWidget(self.editor)
 
 
@@ -117,7 +126,8 @@ class Ui_MainWindow(object):
 
         self.message_console = QtWidgets.QTextEdit(MainWindow)
         self.message_console.setMinimumHeight(30)
-
+        self.message_console.setReadOnly(True)
+        self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
         self.left_pane_widget = QWidget(MainWindow)
         self.message_splitter = QSplitter()
         self.message_splitter.setOrientation(Qt.Vertical)#splitterの方向を横に設定
@@ -137,6 +147,8 @@ class Ui_MainWindow(object):
         self.graphicsView = opengl.GLViewWidget(MainWindow)
         #self.graphicsView.setStyleSheet("border-radius: 10px;")
         self.graphicsView.setBackgroundColor(QtGui.QColor(30, 30, 30))
+        self.graphicsView.setCameraPosition(distance=120)
+
         self.segment_button_layout = QtWidgets.QHBoxLayout()
         self.slider_segment =  QtWidgets.QSlider(MainWindow)
         self.slider_segment.setOrientation(QtCore.Qt.Horizontal)
@@ -169,6 +181,11 @@ class Ui_MainWindow(object):
         self.layer_layout.addLayout(self.slider_layout)
         self.layer_layout.addLayout(self.layer_button_layout)
 
+        self.up_button.setArrowType(Qt.UpArrow)
+        self.down_button.setArrowType(Qt.DownArrow)
+        self.left_button.setArrowType(Qt.LeftArrow)
+        self.right_button.setArrowType(Qt.RightArrow)
+
 
 
         self.central_layout =  QtWidgets.QHBoxLayout()
@@ -185,47 +202,6 @@ class Ui_MainWindow(object):
         self.right_layout.addWidget(self.parameter_tree)
         self.right_layout.addWidget(self.gcode_export_button)
 
-    def menu_bar_settings(self, MainWindow):
-        menubar = self.menuBar()
-
-        menu_data = {
-            'File': {
-                'New': {'shortcut': 'Ctrl+N', 'triggered': self.new},
-                'Open': {'shortcut': 'Ctrl+O', 'triggered': self.file_open},
-                'Save': {'shortcut': 'Ctrl+S', 'triggered': self.file_save},
-                'Save As': {'shortcut': 'Ctrl+Shift+S', 'triggered': self.file_save_as}
-            },
-            'Settings': {
-                'Settings': {'shortcut': 'Ctrl+,', 'triggered': self.settings}
-            },
-            'Edit': {
-                'Cut': {'shortcut': 'Ctrl+X'},
-                'Copy': {'shortcut': 'Ctrl+C'},
-                'Paste': {'shortcut': 'Ctrl+V'},
-                'Undo': {'shortcut': 'Ctrl+Z'},
-                'Redo': {'shortcut': 'Ctrl+Y'}
-            },
-            'Run': {
-                'Run': {'shortcut': 'Ctrl+R', 'triggered': self.run}
-            },
-            'Help': {
-                #'Documentation': {'triggered': self.documentation},
-                'Version Information': {'triggered': self.version_info},
-                'Contact Us': {'triggered': self.contact_us}
-            }
-        }
-
-        for menu_name, actions in menu_data.items():
-            menu = menubar.addMenu(menu_name)
-            for action_name, action_data in actions.items():
-                action = QAction(action_name, self)
-                shortcut = action_data.get('shortcut', None)
-                triggered = action_data.get('triggered', None)
-                if shortcut:
-                    action.setShortcut(shortcut)
-                if triggered:
-                    action.triggered.connect(triggered)
-                menu.addAction(action)
     
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

@@ -20,24 +20,8 @@ from window.machine_settings_window import *
 from path_generator import Path
 from window.app_settings_window import SettingsWindow
 from window.file_operations import FileOperation
-#import markdown2
 import qdarktheme
 
-class ReadmeDialog(QDialog):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("README")
-
-        layout = QVBoxLayout()
-        self.text_edit = QTextEdit(self)
-        layout.addWidget(self.text_edit)
-        self.setLayout(layout)
-
-    def set_readme_text(self, readme_text):
-        pass
-        # Dialog to display readme (not yet completed)
-        #html = markdown2.markdown(readme_text)
-        #self.text_edit.setHtml(html)
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -48,33 +32,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.file_operation = FileOperation()
     
     def initUI(self):
-
-        self.editor.setStyleSheet("""QTextEdit{ 
-            color: #ccc; 
-            background-color: #2b2b2b;}""")
-        #シンタックス表示
-        self.highlight=window.editor.syntax_pars.PythonHighlighter(self.editor.document())
-        self.graphicsView.setCameraPosition(distance=120)
-        self.message_console.setReadOnly(True)
-        self.message_console.setStyleSheet("background-color: rgb(26, 26, 26);")
-        arrow_style_sheet = """
-                            QPushButton {
-                                background-color: #3498db;
-                                color: #ffffff;
-                                border: none;
-                                padding: 10px 20px;
-                            }
-                            QPushButton::up-arrow {
-                                image: url("custom_arrow.png");  /* カスタムの矢印画像を指定 */
-                                width: 20px;  /* 矢印の幅を指定 */
-                                height: 20px;  /* 矢印の高さを指定 */
-                            }
-                        """
-        self.up_button.setArrowType(Qt.UpArrow)
-        self.up_button.setStyleSheet(arrow_style_sheet)
-        self.down_button.setArrowType(Qt.DownArrow)
-        self.left_button.setArrowType(Qt.LeftArrow)
-        self.right_button.setArrowType(Qt.RightArrow)
         self.read_setting()
         self.parameter_tree_setting()
         self.p = Parameter.create(name='params', type='group', children=self.params)
@@ -108,25 +65,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def documentation(self):
-        # The document menu was once hidden due to problems with the README display,
-        #  such as img not being displayed, code highlighting not being done, etc. 
-        with open('../README.md', 'r') as file:
-            readme_text = file.read()
-
-        dialog = ReadmeDialog(self)
-        dialog.set_readme_text(readme_text)
-        dialog.exec_()
+        self.menu_bar.documentation(self)
 
     def version_info(self):
-        version = 'G-coordinator 2.2.0'
-        QMessageBox.information(self, 'Version Information', f'Version: {version}')
+        self.menu_bar.version_info(self)
 
     def contact_us(self):
-        contact = 'tomohiron907@gmail.com'
-        QMessageBox.information(self, 'Contact', f'Contact: {contact}\n Twitter: @tamutamu3D')
-
-
-
+        self.menu_bar.contact_us(self)
     
     def run(self):
         self.save_as_modeling()
