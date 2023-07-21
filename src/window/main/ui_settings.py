@@ -12,9 +12,8 @@ from window.editor.text_editor import TextEditor
 from window.button.svg_button import SvgButton
 from window.editor.line_number import LineNumberWidget
 from window.editor.syntax_pars import PythonHighlighter
-from window.parameter_tree import ParameterTree
-
-from window.menu_bar import MenuBar
+from window.main.parameter_tree import ParameterTree
+from window.main.menu_bar import MenuBar
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):

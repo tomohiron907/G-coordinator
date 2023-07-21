@@ -8,13 +8,13 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtPrintSupport import *
 
-from window.import_file import import_file
+from window.main.import_file import import_file
 from window.draw_object import draw_full_object, draw_object_slider, grid_draw
-from window.ui_settings import Ui_MainWindow
+from window.main.ui_settings import Ui_MainWindow
 from window.gcode_export_window import GcodeExportWindow
 from window.machine_settings_window import MachineSettingsDialog
 from window.app_settings_window import SettingsWindow
-from window.file_operations import FileOperation
+from window.main.file_operations import FileOperation
 
 from gcode.gcode_process import Gcode
 import path_generator
