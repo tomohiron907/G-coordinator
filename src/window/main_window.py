@@ -6,12 +6,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtPrintSupport import *
-import pyqtgraph.opengl as gl
 from window.import_file import import_file
-import window.editor.syntax_pars
 from gcode.gcode_process import Gcode
 from  window.draw_object import draw_full_object, draw_object_slider, grid_draw
-import configparser
 import path_generator
 from window.ui_settings import Ui_MainWindow
 from window.gcode_export_window import *
@@ -19,7 +16,6 @@ from window.machine_settings_window import *
 from path_generator import Path
 from window.app_settings_window import SettingsWindow
 from window.file_operations import FileOperation
-from window.parameter_tree import ParameterTree
 import qdarktheme
 
 
@@ -27,12 +23,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-        self.initUI()
+        self.new()
         grid_draw(self.graphicsView)
         self.file_operation = FileOperation()
-    
-    def initUI(self):
-        self.new()
 
     def settings(self):
         settings_window = SettingsWindow()
@@ -94,7 +87,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             with open("buffer/modeling.py",'w') as f:
                 pass
         
-        #draw_object.set_object_array(self.full_object)
         
         self.graphicsView.clear()  # initialize pyqtgraph widget
         grid_draw(self.graphicsView)
@@ -143,7 +135,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.slider_segment.setValue(self.slider_segment.value()+1)
 
     def new(self):
-        #self._save_to_path()
         self.path = None
         with open('buffer/default_start.py', 'r') as file:
             code_str = file.read()
@@ -171,63 +162,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle("%s - G-coordinator" %(os.path.basename(self.path)
                                                   if self.path else "Untitled"))
 
-
-
-    def read_setting(self):
-        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-        CONFIG_PATH = ROUTE_PATH + '/settings/print_settings.ini' # 編集
-        self.print_setting = configparser.ConfigParser()
-        self.print_setting.read(CONFIG_PATH)
-
-    def parameter_tree_setting(self):
-        self.params = [
-            {'name': 'nozzle', 'type': 'group', 'children': [
-                {'name': 'nozzle_diameter', 'type': 'float', 'value': float(self.print_setting['nozzle']['nozzle_diameter'])},
-                {'name': 'filament_diameter', 'type': 'float', 'value': float(self.print_setting['nozzle']['filament_diameter'])},
-            ]},
-            {'name': 'layer', 'type': 'group', 'children': [
-                {'name': 'layer_height', 'type': 'float', 'value': float(self.print_setting['layer']['layer_height'])},
-            ]},
-            
-            {'name': 'speed', 'type': 'group', 'children': [
-                {'name': 'print_speed', 'type': 'int', 'value': int(self.print_setting['speed']['print_speed'])},
-                {'name': 'travel_speed', 'type': 'int', 'value': int(self.print_setting['speed']['travel_speed'])},
-            ]},
-            {'name': 'fan_speed', 'type': 'group', 'children': [
-                {'name': 'fan_speed', 'type': 'int', 'value': int(self.print_setting['fan_speed']['fan_speed'])},
-            ]},
-            {'name': 'temperature', 'type': 'group', 'children': [
-                {'name': 'nozzle_temperature', 'type': 'int', 'value': int(self.print_setting['temperature']['nozzle_temperature'])},
-                {'name': 'bed_temperature', 'type': 'int', 'value': int(self.print_setting['temperature']['bed_temperature'])},
-            ]},
-            {'name': 'travel_option', 'type': 'group', 'children': [
-                {'name': 'retraction', 'type': 'bool', 'value': self.print_setting.getboolean('travel_option','retraction')},
-                {'name': 'retraction_distance', 'type': 'float', 'value': float(self.print_setting['travel_option']['retraction_distance'])},
-                {'name': 'unretraction_distance', 'type': 'float', 'value': float(self.print_setting['travel_option']['unretraction_distance'])},
-                {'name': 'z_hop', 'type': 'bool', 'value': self.print_setting.getboolean('travel_option','z_hop')},
-                {'name': 'z_hop_distance', 'type': 'float', 'value': float(self.print_setting['travel_option']['z_hop_distance'])},
-            ]},
-            {'name': 'extrusion_option', 'type': 'group', 'children': [
-                {'name': 'extrusion_multiplier', 'type': 'float', 'value': float(self.print_setting['extrusion_option']['extrusion_multiplier'])},
-            ]},
-            
-        ]
-
-    
-
-    def change(self, param, changes):
-        print("tree changes:")
-        for param, change, data in changes:
-            path = self.p.childPath(param)
-            childName = '.'.join(path)
-            self.print_setting.set(path[0],path[1],str(data))
-            with open('settings/print_settings.ini', 'w') as file:
-                self.print_setting.write(file)
-            print('  parameter: %s'% childName)
-            print('  change:    %s'% change)
-            print('  data:      %s'% str(data))
-            print('  ----------')
-            print_settings.reload_print_setting()
     
     def open_machine_settings_window(self):
         
