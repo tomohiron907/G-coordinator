@@ -15,15 +15,9 @@ import inspect
 class TextEditor(QTextEdit):
     def __init__(self,  parent=None):
         super().__init__(parent)
-
-        '''self.completer = Completer(parent=self)
-        self.completer.setWidget(self)
-        self.completer.setCompletionMode(QCompleter.PopupCompletion)
-        self.completer.setCaseSensitivity(Qt.CaseInsensitive)
-        self.completer.activated.connect(self.insertCompletion)'''
         self.completer = Completer(self)
         self.completer.setWidget(self)
-        self.completer.activated.connect(self.completer.insertCompletion)  # CompleterクラスのinsertCompletionを接続
+        #self.completer.activated.connect(self.completer.insertCompletion)  # CompleterクラスのinsertCompletionを接続
 
         self.trigger = ''
         popup = self.completer.popup()
@@ -36,13 +30,8 @@ class TextEditor(QTextEdit):
         """)
         
         #self.textChanged.connect(lambda: self.completer.update_word_list(text))
-        self.textChanged .connect(self.update_text)
-        self.update_text()
-    
-    def update_text(self):
-        #self.text = self.toPlainText()
-        self.completer.update_word_list()
-        #print(self.text)
+        self.textChanged.connect(self.completer.update_word_list)
+
 
     def print_change(self):
         print('Changed!!')
@@ -93,37 +82,6 @@ class TextEditor(QTextEdit):
                 cursor.removeSelectedText()
 
 
-
-
-
-
-
-    '''def insertCompletion(self, completion):
-        
-        if self.completer.widget() != self:
-            return
-        tc = self.textCursor()
-        extra = len(completion) - len(self.completer.completionPrefix())
-        tc.movePosition(QTextCursor.Left)
-        tc.movePosition(QTextCursor.EndOfWord)
-        if extra ==0:
-            completion_incert = ''
-        else:
-            completion_incert = completion[-extra:]
-        if not completion in self.method_list:
-            tc.insertText(completion_incert)
-            if completion == 'Path':
-                tc.insertText('()')
-                tc.movePosition(QTextCursor.PreviousCharacter)
-
-        else:
-            tc.insertText(completion_incert+"()")
-            print(completion)
-            tc.movePosition(QTextCursor.PreviousCharacter)
-
-        
-        self.setTextCursor(tc)'''
-    
     def textUnderCursor(self):
         tc = self.textCursor()
         tc.select(QTextCursor.WordUnderCursor)
@@ -138,13 +96,15 @@ class TextEditor(QTextEdit):
         self.insertPlainText(plain_text)
 
     def keyPressEvent(self, event):
+        
         if self.completer.popup().isVisible():
-            if event.key() in (Qt.Key_Enter, Qt.Key_Return, Qt.Key_Escape, Qt.Key_Tab, Qt.Key_Backtab):
+            if event.key() in (Qt.Key_Enter, Qt.Key_Return):
+                self.completer.popup().hide()  # Enterキーが押されたら補完ウィジェットを非表示にする
                 event.ignore()
                 return
-            current_index = self.completer.popup().currentIndex()
-            if self.completer.completionModel().data(current_index) == self.textUnderCursor():
-                self.completer.popup().hide()
+            if event.key() in (Qt.Key_Escape, Qt.Key_Tab, Qt.Key_Backtab):
+                self.completer.popup().hide()  # 他のキーが押されたら補完ウィジェットを非表示にしない
+                event.ignore()
                 return
 
         #オートインデントの処理
@@ -196,10 +156,8 @@ class TextEditor(QTextEdit):
             super(TextEditor, self).keyPressEvent(event)
 
 
-        '''cursor_position = self.textCursor().position()
-        if cursor_position == 0:
-            self.completer.popup().hide()
-            return
+        # auto complete
+        cursor_position = self.textCursor().position()
         completionPrefix = self.toPlainText()[:cursor_position].split()[-1]
         if completionPrefix.startswith(self.trigger):
             completionPrefix = completionPrefix[len(self.trigger):]
@@ -212,6 +170,7 @@ class TextEditor(QTextEdit):
         if completionPrefix != self.completer.completionPrefix():
             self.completer.setCompletionPrefix(completionPrefix)
             self.completer.popup().setCurrentIndex(self.completer.completionModel().index(0, 0))
+
         cr = self.cursorRect()
         cr.setWidth(self.completer.popup().sizeHintForColumn(0) + self.completer.popup().verticalScrollBar().sizeHint().width())
-        self.completer.complete(cr)'''
+        self.completer.complete(cr)

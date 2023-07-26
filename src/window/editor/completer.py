@@ -9,49 +9,119 @@ import ast
 
 import path_generator
 import print_settings
-def extract_variable_names(code_str):
-    names = set()
-    tree = ast.parse(code_str)
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Name):
-            names.add(node.id)
 
-    print(names)
+
+def extract_variable_names(code_str, names):
+    
+    try: # 文法の破綻したコードが送られてきた時のための try/except
+        tree = ast.parse(code_str)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Name):
+                names.add(node.id)
+    except:
+        pass
+    return names
+
+
+def extract_function_names(code_string, function_names):
+    try:
+        def visit_FunctionDef(node):
+            function_names.add(node.name)
+        tree = ast.parse(code_string)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                visit_FunctionDef(node)
+    except:
+        pass
+    function_names.update(['np.'+method for method in dir(np) if not method.startswith('__')])
+    return function_names
+
+def extract_class_names(code_str, names):
+    
+    try: # 文法の破綻したコードが送られてきた時のための try/except
+        tree = ast.parse(code_str)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                names.add(node.id)
+    except:
+        pass
     return names
 
 class Completer(QCompleter):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.text_editor = parent
-        
-        self.word_list = ['full_object', 'full_object.append']
-        self.class_list = ['full_object']
-        self.method_list = ['full_object.append']
-        self.variable_list = []
-        self.word_list_path_generator(path_generator)
-        self.word_list_print_setting(print_settings)
-        self.word_list += ["np."+ method  for method in dir(np) if not method.startswith('__')]
-        self.method_list += ["np."+ method  for method in dir(np) if not method.startswith('__')]
-        self.set_words()
+    def __init__(self,  parent=None):
+        super().__init__( parent)
+        self.word_list = []
+        self.variable_set = set([])
+        self.function_set = set([])
+        self.class_set = set([])
         self.setCompletionMode(QCompleter.PopupCompletion)
         self.setCaseSensitivity(Qt.CaseInsensitive)
-        #self.activated.connect(self.insertCompletion)
+        self.setModel(QStringListModel(self.word_list))
+        self.activated.connect(self.insertCompletion)
 
     def set_words(self):
-        #self.word_list = list(set(self.word_list))
         self.completion_model = QStringListModel(self.word_list)
-        #self.setModel(QStringListModel(self.word_list))
         self.setModel(self.completion_model)
         self.setCompletionMode(QCompleter.PopupCompletion)
         self.setCaseSensitivity(Qt.CaseInsensitive)
 
+    def insertCompletion(self, completion):
+        #print(completion)
+        if self.widget() != self.parent():
+            return
+        tc = self.parent().textCursor()
+        extra = len(completion) - len(self.completionPrefix())
+        print(f'{extra=}')
+        
+        if completion in self.function_set:
+            tc.movePosition(QTextCursor.Left)
+            tc.movePosition(QTextCursor.EndOfWord)
+            if extra == 0:
+                tc.insertText("()")
+            else:
+                tc.insertText(completion[-extra:]+"()")
+            tc.movePosition(QTextCursor.PreviousCharacter)
+            self.parent().setTextCursor(tc)
+        elif completion in self.variable_set:
+            tc.movePosition(QTextCursor.Left)
+            tc.movePosition(QTextCursor.EndOfWord)
+            tc.insertText(completion[-extra:])
+            self.parent().setTextCursor(tc)
+            tc.movePosition(QTextCursor.Right)
+        else:
+            tc.insertText(completion[-extra:])
+
+    def update_word_list(self):
+        self.word_list = [] # 使わなくなった変数名などがword_listに残らないようにリストを初期化
+        self.word_list_path_generator(path_generator)
+        self.word_list_print_setting(print_settings)
+        text = self.parent().toPlainText()
+
+        self.variable_set = extract_variable_names(text, self.variable_set)
+        self.function_set = extract_function_names(text, self.function_set)
+
+        cursor_position = self.parent().textCursor().position()
+        text_before_cursor = self.parent().toPlainText()[:cursor_position]
+        words_before_cursor = text_before_cursor.split()
+        completionPrefix = words_before_cursor[-1] if words_before_cursor else "" # 途中までに入植した文字列
+
+        try: # 書きかけの文字列は，名前の集合から除外
+            self.variable_set.remove(completionPrefix)
+            self.function_set.remove(completionPrefix)
+        except: # prefixがvariablesにない場合の処理
+            pass
+        self.word_list += self.variable_set
+        self.word_list += self.function_set
+
+        self.word_list = sorted(set(self.word_list))
+        
+        self.set_words()
 
     def word_list_path_generator(self, module):
         classes = []
         for name, obj in inspect.getmembers(module):
             if inspect.isclass(obj):
                 classes.append(name)
-                self.class_list.append(name)
         # オートコンプリートに使用するワードリストを作成
         
         for class_name in classes:
@@ -61,73 +131,11 @@ class Completer(QCompleter):
             for method_name in dir(getattr(module, class_name)):
                 if not method_name.startswith('_'):
                     self.word_list.append(f"{class_name}.{method_name}")
-                    self.method_list.append(f'{class_name}.{method_name}')
-        
+
     def word_list_print_setting(self, module):
         self.word_list.append('print_settings')
-        self.class_list.append('print_settings')
         for name, obj in inspect.getmembers(module):
             if not name.startswith('_') and not inspect.ismodule(obj):
                 self.word_list.append(f'print_settings.{name}')
-                self.variable_list.append(f'print_settings.{name}')
 
-    def update_word_list(self):
-        self.word_list = []
-        #print(self.text_editor.toPlainText())
-        text = self.text_editor.toPlainText()
-
-        # Use regular expression to find variable names followed by '='
-        #variable_assignments = re.findall(r'\b([a-zA-Z_]\w*)\s*=', text)
-
-        # Extract the variable names from the matches
-        #self.variable_list = [var_name for var_name in variable_assignments]
-        self.variable_list = extract_variable_names(text)
-        #self.variable_list = list(set(self.va))
-        #self.word_list += variable_names
-        self.word_list += self.class_list
-        self.word_list += self.method_list
-        self.word_list += self.variable_list
-        self.word_list = list(set(self.word_list))
-        self.set_words()
-
-        # Remove duplicates and add new variable names to the words list
-        '''unique_variable_names = list(set(variable_names))
-        self.completion_model.setStringList(unique_variable_names)'''
-    def insertCompletion(self, completion):
-        print(f'{completion=}')
-        if self.widget() is not None and isinstance(self.widget(), QTextEdit):
-            text_edit = self.widget()
-            tc = text_edit.textCursor()
-            extra = len(completion) - len(self.completionPrefix())
-            tc.movePosition(QTextCursor.Left)
-            tc.movePosition(QTextCursor.EndOfWord)
-            tc.insertText(completion[-extra:])
-            text_edit.setTextCursor(tc)
-    
-
-    '''def insertCompletion(self, completion):
-        
-        if self.widget() != self:
-            return
-        tc = self.textCursor()
-        extra = len(completion) - len(self.completionPrefix())
-        tc.movePosition(QTextCursor.Left)
-        tc.movePosition(QTextCursor.EndOfWord)
-        if extra ==0:
-            completion_incert = ''
-        else:
-            completion_incert = completion[-extra:]
-        if not completion in self.method_list:
-            tc.insertText(completion_incert)
-            if completion == 'Path':
-                tc.insertText('()')
-                tc.movePosition(QTextCursor.PreviousCharacter)
-
-        else:
-            tc.insertText(completion_incert+"()")
-            print(completion)
-            tc.movePosition(QTextCursor.PreviousCharacter)
-
-        
-        self.setTextCursor(tc)'''
 
