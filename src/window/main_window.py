@@ -30,7 +30,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         grid_draw(self.graphicsView)
         self.file_operation = FileOperation()
 
-    #----------------------------------------------------------------------
+    #=================================================================
     # event handler 
     def draw_updated_object(self):
         """
@@ -131,7 +131,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 
-    #----------------------------------------------------------------------
+    #=================================================================
     # file operartion
     def file_open(self):
         self.file_operation.open(self)
@@ -154,7 +154,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 
-    #----------------------------------------------------------------------
+    #=================================================================
     # menu bar
     def documentation(self):
         self.menu_bar.documentation(self)
@@ -173,7 +173,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 
-    #----------------------------------------------------------------------
+    #=================================================================
     # other methods
     def print_console(self, message):
         self.message_console.setTextColor(QColor('#ffffff'))

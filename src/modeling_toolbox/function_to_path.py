@@ -19,7 +19,6 @@ def eq_to_path(fn,height, x_min=-10, x_max=10, y_min=-10, y_max=10, z_min=0, z_m
     X, Y, Z = np.meshgrid(x, y, z)
     equation = fn(X, Y, Z)
     path_list_buffer = []
-    #for height in range(z_min, z_max):
     slice_plane = equation[:, :, height]
     contours = plt.contour(x, y, slice_plane, levels=[0], colors='black')
     for contour in contours.collections:

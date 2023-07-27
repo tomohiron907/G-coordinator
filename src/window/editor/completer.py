@@ -13,7 +13,7 @@ import print_settings
 
 def extract_variable_names(code_str, names):
     
-    try: # 文法の破綻したコードが送られてきた時のための try/except
+    try: # try/except for when broken grammar code is sent
         tree = ast.parse(code_str)
         for node in ast.walk(tree):
             if isinstance(node, ast.Name):
@@ -24,7 +24,7 @@ def extract_variable_names(code_str, names):
 
 
 def extract_function_names(code_string, function_names):
-    try:
+    try: # try/except for when broken grammar code is sent
         def visit_FunctionDef(node):
             function_names.add(node.name)
         tree = ast.parse(code_string)
@@ -38,7 +38,7 @@ def extract_function_names(code_string, function_names):
 
 def extract_class_names(code_str, names):
     
-    try: # 文法の破綻したコードが送られてきた時のための try/except
+    try: # try/except for when broken grammar code is sent
         tree = ast.parse(code_str)
         for node in ast.walk(tree):
             if isinstance(node, ast.ClassDef):
@@ -66,7 +66,6 @@ class Completer(QCompleter):
         self.setCaseSensitivity(Qt.CaseInsensitive)
 
     def insertCompletion(self, completion):
-        #print(completion)
         if self.widget() != self.parent():
             return
         tc = self.parent().textCursor()
@@ -92,7 +91,9 @@ class Completer(QCompleter):
             tc.insertText(completion[-extra:])
 
     def update_word_list(self):
-        self.word_list = [] # 使わなくなった変数名などがword_listに残らないようにリストを初期化
+        # Initialize the list so that unused variable names, etc. 
+        # do not remain in word_list
+        self.word_list = [] 
         self.word_list_path_generator(path_generator)
         self.word_list_print_setting(print_settings)
         text = self.parent().toPlainText()
@@ -105,10 +106,10 @@ class Completer(QCompleter):
         words_before_cursor = text_before_cursor.split()
         completionPrefix = words_before_cursor[-1] if words_before_cursor else "" # 途中までに入植した文字列
 
-        try: # 書きかけの文字列は，名前の集合から除外
+        try: # Exclude pre-written strings from the set of names
             self.variable_set.remove(completionPrefix)
             self.function_set.remove(completionPrefix)
-        except: # prefixがvariablesにない場合の処理
+        except: # Processing when prefix is not in variables
             pass
         self.word_list += self.variable_set
         self.word_list += self.function_set
@@ -122,12 +123,12 @@ class Completer(QCompleter):
         for name, obj in inspect.getmembers(module):
             if inspect.isclass(obj):
                 classes.append(name)
-        # オートコンプリートに使用するワードリストを作成
+        # Create a word list for autocomplete
         
         for class_name in classes:
-            # クラス名を追加
+            # Add class name
             self.word_list.append(class_name)
-            # クラスの中のメソッドを取得して追加
+            # Get and add methods in the class
             for method_name in dir(getattr(module, class_name)):
                 if not method_name.startswith('_'):
                     self.word_list.append(f"{class_name}.{method_name}")

@@ -27,7 +27,6 @@ class Path:
         kinematics.coords_arrange(self)
         self.set_print_settings()
         kinematics.e_calc(self)
-        #console.print(f'path generated : Path number {self.path_number}')
         
     
     def set_print_settings(self):
@@ -120,7 +119,7 @@ class PathList:
         sorted_paths = []
         remaining_paths = self.paths.copy()
 
-        # 最初のパスを取り出し、ソート済みリストに追加
+        # Extract first path and add to sorted list
         current_path = remaining_paths.pop(0)
         sorted_paths.append(current_path)
 
@@ -128,14 +127,14 @@ class PathList:
             nearest_index = None
             min_distance = float('inf')
 
-            # ソートされていないパスの中から最も近い始点を持つパスを探す
+            # Find the path with the closest starting point among unsorted paths
             for i, path in enumerate(remaining_paths):
                 distance = np.linalg.norm(current_path.end_coord - path.start_coord)
                 if distance < min_distance:
                     min_distance = distance
                     nearest_index = i
 
-            # 最も近いパスを取り出し、ソート済みリストに追加
+            # Retrieve the closest path and add it to the sorted list
             current_path = remaining_paths.pop(nearest_index)
             sorted_paths.append(current_path)
 
@@ -215,24 +214,24 @@ class Transform:
         for i in range( len(polygon)):
             # Compute the normal vector of the current vertex
             if np.allclose(polygon[0] , polygon[-1]):
-                # 閉曲線
+                # closed curve
                 p1 = polygon[(i-1)%(len(polygon)-1)]
                 p2 = polygon[i%(len(polygon)-1)]
                 p3 = polygon[(i+1)%(len(polygon)-1)]
             else:
-                # 開曲線
+                # open curve
                 if i == 0:
-                    # 開曲線の始点の処理
+                    # Processing of the starting point of an open curve
                     p1 = 2 * polygon[i] - polygon[i+1]
                     p2 = polygon[i]
                     p3 = polygon[i+1]
                 elif i == len(polygon)-1:
-                    # 開曲線の終点
+                    # End of open curve
                     p1 = polygon[i-1]
                     p2 = polygon[i]
                     p3 = 2 * polygon[i] - polygon[i-1]
                 else:
-                    # 開曲線の中間点
+                    # Midpoint of open curve
                     p1 = polygon[i-1]
                     p2 = polygon[i]
                     p3 = polygon[i+1]

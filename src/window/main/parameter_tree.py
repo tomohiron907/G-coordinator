@@ -13,8 +13,8 @@ class ParameterTree(pgParameterTree):
         super(ParameterTree, self).__init__()
 
     def read_setting(self):
-        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-        CONFIG_PATH = ROUTE_PATH + '/settings/print_settings.ini' # 編集
+        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' 
+        CONFIG_PATH = ROUTE_PATH + '/settings/print_settings.ini' 
         self.print_setting = configparser.ConfigParser()
         self.print_setting.read(CONFIG_PATH)
 

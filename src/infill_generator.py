@@ -15,13 +15,14 @@ def gyroid_infill(path, density=0.5, value=0):
         path_list = PathList([path])
     elif isinstance(path, PathList):
         path_list = path
-    # 初期値を設定
+    # Set initial values
     min_x = float('inf')
     max_x = float('-inf')
     min_y = float('inf')
     max_y = float('-inf')
 
-    # 各pathオブジェクトの座標列を調べて最小値と最大値を更新する
+    # Examine the coordinate sequence of each path object and
+    #  update the minimum and maximum values
     for path in path_list.paths:
         x_coords = path.x
         y_coords = path.y
@@ -46,9 +47,7 @@ def gyroid_infill(path, density=0.5, value=0):
     insides = []
     for path in path_list.paths:
         x_list = path.x
-        y_list = path.y
-        #z_height = path.center[2]
-        
+        y_list = path.y        
         # Determine the inside region
         inside = np.ones_like(equation) # outside = 1
         path = matlabPath(np.column_stack([x_list, y_list]))
@@ -59,18 +58,14 @@ def gyroid_infill(path, density=0.5, value=0):
         inside[inside == 1] = -1 # change inside to -1
         inside[inside == 0] = 1  # Change outside  to 1
         insides.append(inside)
-        #print(inside)
 
-    result = insides[0]  # 最初のndarrayを初期値として設定
+    result = insides[0]  # Set the first ndarray as the initial value
 
     for i in range(1, len(insides)):
-        result = np.multiply(result, insides[i])  # アダマール積を計算
-
+        result = np.multiply(result, insides[i])  # Calculate the Adamar product
 
     # Replace -1 with np.nan
     result[result == 1] = np.nan
-
-
 
     # Plot the slices
     slice_plane = equation * result
@@ -117,9 +112,7 @@ def line_infill(path, density=0.5, angle=np.pi/4):
     insides = []
     for path in path_list.paths:
         x_list = path.x
-        y_list = path.y
-        #z_height = path.center[2]
-        
+        y_list = path.y        
         # Determine the inside region
         inside = np.ones_like(equation) # outside = 1
         path = matlabPath(np.column_stack([x_list, y_list]))
@@ -130,18 +123,14 @@ def line_infill(path, density=0.5, angle=np.pi/4):
         inside[inside == 1] = -1 # change inside to -1
         inside[inside == 0] = 1  # Change outside  to 1
         insides.append(inside)
-        #print(inside)
 
-    result = insides[0]  # 最初のndarrayを初期値として設定
+    result = insides[0]  
 
     for i in range(1, len(insides)):
-        result = np.multiply(result, insides[i])  # アダマール積を計算
-
+        result = np.multiply(result, insides[i])  
 
     # Replace -1 with np.nan
     result[result == 1] = np.nan
-
-
 
     # Plot the slices
     slice_plane = equation * result

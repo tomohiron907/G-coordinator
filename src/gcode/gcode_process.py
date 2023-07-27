@@ -2,7 +2,6 @@ import os
 import sys
 import numpy as np
 import math
-#import default_gcode
 import configparser
 import print_settings
 from print_settings import *
@@ -76,7 +75,6 @@ class Gcode:
         print_speed_array = np.full_like(path.x, print_settings.print_speed)
         if path.print_speed is None and any(x is not None for x in path.print_speed_array) is False:
             pass
-            #feed_array = np.full_like(path.x, print_settings.EXRTRUSION_MULTIPLIER_DEFAULT)
         elif path.print_speed != None:
             print_speed_array = np.full_like(path.x, path.print_speed)
         elif any(x is not None for x in path.print_speed_array):
@@ -101,7 +99,6 @@ class Gcode:
     def retract_setting(self, path):
         if path.retraction is None:
             path.retraction = print_settings.retraction
-            #self.retraction = self.retraction
         else:
             pass
     

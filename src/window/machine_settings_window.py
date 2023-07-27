@@ -56,7 +56,6 @@ class MachineSettingsDialog(QWidget):
     
     def init_ui(self):
         layout = QVBoxLayout()
-        
         # Parameter tree
         self.parameter_tree = ParameterTree()
         self.p = Parameter.create(name='params', type='group', children=self.params)
@@ -94,8 +93,8 @@ class MachineSettingsDialog(QWidget):
         self.setLayout(layout)
     
     def read_setting(self):
-        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-        CONFIG_PATH = ROUTE_PATH + '/settings/machine_settings.ini' # 編集
+        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' 
+        CONFIG_PATH = ROUTE_PATH + '/settings/machine_settings.ini' 
         self.machine_setting = configparser.ConfigParser()
         self.machine_setting.read(CONFIG_PATH)
 
@@ -105,7 +104,7 @@ class MachineSettingsDialog(QWidget):
         for param, change, data in changes:
             path = self.p.childPath(param)
             childName = '.'.join(path)
-            # パスの階層を取得し、対応するセクションとキーを設定ファイルに書き込む
+            # Get the path hierarchy and write the corresponding section and key in the configuration file
             section, key = path[0], '.'.join(path[1:])
             self.machine_setting.set(section, key, str(data))
         

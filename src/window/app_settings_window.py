@@ -21,8 +21,6 @@ class SettingsWindow(QDialog):
         self.dark_theme_radio = QRadioButton('Dark')
         self.light_theme_radio = QRadioButton('Light')
 
-
-
         # Font Display Label
         self.font_label = QLabel()
 
@@ -33,8 +31,6 @@ class SettingsWindow(QDialog):
         # Console Font Size Setting
         console_font_size_label = QLabel('Console Font Size:')
         self.console_font_size_lineedit = QLineEdit()
-
-        
 
         # Save Button
         save_button = QPushButton('Save')

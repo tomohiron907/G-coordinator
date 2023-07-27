@@ -21,16 +21,13 @@ class GcodeExportWindow(QWidget):
         layout = QVBoxLayout()
         self.button = QPushButton('Save G-code file', self)
         self.button.setToolTip('Click to save G-code file')
-        #button.move(200, 20)
         self.button.clicked.connect(self.saveFileDialog)
         
         self.textEdit = QTextEdit(self)
         self.textEdit.setFont(QFont("Courier New", 10))
-        #self.textEdit.setGeometry(10, 60, 480, 330)
         self.showGCodePreview()
         
         self.label = QLabel(self)
-        #self.label.setGeometry(10, 350, 480, 40)
         self.label.setFont(QFont("Arial", 10, QFont.Bold))
         self.label.setText("Showing the first 1000 lines of G-code file.")
 

@@ -17,8 +17,6 @@ class TextEditor(QTextEdit):
         super().__init__(parent)
         self.completer = Completer(self)
         self.completer.setWidget(self)
-        #self.completer.activated.connect(self.completer.insertCompletion)  # CompleterクラスのinsertCompletionを接続
-
         self.trigger = ''
         popup = self.completer.popup()
 
@@ -29,7 +27,6 @@ class TextEditor(QTextEdit):
             selection-color: black; /* 選択されているアイテムの文字色 */
         """)
         
-        #self.textChanged.connect(lambda: self.completer.update_word_list(text))
         self.textChanged.connect(self.completer.update_word_list)
 
 
@@ -44,14 +41,15 @@ class TextEditor(QTextEdit):
     def indent(self):
         if not self.textCursor().hasSelection():
             self.insertPlainText(" " * 4)
-        # 選択範囲がある場合は選択範囲内の各行の先頭にインデントを挿入
+        #  If there is a selection, insert an indent at the beginning 
+        #  of each line within the selection
         else:
-            # 選択範囲の開始と終了行番号を取得
+            # Get the start and end line numbers of the selected range
             start = self.textCursor().selectionStart()
             end = self.textCursor().selectionEnd()
             start_block = self.document().findBlock(start).blockNumber()
             end_block = self.document().findBlock(end).blockNumber()
-            # 選択範囲の各行に対して処理を行う
+            #  Process each row of the selection
             for block_number in range(start_block, end_block + 1):
                 block = self.document().findBlockByNumber(block_number)
                 cursor = self.textCursor()
@@ -65,14 +63,14 @@ class TextEditor(QTextEdit):
         start_block = self.document().findBlock(start).blockNumber()
         end_block = self.document().findBlock(end).blockNumber()
 
-        # 選択範囲の各行に対して処理を行う
+        # Process each row of the selection
         for block_number in range(start_block, end_block + 1):
             block = self.document().findBlockByNumber(block_number)
             cursor = self.textCursor()
             cursor.setPosition(block.position())
             cursor.movePosition(QTextCursor.StartOfLine)
 
-            # スペースをアンインデントする
+            # Unindent spaces
             line_text = block.text()
             if len(line_text) > 4 and line_text.startswith(" " * 4):
                 cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 4)
@@ -96,22 +94,21 @@ class TextEditor(QTextEdit):
         self.insertPlainText(plain_text)
 
     def keyPressEvent(self, event):
-        
+        # auto_complete
         if self.completer.popup().isVisible():
             if event.key() in (Qt.Key_Enter, Qt.Key_Return):
-                self.completer.popup().hide()  # Enterキーが押されたら補完ウィジェットを非表示にする
+                self.completer.popup().hide()  # Hide the completion widget when the Enter key is pressed
                 event.ignore()
                 return
             if event.key() in (Qt.Key_Escape, Qt.Key_Tab, Qt.Key_Backtab):
-                self.completer.popup().hide()  # 他のキーが押されたら補完ウィジェットを非表示にしない
+                self.completer.popup().hide()  
                 event.ignore()
                 return
 
-        #オートインデントの処理
+        #Auto indentation process
         if event.key() in (Qt.Key_Return, Qt.Key_Enter):
             indent_width = 4
             line_number = self.textCursor().blockNumber()
-            #print(line_number)
             line_text = self.document().findBlockByLineNumber(line_number).text()
             indent_level = line_text.count(" " * indent_width)
             if line_text.endswith(":"):
@@ -124,8 +121,8 @@ class TextEditor(QTextEdit):
             self.indent()
             return
                 
-        if event.key() == Qt.Key_Backtab:  # Shift + Tabの場合はQt.Key_Backtabを使う
-            if event.modifiers() == Qt.ShiftModifier:  # Shiftが同時に押されているかをチェック
+        if event.key() == Qt.Key_Backtab:  
+            if event.modifiers() == Qt.ShiftModifier:  # Check if Shift is pressed at the same time
                 self.unindent()
                 return
             
@@ -134,16 +131,16 @@ class TextEditor(QTextEdit):
             cursor = self.textCursor()
             position = cursor.position()
 
-            # カーソルの前の4文字を取得
+            # Get the 4 characters before the cursor
             cursor.movePosition(QTextCursor.Left, QTextCursor.KeepAnchor, 4)
             text = cursor.selectedText()
 
             if text == ' ' * 4:
-                # カーソル位置を修正
+                # Fix cursor position
                 new_position = position - 4
                 cursor.setPosition(new_position)
 
-                # 4つのスペースを一括削除
+                # Delete 4 spaces at once
                 cursor.movePosition(QTextCursor.Right, QTextCursor.KeepAnchor, 4)
                 cursor.removeSelectedText()
 

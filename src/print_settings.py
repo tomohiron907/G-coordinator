@@ -28,8 +28,6 @@ def reload_print_setting():
     nozzle_diameter = float(print_setting['nozzle']['nozzle_diameter'])
     filament_diameter = float(print_setting['nozzle']['filament_diameter'])
     layer_height = float(print_setting['layer']['layer_height'])
-    #x_origin = int(print_setting['origin']['x_origin'])
-    #y_origin = int(print_setting['origin']['y_origin'])
     print_speed = int(print_setting['speed']['print_speed'])
     travel_speed = int(print_setting['speed']['travel_speed'])
     fan_speed =  int(print_setting['fan_speed']['fan_speed'])
@@ -49,21 +47,15 @@ def reload_print_setting():
     y_origin = int(machine_settings['Printer']['origin.origin_y'])
 
     kin_name = machine_settings['Printer']['kinematics']
-    #kin_name = print_setting['kinematics']['kin_name']
     if kin_name == 'Cartesian':
-        #print('cartesian setting')
         kinematics = Cartesian(machine_settings)
     elif kin_name == 'NozzleTilt':
-        #print('nozlle tilt setting')
         kinematics = NozzleTilt(machine_settings)
     elif kin_name == 'BedTilt':
-        #print('bed tilt setting')
         kinematics = BedTiltBC(machine_settings)
     elif kin_name == 'BedRotate':
-        #print('bed rotate setting')
         kinematics = BedRotate(machine_settings)
     else:
-        #print('else')
         kinematics = Kinematics(machine_settings)
     return kin_name, kinematics
 nozzle_diameter = None

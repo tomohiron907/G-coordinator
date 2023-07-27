@@ -1,4 +1,3 @@
-
 import sys
 import platform
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -95,7 +94,6 @@ class Ui_MainWindow(object):
         self.editor.setStyleSheet("""QTextEdit{ 
             color: #ccc; 
             background-color: #2b2b2b;}""")
-        #シンタックス表示
         self.highlight=PythonHighlighter(self.editor.document())
         self.line_number_widget = LineNumberWidget(self.editor)
 
@@ -112,7 +110,7 @@ class Ui_MainWindow(object):
 
         self.left_pane_widget = QWidget(MainWindow)
         self.message_splitter = QSplitter()
-        self.message_splitter.setOrientation(Qt.Vertical)#splitterの方向を横に設定
+        self.message_splitter.setOrientation(Qt.Vertical)
         self.message_splitter.addWidget(QWidget())
         self.message_splitter.widget(0).setLayout(self.editor_layout)
         self.message_splitter.addWidget(self.message_console)
@@ -195,18 +193,18 @@ class Ui_MainWindow(object):
         self.machine_settings_button.setText(_translate("MainWindow", "Machine settings"))
     
     def signal_connecter(self, MainWindow):
-        self.open_button.pressed.connect(MainWindow.file_open) # type: ignore
-        self.reload_button.pressed.connect(MainWindow.run) # type: ignore
-        self.machine_settings_button.pressed.connect(MainWindow.open_machine_settings_window) # type: ignore
+        self.open_button.pressed.connect(MainWindow.file_open)
+        self.reload_button.pressed.connect(MainWindow.run)
+        self.machine_settings_button.pressed.connect(MainWindow.open_machine_settings_window)
         
-        self.gcode_export_button.pressed.connect(MainWindow.draw_updated_object) # type: ignore
-        self.gcode_export_button.pressed.connect(MainWindow.Gcode_create) # type: ignore
-        self.slider_layer.valueChanged['int'].connect(MainWindow.redraw_layer_object) # type: ignore
-        self.up_button.pressed.connect(MainWindow.up_button_pressed) # type: ignore
-        self.down_button.pressed.connect(MainWindow.down_button_pressed) # type: ignore
-        self.slider_segment.valueChanged['int'].connect(MainWindow.redraw_segment_object) # type: ignore
-        self.left_button.pressed.connect(MainWindow.left_button_pressed) # type: ignore
-        self.right_button.pressed.connect(MainWindow.right_button_pressed) # type: ignore
+        self.gcode_export_button.pressed.connect(MainWindow.draw_updated_object)
+        self.gcode_export_button.pressed.connect(MainWindow.Gcode_create)
+        self.slider_layer.valueChanged['int'].connect(MainWindow.redraw_layer_object)
+        self.up_button.pressed.connect(MainWindow.up_button_pressed)
+        self.down_button.pressed.connect(MainWindow.down_button_pressed)
+        self.slider_segment.valueChanged['int'].connect(MainWindow.redraw_segment_object)
+        self.left_button.pressed.connect(MainWindow.left_button_pressed)
+        self.right_button.pressed.connect(MainWindow.right_button_pressed)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
     
     def __line_widget_line_count_changed(self):
