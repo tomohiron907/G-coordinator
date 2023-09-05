@@ -175,7 +175,16 @@ class Transform:
         return  rotated_path
     
     @staticmethod
-    def move(path, x=0, y=0, z=0, roll=0, pitch=0, yaw=0):
+    def move(arg, x=0, y=0, z=0, roll=0, pitch=0, yaw=0):
+        if isinstance(arg, Path):
+            path = Transform.move_path(arg, x, y, z, roll, pitch, yaw)
+            return path
+        elif isinstance(arg, PathList):
+            path_list = Transform.move_pathlist(arg, x, y, z, roll, pitch, yaw)
+            return path_list
+        
+    @staticmethod
+    def move_path(path,  x=0, y=0, z=0, roll=0, pitch=0, yaw=0):
         translation_vector = np.array([x, y, z])
 
         rotation_matrix = np.array([[np.cos(yaw) * np.cos(pitch),
@@ -200,7 +209,17 @@ class Transform:
 
         moved_path = Path(x_coords, y_coords, z_coords)
         return moved_path
-        
+    @staticmethod
+    def move_pathlist( pathlist, x=0, y=0, z=0, roll=0, pitch=0, yaw=0):
+        path_list_buffer = []
+        for path in pathlist.paths:
+            path = Transform.move_path(path,  x, y, z, roll, pitch, yaw)
+            path_list_buffer.append(path)
+        path_list_instance = PathList(path_list_buffer)
+        path_list_buffer =[]
+        return path_list_instance
+
+
     @staticmethod
     def offset(path, d):
         # Generate the offset polygon by computing the normal vectors of each vertex
