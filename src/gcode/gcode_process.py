@@ -114,7 +114,7 @@ class Gcode:
     def z_hop_down(self):
         self.f.write(f'G91 \n')
         self.f.write(f'G0 Z{-print_settings.z_hop_distance}\n')
-        self.f.write(f'G90 \n')
+        self.f.write(f'G90 \nM83 \n')
     def retract(self):
         self.f.write(f'G1 E{-print_settings.retraction_distance}\n')
     def unretract(self):
