@@ -14,7 +14,7 @@ def object_modeling():
         y = np.array([100,100,-100,-100,100], dtype = float)
         z = np.full_like(x, (height+1)*thickness)
         wall = Path(x, y, z)
-        infill = line_infill(wall, density = 1)
+        infill = line_infill(wall, infill_distance=0.4)
         full_object.append(wall)
         full_object.append(infill)
         

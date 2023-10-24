@@ -28,7 +28,7 @@ def object_modeling():
         full_object.append(outer_wall)
         
         if height<50:
-            gyroid = gyroid_infill(wall, density = 0.7)
+            gyroid = gyroid_infill(wall, infill_distance = 2)
             full_object.append(gyroid)
         
        

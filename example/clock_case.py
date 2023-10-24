@@ -40,7 +40,7 @@ def object_modeling():
             full_object.append(inner_hole)
             
             contour = PathList([wall, hole])
-            infill = line_infill(contour, density = 0.98, angle = np.pi/4 + np.pi/2*height)
+            infill = line_infill(contour, infill_distance = 0.5, angle = np.pi/4 + np.pi/2*height)
             infill.z_hop = True
             infill.retraction = True
             full_object.append(infill)

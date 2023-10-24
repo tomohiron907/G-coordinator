@@ -55,7 +55,7 @@ def object_modeling():
         full_object.append(wall)
 
         if height<3:
-            infill = line_infill(wall, 0.98, height*np.pi/2 + np.pi/4)
+            infill = line_infill(wall, infill_distance = 1, angle=height*np.pi/2 + np.pi/4)
             infill.z_hop = True
             infill.retraction = True
             full_object.append(infill)

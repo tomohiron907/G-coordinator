@@ -17,7 +17,7 @@ def object_modeling():
         z = np.full_like(arg, height*print_settings.layer_height+0.2)
         wall = Path(x, y, z)
         inner_wall = Transform.offset(wall, -0.7)
-        infill = gyroid_infill(wall, density = 0.6)
+        infill = gyroid_infill(wall,infill_distance = 8)
         wall.z_hop = False
         wall.retraction = False
         full_object.append(wall)
