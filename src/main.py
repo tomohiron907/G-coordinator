@@ -18,11 +18,11 @@ Usage:
 
 
 import sys
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from PyQt5.QtGui          import *
+from PyQt5.QtWidgets      import *
+from PyQt5.QtCore         import *
 from PyQt5.QtPrintSupport import *
-from window.main_window import main_window, app
+from window.main_window   import main_window, app
 
 def launch():
     icon_path = '../img/G-coordinator.png'

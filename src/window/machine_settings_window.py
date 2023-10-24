@@ -1,13 +1,16 @@
 import sys
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtPrintSupport import *
+from PyQt5.QtGui             import *
+from PyQt5.QtWidgets         import *
+from PyQt5.QtCore            import *
+from PyQt5.QtPrintSupport    import *
 from pyqtgraph.parametertree import Parameter, ParameterTree
 import configparser
-from print_settings import *
+from print_settings          import *
 
 class MachineSettingsDialog(QWidget):
+    """
+    Machine Settings Window
+    """
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Machine Settings")
@@ -16,34 +19,34 @@ class MachineSettingsDialog(QWidget):
         # Parameters
         self.params = [
             {'name': 'Printer', 'type': 'group', 'children': [
-                {'name': 'Kinematics', 'type': 'list', 'values': ['Cartesian', 'NozzleTilt', 'BedTilt', 'BedRotate'], 'value':str(self.machine_setting['Printer']['kinematics'])},
-                {'name': 'bed_size', 'type': 'group', 'children': [
-                    {'name': 'bed_size_x', 'type': 'int', 'value': float(self.machine_setting['Printer']['bed_size.bed_size_x'])},
-                    {'name': 'bed_size_y', 'type': 'int', 'value': float(self.machine_setting['Printer']['bed_size.bed_size_y'])},
-                    {'name': 'bed_size_z', 'type': 'int', 'value': float(self.machine_setting['Printer']['bed_size.bed_size_z'])}
+                {'name'    : 'Kinematics', 'type': 'list', 'values': ['Cartesian', 'NozzleTilt', 'BedTilt', 'BedRotate'], 'value':str(self.machine_setting['Printer']['kinematics'])},
+                {'name'    : 'bed_size', 'type': 'group', 'children': [
+                    {'name': 'bed_size_x', 'type': 'int',     'value': float(self.machine_setting['Printer']['bed_size.bed_size_x'])},
+                    {'name': 'bed_size_y', 'type': 'int',     'value': float(self.machine_setting['Printer']['bed_size.bed_size_y'])},
+                    {'name': 'bed_size_z', 'type': 'int',     'value': float(self.machine_setting['Printer']['bed_size.bed_size_z'])}
                 ]},
-                {'name': 'origin', 'type': 'group', 'children': [
-                    {'name': 'origin_x', 'type': 'int', 'value': float(self.machine_setting['Printer']['origin.origin_x'])},
-                    {'name': 'origin_y', 'type': 'int', 'value': float(self.machine_setting['Printer']['origin.origin_y'])}
+                {'name'    : 'origin', 'type': 'group', 'children': [
+                    {'name': 'origin_x', 'type': 'int',       'value': float(self.machine_setting['Printer']['origin.origin_x'])},
+                    {'name': 'origin_y', 'type': 'int',       'value': float(self.machine_setting['Printer']['origin.origin_y'])}
                 ]},
             ]},
             {'name': 'Kinematics', 'type': 'group', 'children': [
-                {'name': 'NozzleTilt', 'type': 'group', 'children': [
-                    {'name': 'tilt_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['NozzleTilt.tilt_code'])},
-                    {'name': 'rot_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['NozzleTilt.rot_code'])},
-                    {'name': 'tilt_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['NozzleTilt.tilt_offset'])},
-                    {'name': 'rot_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['NozzleTilt.rot_offset'])}
+                {'name'    : 'NozzleTilt', 'type': 'group', 'children': [
+                    {'name': 'tilt_code', 'type': 'str',      'value': str(self.machine_setting['Kinematics']['NozzleTilt.tilt_code'])},
+                    {'name': 'rot_code', 'type': 'str',       'value': str(self.machine_setting['Kinematics']['NozzleTilt.rot_code'])},
+                    {'name': 'tilt_offset', 'type': 'float',  'value': float(self.machine_setting['Kinematics']['NozzleTilt.tilt_offset'])},
+                    {'name': 'rot_offset', 'type': 'float',   'value': float(self.machine_setting['Kinematics']['NozzleTilt.rot_offset'])}
                 ]},
-                {'name': 'BedTilt', 'type': 'group', 'children': [
-                    {'name': 'tilt_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['BedTilt.tilt_code'])},
-                    {'name': 'rot_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['BedTilt.rot_code'])},
-                    {'name': 'tilt_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedTilt.tilt_offset'])},
-                    {'name': 'rot_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedTilt.rot_offset'])},
+                {'name'    : 'BedTilt', 'type': 'group', 'children': [
+                    {'name': 'tilt_code', 'type': 'str',      'value': str(self.machine_setting['Kinematics']['BedTilt.tilt_code'])},
+                    {'name': 'rot_code', 'type': 'str',       'value': str(self.machine_setting['Kinematics']['BedTilt.rot_code'])},
+                    {'name': 'tilt_offset', 'type': 'float',  'value': float(self.machine_setting['Kinematics']['BedTilt.tilt_offset'])},
+                    {'name': 'rot_offset', 'type': 'float',   'value': float(self.machine_setting['Kinematics']['BedTilt.rot_offset'])},
                     {'name': 'div_distance', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedTilt.div_distance'])}
                 ]},
-                {'name': 'BedRotate', 'type': 'group', 'children': [
-                    {'name': 'rot_code', 'type': 'str', 'value': str(self.machine_setting['Kinematics']['BedRotate.rot_code'])},
-                    {'name': 'rot_offset', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedRotate.rot_offset'])},
+                {'name'    : 'BedRotate', 'type': 'group', 'children': [
+                    {'name': 'rot_code', 'type': 'str',       'value': str(self.machine_setting['Kinematics']['BedRotate.rot_code'])},
+                    {'name': 'rot_offset', 'type': 'float',   'value': float(self.machine_setting['Kinematics']['BedRotate.rot_offset'])},
                     {'name': 'div_distance', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedRotate.div_distance'])},
 
                 ]},
@@ -55,6 +58,9 @@ class MachineSettingsDialog(QWidget):
         self.init_ui()
     
     def init_ui(self):
+        """ 
+        initialize ui
+        """
         layout = QVBoxLayout()
         # Parameter tree
         self.parameter_tree = ParameterTree()
@@ -63,6 +69,7 @@ class MachineSettingsDialog(QWidget):
         self.p.sigTreeStateChanged.connect(self.change)
         layout.addWidget(self.parameter_tree)
 
+        # Start Gcode Editor and gcode 
         start_label = QLabel('Start Gcode Editor', self)
         layout.addWidget(start_label)
         self.start_edit = QPlainTextEdit(self)
@@ -73,7 +80,7 @@ class MachineSettingsDialog(QWidget):
             content = file.read()
             self.start_edit.setPlainText(content)
 
-        
+        # End Gcode Editor
         end_label = QLabel('End Gcode Editor', self)
         layout.addWidget(end_label)
         self.end_edit = QPlainTextEdit(self)

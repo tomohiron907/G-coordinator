@@ -3,22 +3,22 @@ import sys
 import traceback
 import platform
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtPrintSupport import *
+from PyQt5.QtCore                   import *
+from PyQt5.QtGui                    import *
+from PyQt5.QtWidgets                import *
+from PyQt5.QtPrintSupport           import *
 
-from window.main.import_file import import_file
-from window.draw_object import draw_full_object, draw_object_slider, grid_draw
-from window.main.ui_settings import Ui_MainWindow
-from window.gcode_export_window import GcodeExportWindow
+from window.main.                   import_file import import_file
+from window.draw_object             import draw_full_object, draw_object_slider, grid_draw
+from window.main.ui_settings        import Ui_MainWindow
+from window.gcode_export_window     import GcodeExportWindow
 from window.machine_settings_window import MachineSettingsDialog
-from window.app_settings_window import SettingsWindow
-from window.main.file_operations import FileOperation
+from window.app_settings_window     import SettingsWindow
+from window.main.file_operations    import FileOperation
 
-from gcode.gcode_process import Gcode
+from gcode.gcode_process            import Gcode
+from path_generator                 import Path
 import path_generator
-from path_generator import Path
 import qdarktheme
 
 
@@ -40,42 +40,55 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print('draw_object')
         
         try:
-            #importlib.reload(modeling)  #reload updated modeling.py
+            # reload modeling.py
             modeling = import_file('buffer/modeling.py')
-            self.full_object=modeling.object_modeling()  # get the list of coordinate from modeling.py
+            self.full_object=modeling.object_modeling() 
+            # in full_object list, the elements are Path and Path List
+            # make all elements in full_object list to Path
             self.full_object = path_generator.flatten_path_list(self.full_object)
+
             self.message_console.setTextColor(QColor('#00bfff'))
             self.message_console.append('object displyed')
             with open("buffer/modeling.py",'w') as f:
+                # after calling object_modeling(), modeling.py will be rewrited with no content
                 pass
         except:
+            # if there is a sytax error in modeling.py, the file is not reloaded
             print('syntax error!!')
             self.message_console.setTextColor(QColor('#FF6347'))
             print(str(traceback.format_exc()))
             self.message_console.append(traceback.format_exc())
             with open("buffer/modeling.py",'w') as f:
+                # modeling file is rewrited with no content
                 pass
         
-        self.graphicsView.clear()  # initialize pyqtgraph widget
+        # draw updated object in pyqtgraph widget
+        self.graphicsView.clear()  
         grid_draw(self.graphicsView)
-        draw_full_object(self.graphicsView,self.full_object)  #redraw updated objects in modeling.py
-        self.slider_layer.setRange(0, len(self.full_object)-1)  # set slider range
-        self.slider_layer.setValue(len(self.full_object)-1)
+        draw_full_object(self.graphicsView,self.full_object)  
+        self.slider_layer.setRange  (0, len(self.full_object)-1)  
+        self.slider_layer.setValue  (   len(self.full_object)-1)
         self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
-        self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()].coords))
+        self.slider_segment.setValue(   len(self.full_object[self.slider_layer.value()].coords))
         self.file_save()
 
     def redraw_layer_object(self): 
-        self.graphicsView.clear()  # initialize pyqtgraph widget
+        # redraw updated objects according to the layer slider
+        self.graphicsView.clear()  
         grid_draw(self.graphicsView)
         self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
-        self.slider_segment.setValue(len(self.full_object[self.slider_layer.value()].coords))
-        draw_object_slider(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
+        self.slider_segment.setValue(   len(self.full_object[self.slider_layer.value()].coords))
+        draw_object_slider( self.graphicsView,self.full_object, \
+                            self.slider_layer.value(),\
+                            self.slider_segment.value())  
 
     def redraw_segment_object(self): 
-        self.graphicsView.clear()  # initialize pyqtgraph widget
+        # redraw updated objects according to the segment slider
+        self.graphicsView.clear()  
         grid_draw(self.graphicsView)
-        draw_object_slider(self.graphicsView,self.full_object, self.slider_layer.value(),self.slider_segment.value())  #redraw updated objects in modeling.py
+        draw_object_slider( self.graphicsView,self.full_object, \
+                            self.slider_layer.value(),\
+                            self.slider_segment.value()) 
     
     def up_button_pressed(self):
         self.slider_layer.setValue(self.slider_layer.value()+1)
@@ -148,7 +161,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def update_title(self):
         # setting window title with prefix as file name
         self.setWindowTitle("%s - G-coordinator" %(os.path.basename(self.path)
-                                                  if self.path else "Untitled"))
+                                                    if self.path else "Untitled"))
 
 
 
@@ -176,11 +189,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #=================================================================
     # other methods
     def print_console(self, message):
+        # print message in console
         self.message_console.setTextColor(QColor('#ffffff'))
         self.message_console.append(message)
         self.message_console.moveCursor(QTextCursor.End)
 
     def new(self):
+        # when you open the G-coordinator, this method is called
+        # initialize the editor
         self.path = None
         with open('buffer/default_start.py', 'r') as file:
             code_str = file.read()

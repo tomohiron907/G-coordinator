@@ -1,16 +1,30 @@
 import sys
 import numpy as np
 import math
-from print_settings import *
+from print_settings     import *
+from matplotlib.path    import Path as matlabPath
+from path_generator     import Path, PathList
+from window.main_window import *
 import print_settings
 import matplotlib.pyplot as plt
-from matplotlib.path import Path as matlabPath
-from path_generator import Path, PathList
-from window.main_window import *
+"""
+G-coordinator has two infill generators: gyroid and line infill.
 
+you can make your own infill generator by changing the equation below.
+equation = np.sin(X/density + Y/density*np.tan(angle))
+
+"""
 
 
 def gyroid_infill(path, density=0.5, value=0):
+    """
+    generate gyroid infill
+
+    args    : Path or PathList
+    returns : PathList of gyroid
+
+    usage   : infill = gyroid_infill(path, density=0.9, value=0)
+    """
     if isinstance(path, Path):
         path_list = PathList([path])
     elif isinstance(path, PathList):
@@ -86,6 +100,14 @@ def gyroid_infill(path, density=0.5, value=0):
 
 
 def line_infill(path, density=0.5, angle=np.pi/4):
+    """
+    generate line infill
+
+    args    : Path or PathList 
+    returns : PathList of line infill
+
+    usage   : infill = line_infill(path, density=0.9, angle=np.pi/4)
+    """
     if isinstance(path, Path):
         path_list = PathList([path])
     elif isinstance(path, PathList):

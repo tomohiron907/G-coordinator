@@ -3,52 +3,53 @@ import numpy as np
 import math
 from print_settings import *
 import print_settings
-import console
+
 
 
 class Path:
-    count = 0
     def __init__(self, x=0, y=0, z=0, rot=None, tilt=None):
-        self.path_number = Path.count
-        Path.count += 1 
         kin_name, kinematics = print_settings.reload_print_setting()
         self.type = 'print'
         self.x = np.array(x)
         self.y = np.array(y)
         self.z = np.array(z)
+        
         if tilt is None:
             self.tilt = np.full_like(x, 0)
         else:
             self.tilt = np.array(tilt)
         if rot is None:
-            self.rot = np.full_like(x, 0)
+            self.rot  = np.full_like(x, 0)
         else:
-            self.rot = np.array(rot)
+            self.rot  = np.array(rot)
+        
         kinematics.coords_arrange(self)
         self.set_print_settings()
         kinematics.e_calc(self)
         
     
     def set_print_settings(self):
-        self.array_number = len(self.x)
-        self.extrusion_multiplier = None
+        # Set initial values
+        self.array_number               = len(self.x)
+        self.extrusion_multiplier       = None
         self.extrusion_multiplier_array = np.full(self.array_number, None)
-        self.print_speed = None
-        self.print_speed_array = np.full(self.array_number, None)
-        self.retraction = None
-        self.z_hop = None
-        self.before_gcode = None
-        self.after_gcode = None
+        self.print_speed                = None
+        self.print_speed_array          = np.full(self.array_number, None)
+        self.retraction                 = None
+        self.z_hop                      = None
+        self.before_gcode               = None
+        self.after_gcode                = None
+
 
 class PathList:
     def __init__(self, paths):
-        self.paths = paths
-        self._extrusion_multiplier = None
-        self._print_speed = None
-        self._retraction = None
-        self._z_hop = None
-        self._before_gcode = None
-        self._after_gcode = None
+        self.paths                      = paths
+        self._extrusion_multiplier      = None
+        self._print_speed               = None
+        self._retraction                = None
+        self._z_hop                     = None
+        self._before_gcode              = None
+        self._after_gcode               = None
         if len(paths) != 0:
             self.sort_paths()
 
@@ -109,13 +110,18 @@ class PathList:
     def _apply_print_settings(self):
         for path in self.paths:
             path.extrusion_multiplier = self.extrusion_multiplier
-            path.print_speed = self.print_speed
-            path.retraction = self.retraction
-            path.z_hop = self.z_hop
-            path.before_gcode = self.before_gcode
-            path.after_gcode = self.after_gcode
+            path.print_speed          = self.print_speed
+            path.retraction           = self.retraction
+            path.z_hop                = self.z_hop
+            path.before_gcode         = self.before_gcode
+            path.after_gcode          = self.after_gcode
 
     def sort_paths(self):
+        """
+        Path sorting algorithm
+
+        Sorts the paths in the PathList object in order of proximity to the previous path's end point.
+        """
         sorted_paths = []
         remaining_paths = self.paths.copy()
 
@@ -144,6 +150,14 @@ class PathList:
 
 
 def flatten_path_list(full_object):
+    """
+    the full_object(list) is composed of Path and PathList.
+    when calcuate, PathList nedds to be flatten.
+    this function makes all elements in full_object to Path.
+
+    args    : list of Path and PathList
+    returns : list of Path
+    """
     flattened_paths = []
     for item in full_object:
         if isinstance(item, PathList):
@@ -157,25 +171,47 @@ class Transform:
     def __init__(self):
         pass
     
+
     @staticmethod
     def twice_x(path):
-        output_path = Path()
+        """
+        expand the x coordinate of the path by 2 times
+
+        args    : Path
+        returns : Path
+        """
+        output_path   = Path()
         output_path.x = 2 * path.x
         output_path.y = path.y
         output_path.z = path.z
         output_path.coords_arrange()
         return  output_path
         
+    
     @staticmethod
     def rotate(path, theta):
+        """
+        rotate the path by theta
+
+        args    : Path
+        returns : Path
+        
+        """
         x = np.cos(theta)*path.x + np.sin(theta)*path.y
         y = -np.sin(theta)*path.x + np.cos(theta)*path.y
         z = path.z
         rotated_path = Path(x, y, z)
         return  rotated_path
     
+
     @staticmethod
     def move(arg, x=0, y=0, z=0, roll=0, pitch=0, yaw=0):
+        """
+        move the path or pathlist by (x, y, z) and rotate by (roll, pitch, yaw)
+
+        args    : Path or PathList
+        returns : Path or PathList (according to the type of arg)
+        """
         if isinstance(arg, Path):
             path = Transform.move_path(arg, x, y, z, roll, pitch, yaw)
             return path
@@ -183,8 +219,15 @@ class Transform:
             path_list = Transform.move_pathlist(arg, x, y, z, roll, pitch, yaw)
             return path_list
         
+
     @staticmethod
     def move_path(path,  x=0, y=0, z=0, roll=0, pitch=0, yaw=0):
+        """
+        move the path by (x, y, z) and rotate by (roll, pitch, yaw)
+
+        args    : Path
+        returns : Path
+        """
         translation_vector = np.array([x, y, z])
 
         rotation_matrix = np.array([[np.cos(yaw) * np.cos(pitch),
@@ -198,9 +241,7 @@ class Transform:
                                     np.cos(pitch) * np.cos(roll)]])
 
         path_coords = np.array(path.coords)
-
         translated_coords = path_coords + translation_vector
-
         transformed_coords = np.dot(rotation_matrix, np.transpose(translated_coords))
 
         x_coords = transformed_coords[0]
@@ -209,8 +250,16 @@ class Transform:
 
         moved_path = Path(x_coords, y_coords, z_coords)
         return moved_path
+    
+
     @staticmethod
     def move_pathlist( pathlist, x=0, y=0, z=0, roll=0, pitch=0, yaw=0):
+        """
+        move the pathlist by (x, y, z) and rotate by (roll, pitch, yaw)
+
+        args    : PathList
+        returns : PathList
+        """
         path_list_buffer = []
         for path in pathlist.paths:
             path = Transform.move_path(path,  x, y, z, roll, pitch, yaw)
@@ -222,8 +271,14 @@ class Transform:
 
     @staticmethod
     def offset(path, d):
-        # Generate the offset polygon by computing the normal vectors of each vertex
-        # and moving each vertex along its normal vector by the distance d
+
+        """
+        Generate the offset polygon by computing the normal vectors of each vertex
+        and moving each vertex along its normal vector by the distance d
+
+        args    : Path
+        returns : Path
+        """
         polygon = path.coords
         offset_polygon = np.array([])
         offset_point_x = []
@@ -283,8 +338,18 @@ class Transform:
         offset_path = Path(offset_point_x, offset_point_y, offset_point_z)
         return offset_path
 
+
     @staticmethod
     def fill(path, infill_distance = 0.4, angle = np.pi/4, offset = 0):
+        """
+        Generate the infill path by computing the normal vectors of each vertex
+        but this method can only apply to the convex polygon.
+        For the other polygons, like concave polygon, 
+        use  line_infill() in infill_generator.py  instead.
+
+        args    : Path 
+        returns : Path
+        """
         path = Transform.offset(path, offset)
         x = path.x
         y = path.y
