@@ -2,6 +2,7 @@ import os
 import sys
 import traceback
 import platform
+import pickle
 
 from PyQt5.QtCore                   import *
 from PyQt5.QtGui                    import *
@@ -41,8 +42,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         try:
             # reload modeling.py
-            modeling = import_file('buffer/modeling.py')
-            self.full_object=modeling.object_modeling() 
+            #modeling = import_file('buffer/modeling.py')
+            print(main_window.path)
+            with open('buffer/modeling.py', 'r') as f:
+                self.code = f.read()
+            #self.full_object=modeling.object_modeling() 
+            exec(self.code)
+            with open('buffer/full_object.pickle', 'rb') as f:
+                self.full_object = pickle.load(f)
+            
             # in full_object list, the elements are Path and Path List
             # make all elements in full_object list to Path
             self.full_object = path_generator.flatten_path_list(self.full_object)
