@@ -3,7 +3,7 @@ import numpy as np
 import math
 from print_settings import *
 import print_settings
-
+import gcoordinator as gc
 
 
 class Path:
@@ -160,9 +160,9 @@ def flatten_path_list(full_object):
     """
     flattened_paths = []
     for item in full_object:
-        if isinstance(item, PathList):
+        if isinstance(item, gc.PathList):
             flattened_paths.extend(flatten_path_list(item.paths))
-        elif isinstance(item, Path):
+        elif isinstance(item, gc.Path):
             flattened_paths.append(item)
     return flattened_paths
 

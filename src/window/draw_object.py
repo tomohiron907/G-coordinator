@@ -88,7 +88,6 @@ def draw_full_object(widget, full_object):
             hue = z % 360  
             rgb = colorsys.hsv_to_rgb(hue/360, 1, 1)  
             color[i] = (*rgb, 1)  
-
         coord = np.insert(coord, 1, coord[0], axis=0)
         coord = np.append(coord, [coord[-1]], axis=0)
         
@@ -97,7 +96,6 @@ def draw_full_object(widget, full_object):
         
         pos_array.append(coord)
         colors.append(color)
-    
     pos_array = np.concatenate(pos_array)
     colors = np.concatenate(colors)
 

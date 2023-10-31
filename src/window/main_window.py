@@ -41,39 +41,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print('draw_object')
         
         try:
-            # reload modeling.py
-            #modeling = import_file('buffer/modeling.py')
-            print(main_window.path)
-            with open('buffer/modeling.py', 'r') as f:
+            # get code from editor
+            with open(main_window.path, 'r') as f:
                 self.code = f.read()
-            #self.full_object=modeling.object_modeling() 
+            # execute python code. In the code, the full_objects 
+            # should be saved in buffer/full_object.pickle
             exec(self.code)
             with open('buffer/full_object.pickle', 'rb') as f:
                 self.full_object = pickle.load(f)
-            
             # in full_object list, the elements are Path and Path List
             # make all elements in full_object list to Path
             self.full_object = path_generator.flatten_path_list(self.full_object)
-
             self.message_console.setTextColor(QColor('#00bfff'))
             self.message_console.append('object displyed')
-            with open("buffer/modeling.py",'w') as f:
-                # after calling object_modeling(), modeling.py will be rewrited with no content
-                pass
+            
         except:
             # if there is a sytax error in modeling.py, the file is not reloaded
             print('syntax error!!')
             self.message_console.setTextColor(QColor('#FF6347'))
             print(str(traceback.format_exc()))
             self.message_console.append(traceback.format_exc())
-            with open("buffer/modeling.py",'w') as f:
-                # modeling file is rewrited with no content
-                pass
-        
+            
         # draw updated object in pyqtgraph widget
         self.graphicsView.clear()  
         grid_draw(self.graphicsView)
-        draw_full_object(self.graphicsView,self.full_object)  
+        draw_full_object(self.graphicsView, self.full_object)  
         self.slider_layer.setRange  (0, len(self.full_object)-1)  
         self.slider_layer.setValue  (   len(self.full_object)-1)
         self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
@@ -157,8 +149,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def file_open(self):
         self.file_operation.open(self)
 
-    def save_as_modeling(self):
-        self.file_operation.save_as_modeling(self)
+    """def save_as_modeling(self):
+        self.file_operation.save_as_modeling(self)"""
 
     def file_save(self):
         self.file_operation.save(self)
@@ -187,7 +179,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.menu_bar.contact_us(self)
     
     def run(self):
-        self.save_as_modeling()
+        self.file_save()
         self.draw_updated_object()
 
 

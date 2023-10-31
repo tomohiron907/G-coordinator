@@ -26,16 +26,6 @@ class FileOperation:
                 main_window.editor.setPlainText(text)
                 # update the title
                 main_window.update_title()
-    
-    def save_as_modeling(self,main_window):
-        # get the text
-        text = main_window.editor.toPlainText()
-        # try catch block
-        # opening file to write
-        with open('buffer/modeling.py', 'w') as f:
-            # write text in the file
-            f.write(text)
-        #self.draw_object()
 
     def save(self, main_window):
         # if there is no save path
