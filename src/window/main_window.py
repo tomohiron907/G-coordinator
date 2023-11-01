@@ -17,10 +17,7 @@ from window.machine_settings_window import MachineSettingsDialog
 from window.app_settings_window     import SettingsWindow
 from window.main.file_operations    import FileOperation
 
-from gcode.gcode_process            import Gcode
-from path_generator                 import Path
 import gcoordinator as gc
-import path_generator
 import qdarktheme
 
 
@@ -38,7 +35,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         reload and draw update object in pyqtgraph widget
         """
-        Path.count = 0
         print('draw_object')
         
         try:
@@ -52,7 +48,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.full_object = pickle.load(f)
             # in full_object list, the elements are Path and Path List
             # make all elements in full_object list to Path
-            self.full_object = path_generator.flatten_path_list(self.full_object)
+            self.full_object = gc.flatten_path_list(self.full_object)
             self.message_console.setTextColor(QColor('#00bfff'))
             self.message_console.append('object displyed')
             

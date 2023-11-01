@@ -6,8 +6,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import ast
-
-import path_generator
+import gcoordinator as gc
 import print_settings
 
 
@@ -94,7 +93,7 @@ class Completer(QCompleter):
         # Initialize the list so that unused variable names, etc. 
         # do not remain in word_list
         self.word_list = [] 
-        self.word_list_path_generator(path_generator)
+        self.word_list_path_generator(gc.path_generator)
         self.word_list_print_setting(print_settings)
         text = self.parent().toPlainText()
 
