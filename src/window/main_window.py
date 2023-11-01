@@ -9,7 +9,6 @@ from PyQt5.QtGui                    import *
 from PyQt5.QtWidgets                import *
 from PyQt5.QtPrintSupport           import *
 
-from window.main.                   import_file import import_file
 from window.draw_object             import draw_full_object, draw_object_slider, grid_draw
 from window.main.ui_settings        import Ui_MainWindow
 from window.gcode_export_window     import GcodeExportWindow
@@ -48,7 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.full_object = pickle.load(f)
             # in full_object list, the elements are Path and Path List
             # make all elements in full_object list to Path
-            self.full_object = gc.flatten_path_list(self.full_object)
+            self.full_object = gc.path_generator.flatten_path_list(self.full_object)
             self.message_console.setTextColor(QColor('#00bfff'))
             self.message_console.append('object displyed')
             
