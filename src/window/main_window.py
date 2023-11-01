@@ -19,6 +19,7 @@ from window.main.file_operations    import FileOperation
 
 from gcode.gcode_process            import Gcode
 from path_generator                 import Path
+import gcoordinator as gc
 import path_generator
 import qdarktheme
 
@@ -103,7 +104,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.slider_segment.setValue(self.slider_segment.value()+1)
 
     def Gcode_create(self):
-        Gcode(self.full_object)
+        self.gcode = gc.GCode(self.full_object)
+        self.gcode.start_gcode('settings/start_gcode.txt')
+        self.gcode.end_gcode('settings/end_gcode.txt')
+        self.gcode.save('buffer/G-coordinator.gcode')
         self.message_console.setTextColor(QColor('#00bfff'))
         self.message_console.setText('Gcode Exported')
         self.gcode_window = GcodeExportWindow()
