@@ -1,11 +1,8 @@
 import sys
-import print_settings
 import json
-import configparser
-from PyQt5.QtGui import *
+from PyQt5.QtGui     import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-import pyqtgraph as pg
+from PyQt5.QtCore    import *
 from pyqtgraph.parametertree import ParameterTree as pgParameterTree
 from pyqtgraph.parametertree import Parameter
 

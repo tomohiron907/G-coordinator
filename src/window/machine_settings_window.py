@@ -5,7 +5,6 @@ from PyQt5.QtCore            import *
 from PyQt5.QtPrintSupport    import *
 from pyqtgraph.parametertree import Parameter, ParameterTree
 import configparser
-from print_settings          import *
 
 class MachineSettingsDialog(QWidget):
     """
@@ -117,7 +116,6 @@ class MachineSettingsDialog(QWidget):
         
         with open('settings/machine_settings.ini', 'w') as file:
             self.machine_setting.write(file)
-        print_settings.reload_print_setting()
         print('  parameter: %s'% childName)
         print('  change:    %s'% change)
         print('  data:      %s'% str(data))
@@ -125,7 +123,6 @@ class MachineSettingsDialog(QWidget):
 
 
     def save_settings(self):
-        print_settings.reload_print_setting()
 
         start_file_path = 'settings/start_gcode.txt'
         content = self.start_edit.toPlainText()

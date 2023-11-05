@@ -5,14 +5,11 @@ import copy
 import sys
 import configparser
 import math
-from print_settings import *
-from kinematics.kin_base import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from PyQt5.QtGui          import *
+from PyQt5.QtWidgets      import *
+from PyQt5.QtCore         import *
 from PyQt5.QtPrintSupport import *
 import colorsys
-import time
 
 ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
 CONFIG_PATH = ROUTE_PATH + '/settings/print_setting.ini' # 編集
@@ -23,7 +20,7 @@ print_setting.read(CONFIG_PATH)
 def grid_draw(widget):
         
         gz = gl.GLGridItem()
-        gz.setSize(print_settings.bed_x, print_settings.bed_y)
+        gz.setSize(200, 200)
         gz.setSpacing(10,10)
         axis = gl.GLAxisItem()
         axis.setSize(50,50,50)
