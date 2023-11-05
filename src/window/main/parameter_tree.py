@@ -1,5 +1,6 @@
 import sys
 import print_settings
+import json
 import configparser
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -14,9 +15,9 @@ class ParameterTree(pgParameterTree):
 
     def read_setting(self):
         ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' 
-        CONFIG_PATH = ROUTE_PATH + '/settings/print_settings.ini' 
-        self.print_setting = configparser.ConfigParser()
-        self.print_setting.read(CONFIG_PATH)
+        CONFIG_PATH = ROUTE_PATH + '/settings/default_settings.json'
+        with open(CONFIG_PATH, 'r') as f:
+            self.print_setting = json.load(f)
 
     def parameter_tree_setting(self):
         self.params = [
@@ -32,6 +33,10 @@ class ParameterTree(pgParameterTree):
                 {'name': 'print_speed', 'type': 'int', 'value': int(self.print_setting['speed']['print_speed'])},
                 {'name': 'travel_speed', 'type': 'int', 'value': int(self.print_setting['speed']['travel_speed'])},
             ]},
+            {'name': 'origin', 'type': 'group', 'children': [
+                {'name': 'x', 'type': 'int', 'value': int(self.print_setting['origin']['x'])},
+                {'name': 'y', 'type': 'int', 'value': int(self.print_setting['origin']['y'])},
+            ]},
             {'name': 'fan_speed', 'type': 'group', 'children': [
                 {'name': 'fan_speed', 'type': 'int', 'value': int(self.print_setting['fan_speed']['fan_speed'])},
             ]},
@@ -40,10 +45,10 @@ class ParameterTree(pgParameterTree):
                 {'name': 'bed_temperature', 'type': 'int', 'value': int(self.print_setting['temperature']['bed_temperature'])},
             ]},
             {'name': 'travel_option', 'type': 'group', 'children': [
-                {'name': 'retraction', 'type': 'bool', 'value': self.print_setting.getboolean('travel_option','retraction')},
+                {'name': 'retraction', 'type': 'bool', 'value': bool(self.print_setting['travel_option']['retraction'])},
                 {'name': 'retraction_distance', 'type': 'float', 'value': float(self.print_setting['travel_option']['retraction_distance'])},
                 {'name': 'unretraction_distance', 'type': 'float', 'value': float(self.print_setting['travel_option']['unretraction_distance'])},
-                {'name': 'z_hop', 'type': 'bool', 'value': self.print_setting.getboolean('travel_option','z_hop')},
+                {'name': 'z_hop', 'type': 'bool', 'value': bool(self.print_setting['travel_option']['z_hop'])},
                 {'name': 'z_hop_distance', 'type': 'float', 'value': float(self.print_setting['travel_option']['z_hop_distance'])},
             ]},
             {'name': 'extrusion_option', 'type': 'group', 'children': [
@@ -58,34 +63,22 @@ class ParameterTree(pgParameterTree):
     
 
     def change(self, param, changes):
-        print("tree changes:")
-        for param, change, data in changes:
-            path = self.p.childPath(param)
-            childName = '.'.join(path)
-            self.print_setting.set(path[0],path[1],str(data))
-            with open('settings/print_settings.ini', 'w') as file:
-                self.print_setting.write(file)
-            print('  parameter: %s'% childName)
-            print('  change:    %s'% change)
-            print('  data:      %s'% str(data))
-            print('  ----------')
-            print_settings.reload_print_setting()
+            """
+            Update the settings and print the changes made to the console.
 
+            Args:
+                param: The parameter that was changed.
+                changes: A list of tuples containing the parameter, change type, and new data.
 
-class ParameterTreeWindow(QWidget):
-    def __init__(self):
-        super(ParameterTreeWindow, self).__init__()
-        self.parameter_tree = ParameterTree()
-        self.parameter_tree.read_setting()
-        self.parameter_tree.parameter_tree_setting()
-        self.parameter_tree.setParameters(self.parameter_tree.p, showTop=True)
-        layout = QVBoxLayout()
-        layout.addWidget(self.parameter_tree)
-        self.setLayout(layout)
+            Returns:
+                None
+            """
+            print("tree changes:")
+            for param, change, data in changes:
+                path = self.p.childPath(param)
+                print(path[0], path[1],":",  str(data))
+                self.print_setting[path[0]][path[1]] = data
+                with open('settings/default_settings.json', 'w') as f:
+                    json.dump(self.print_setting, f, indent=4)
+            print('-------------')
 
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    mainWindow = ParameterTreeWindow()
-    mainWindow.show()
-    sys.exit(app.exec_())

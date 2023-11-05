@@ -99,7 +99,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.slider_segment.setValue(self.slider_segment.value()+1)
 
     def Gcode_create(self):
-        self.gcode = gc.GCode(self.full_object)
+        self.gcode = gc.GCode(self.full_object, 'settings/default_settings.json')
         self.gcode.start_gcode('settings/start_gcode.txt')
         self.gcode.end_gcode('settings/end_gcode.txt')
         self.gcode.save('buffer/G-coordinator.gcode')
