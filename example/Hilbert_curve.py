@@ -1,6 +1,5 @@
 import numpy as np
-from path_generator import *
-
+import gcoordinator as gc
 
 def hilbert_curve(x, y, xi, xj, yi, yj, depth):
     if depth <= 0:
@@ -26,14 +25,13 @@ def draw_hilbert_curve(length, depth, height):
     
     x, y = hilbert_curve(x, y, xi, xj, yi, yj, depth)
     z = np.full_like(x, 0.2*height + 0.2)
-    hilbert = Path(x, y, z)
+    hilbert = gc.Path(x, y, z)
     return hilbert
 
+full_object=[]
+for height in range(10):
+    hilbert = draw_hilbert_curve(200, 6, height * 0.2)
+    hilbert = gc.Transform.move(hilbert, -100, -100)
+    full_object.append(hilbert)
 
-def object_modeling():
-    full_object=[]
-    for height  in range(20):
-        hilbert = draw_hilbert_curve(200, 6, height)
-        hilbert = Transform.move(hilbert, -100, -100)
-        full_object.append(hilbert)
-    return full_object
+gc.gui_export(full_object)

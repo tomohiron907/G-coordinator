@@ -1,10 +1,7 @@
 import numpy as np
-import math
-import print_settings 
-from path_generator import *
+import gcoordinator as gc
 
 LAYER =20
-#ext_multiplier = 1.4
 
 def lissajous(a, b, d, height):
     t = np.linspace(0, np.pi* 2,400)
@@ -18,20 +15,19 @@ def lissajous(a, b, d, height):
         b_2 = b
     x = rad*np.sin(a_2*t + d)+a*40-20-100
     y = rad*np.sin(b_2*t)+b*40-20-100
-    z = np.full_like(t, (height+1)*print_settings.layer_height)
+    z = np.full_like(t, (height+1)*0.2)
     
-    wall = Path(x, y, z)
+    wall = gc.Path(x, y, z)
     if height == 0:
         wall.z_hop = True
     return wall
 
-def object_modeling():
-    full_object=[]
-    for height in range(LAYER):
-        for i in range(0, 5):
-            for j in range(0, 5):
-                curve = lissajous(i+1, j+1, np.pi/2.86*(i+1)*(j+1), height)
-                full_object.append(curve)
+full_object=[]
+for height in range(LAYER):
+    for i in range(0, 5):
+        for j in range(0, 5):
+            curve = lissajous(i+1, j+1, np.pi/2.86*(i+1)*(j+1), height)
+            full_object.append(curve)
 
 
-    return full_object
+gc.gui_export(full_object)

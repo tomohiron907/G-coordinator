@@ -1,6 +1,6 @@
-import numpy as np
 import math
-from path_generator import *
+import numpy as np
+import gcoordinator as gc
 
 LAYER=250
 
@@ -21,32 +21,28 @@ def amp_calc(height):
     return amp
 
 
-def object_modeling():
-    full_object=[]
-    for height in range(LAYER):
-        arg = np.linspace(0, np.pi*2,401)
-        amp = amp_calc(height)
-        rad = 40-30*1.5*(height/LAYER)+30*1.5*(height/LAYER)**2+amp*np.floor(abs(1.2*np.sin(arg*25))) 
+full_object=[]
+for height in range(LAYER):
+    arg = np.linspace(0, np.pi*2,401)
+    amp = amp_calc(height)
+    rad = 40-30*1.5*(height/LAYER)+30*1.5*(height/LAYER)**2+amp*np.floor(abs(1.2*np.sin(arg*25))) 
+    angle = rotation(height)
+    x = rad*np.cos(arg+angle)
+    y = rad*np.sin(arg+angle)
+    z = np.full_like(arg, height*0.3+0.2)
+    outer_wall = gc.Path(x, y, z)
+    full_object.append(outer_wall)
+    
+
+    for i in range(2):
+        arg = np.linspace(0, np.pi*2,201)
+        rad = 40-30*1.5*(height/LAYER)+30*1.5*(height/LAYER)**2 - 0.4*(i+1) 
         angle = rotation(height)
         x = rad*np.cos(arg+angle)
         y = rad*np.sin(arg+angle)
         z = np.full_like(arg, height*0.3+0.2)
-        outer_wall = Path(x, y, z)
-        full_object.append(outer_wall)
-        
-
-        for i in range(2):
-            arg = np.linspace(0, np.pi*2,201)
-            rad = 40-30*1.5*(height/LAYER)+30*1.5*(height/LAYER)**2 - 0.4*(i+1) 
-            angle = rotation(height)
-            x = rad*np.cos(arg+angle)
-            y = rad*np.sin(arg+angle)
-            z = np.full_like(arg, height*0.3+0.2)
-            inner_wall = Path(x, y, z)
-            full_object.append(inner_wall)
-        
-
-
-    return full_object
+        inner_wall = gc.Path(x, y, z)
+        full_object.append(inner_wall)
     
+gc.gui_export(full_object)
 

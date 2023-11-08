@@ -1,9 +1,5 @@
 import numpy as np
-import math
-import print_settings 
-from path_generator import *
-from infill_generator import line_infill
-
+import gcoordinator as gc
 
 x_coords = np.array([0])
 y_coords = np.array([0])
@@ -33,35 +29,32 @@ R = 150
 arg = np.pi/5
 LAYER = int(R / 0.2 * np.cos(arg))
 
-def object_modeling():
-    global x_coords, y_coords
-    full_object=[]
-    for height in range(LAYER):
-        x_coords = np.array([0])
-        y_coords = np.array([0])
-        
-        a = np.cos(arg)*2 * height /LAYER * R - np.cos(arg)*R
-        
-        initial_length =np.sqrt(R**2 - a**2)
-        initial_angle = 0
-        draw_koch_snowflake(4, initial_length, initial_angle, 0, 0)
-        draw_koch_snowflake(4, initial_length, initial_angle + 120, initial_length, 0)
-        draw_koch_snowflake(4, initial_length, initial_angle +240, initial_length/2, initial_length/2*np.sqrt(3))
 
-        z = np.full_like(x_coords, height*0.2 + 0.2)
-        wall = Path(x_coords, y_coords, z)
-        wall = Transform.move(wall, -initial_length/2, -initial_length/2*np.sqrt(3)*1/3)
-        wall = Transform.rotate(wall, -height/LAYER * np.pi/2)
-        full_object.append(wall)
+full_object=[]
+for height in range(LAYER):
+    x_coords = np.array([0])
+    y_coords = np.array([0])
+    
+    a = np.cos(arg)*2 * height /LAYER * R - np.cos(arg)*R
+    
+    initial_length =np.sqrt(R**2 - a**2)
+    initial_angle = 0
+    draw_koch_snowflake(4, initial_length, initial_angle, 0, 0)
+    draw_koch_snowflake(4, initial_length, initial_angle + 120, initial_length, 0)
+    draw_koch_snowflake(4, initial_length, initial_angle +240, initial_length/2, initial_length/2*np.sqrt(3))
 
-        if height<3:
-            infill = line_infill(wall, infill_distance = 1, angle=height*np.pi/2 + np.pi/4)
-            infill.z_hop = True
-            infill.retraction = True
-            full_object.append(infill)
-        
+    z = np.full_like(x_coords, height*0.2 + 0.2)
+    wall = gc.Path(x_coords, y_coords, z)
+    wall = gc.Transform.move(wall, -initial_length/2, -initial_length/2*np.sqrt(3)*1/3)
+    wall = gc.Transform.rotate_xy(wall, -height/LAYER * np.pi/2)
+    full_object.append(wall)
 
-
-    return full_object
+    if height<3:
+        infill = gc.line_infill(wall, infill_distance = 1, angle=height*np.pi/2 + np.pi/4)
+        infill.z_hop = True
+        infill.retraction = True
+        full_object.append(infill)
+    
+gc.gui_export(full_object)
     
 

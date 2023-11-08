@@ -1,10 +1,9 @@
-import numpy as np
-from path_generator import *
-import print_settings
 import random
+import numpy as np
+import gcoordinator as gc
 
-nozzle = print_settings.nozzle_diameter
-thickness = print_settings.layer_height
+nozzle = 0.4
+thickness = 0.2
 
 LAYER = 20
 s = 10
@@ -19,15 +18,16 @@ def line(x_pos, y_pos, a):
         return x-100, y-100
 
 
-def object_modeling():
-    full_object=[]
-    random_slope = [[  bool(random.getrandbits(1))   for j in range(20)] for j in range(20)]
-    for height in range(LAYER):
-        for i in range(20):
-            for j in range(20):
-                a = random_slope[i][j]
-                x, y = line(i, j, a)
-                z = np.full_like(x, (height+1)*thickness+1)
-                seg = Path(x, y, z)
-                full_object.append(seg)
-    return full_object
+full_object=[]
+random_slope = [[  bool(random.getrandbits(1))   for j in range(20)] for j in range(20)]
+for height in range(LAYER):
+    for i in range(20):
+        for j in range(20):
+            a = random_slope[i][j]
+            x, y = line(i, j, a)
+            z = np.full_like(x, (height+1)*thickness+1)
+            seg = gc.Path(x, y, z)
+            full_object.append(seg)
+
+
+gc.gui_export(full_object)

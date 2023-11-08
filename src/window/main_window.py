@@ -43,7 +43,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # execute python code. In the code, the full_objects 
             # should be saved in buffer/full_object.pickle
             gc.load_settings('settings/settings.json')
-            exec(self.code)
+            exec(self.code, globals())
             with open('buffer/full_object.pickle', 'rb') as f:
                 self.full_object = pickle.load(f)
             # in full_object list, the elements are Path and Path List
