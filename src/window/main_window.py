@@ -149,9 +149,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def file_open(self):
         self.file_operation.open(self)
 
-    """def save_as_modeling(self):
-        self.file_operation.save_as_modeling(self)"""
-
     def file_save(self):
         self.file_operation.save(self)
 

@@ -1,9 +1,8 @@
-import numpy as np
-from path_generator import *
+import gcoordinator as gc
 
 
 
-def object_modeling():
-    full_object=[]
 
-    return full_object
+
+
+gc.gui_export()
