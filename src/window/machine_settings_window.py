@@ -1,4 +1,5 @@
 import sys
+import json
 from PyQt5.QtGui             import *
 from PyQt5.QtWidgets         import *
 from PyQt5.QtCore            import *
@@ -17,36 +18,32 @@ class MachineSettingsDialog(QWidget):
 
         # Parameters
         self.params = [
-            {'name': 'Printer', 'type': 'group', 'children': [
-                {'name'    : 'Kinematics', 'type': 'list', 'values': ['Cartesian', 'NozzleTilt', 'BedTilt', 'BedRotate'], 'value':str(self.machine_setting['Printer']['kinematics'])},
+            {'name': 'Hardware', 'type': 'group', 'children': [
+                {'name'    : 'kinematics', 'type': 'list', 'values': ['Cartesian', 'NozzleTilt', 'BedTilt', 'BedRotate'], 'value':str(self.settings['Hardware']['kinematics'])},
                 {'name'    : 'bed_size', 'type': 'group', 'children': [
-                    {'name': 'bed_size_x', 'type': 'int',     'value': float(self.machine_setting['Printer']['bed_size.bed_size_x'])},
-                    {'name': 'bed_size_y', 'type': 'int',     'value': float(self.machine_setting['Printer']['bed_size.bed_size_y'])},
-                    {'name': 'bed_size_z', 'type': 'int',     'value': float(self.machine_setting['Printer']['bed_size.bed_size_z'])}
-                ]},
-                {'name'    : 'origin', 'type': 'group', 'children': [
-                    {'name': 'origin_x', 'type': 'int',       'value': float(self.machine_setting['Printer']['origin.origin_x'])},
-                    {'name': 'origin_y', 'type': 'int',       'value': float(self.machine_setting['Printer']['origin.origin_y'])}
-                ]},
+                    {'name': 'bed_size_x', 'type': 'int',     'value': float(self.settings['Hardware']['bed_size']['bed_size_x'])},
+                    {'name': 'bed_size_y', 'type': 'int',     'value': float(self.settings['Hardware']['bed_size']['bed_size_y'])},
+                    {'name': 'bed_size_z', 'type': 'int',     'value': float(self.settings['Hardware']['bed_size']['bed_size_z'])}
+                ]}
             ]},
             {'name': 'Kinematics', 'type': 'group', 'children': [
-                {'name'    : 'NozzleTilt', 'type': 'group', 'children': [
-                    {'name': 'tilt_code', 'type': 'str',      'value': str(self.machine_setting['Kinematics']['NozzleTilt.tilt_code'])},
-                    {'name': 'rot_code', 'type': 'str',       'value': str(self.machine_setting['Kinematics']['NozzleTilt.rot_code'])},
-                    {'name': 'tilt_offset', 'type': 'float',  'value': float(self.machine_setting['Kinematics']['NozzleTilt.tilt_offset'])},
-                    {'name': 'rot_offset', 'type': 'float',   'value': float(self.machine_setting['Kinematics']['NozzleTilt.rot_offset'])}
+                {'name'    : 'NozzleTilt', 'type': 'group', 'children':[
+                    {'name': 'tilt_code', 'type': 'str',      'value': str(self.settings  ['Kinematics']['NozzleTilt']['tilt_code'])},
+                    {'name': 'rot_code', 'type': 'str',       'value': str(self.settings  ['Kinematics']['NozzleTilt']['rot_code'])},
+                    {'name': 'tilt_offset', 'type': 'float',  'value': float(self.settings['Kinematics']['NozzleTilt']['tilt_offset'])},
+                    {'name': 'rot_offset', 'type': 'float',   'value': float(self.settings['Kinematics']['NozzleTilt']['rot_offset'])}
                 ]},
-                {'name'    : 'BedTilt', 'type': 'group', 'children': [
-                    {'name': 'tilt_code', 'type': 'str',      'value': str(self.machine_setting['Kinematics']['BedTilt.tilt_code'])},
-                    {'name': 'rot_code', 'type': 'str',       'value': str(self.machine_setting['Kinematics']['BedTilt.rot_code'])},
-                    {'name': 'tilt_offset', 'type': 'float',  'value': float(self.machine_setting['Kinematics']['BedTilt.tilt_offset'])},
-                    {'name': 'rot_offset', 'type': 'float',   'value': float(self.machine_setting['Kinematics']['BedTilt.rot_offset'])},
-                    {'name': 'div_distance', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedTilt.div_distance'])}
+                {'name'    : 'BedTiltBC', 'type': 'group', 'children':[
+                    {'name': 'tilt_code', 'type': 'str',      'value': str(self.settings  ['Kinematics']['BedTiltBC']['tilt_code'])},
+                    {'name': 'rot_code', 'type': 'str',       'value': str(self.settings  ['Kinematics']['BedTiltBC']['rot_code'])},
+                    {'name': 'tilt_offset', 'type': 'float',  'value': float(self.settings['Kinematics']['BedTiltBC']['tilt_offset'])},
+                    {'name': 'rot_offset', 'type': 'float',   'value': float(self.settings['Kinematics']['BedTiltBC']['rot_offset'])},
+                    {'name': 'div_distance', 'type': 'float', 'value': float(self.settings['Kinematics']['BedTiltBC']['div_distance'])}
                 ]},
-                {'name'    : 'BedRotate', 'type': 'group', 'children': [
-                    {'name': 'rot_code', 'type': 'str',       'value': str(self.machine_setting['Kinematics']['BedRotate.rot_code'])},
-                    {'name': 'rot_offset', 'type': 'float',   'value': float(self.machine_setting['Kinematics']['BedRotate.rot_offset'])},
-                    {'name': 'div_distance', 'type': 'float', 'value': float(self.machine_setting['Kinematics']['BedRotate.div_distance'])},
+                {'name'    : 'BedRotate', 'type': 'group', 'children':[
+                    {'name': 'rot_code', 'type': 'str',       'value': str(self.settings  ['Kinematics']['BedRotate']['rot_code'])},
+                    {'name': 'rot_offset', 'type': 'float',   'value': float(self.settings['Kinematics']['BedRotate']['rot_offset'])},
+                    {'name': 'div_distance', 'type': 'float', 'value': float(self.settings['Kinematics']['BedRotate']['div_distance'])},
 
                 ]},
                 
@@ -100,26 +97,34 @@ class MachineSettingsDialog(QWidget):
     
     def read_setting(self):
         ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' 
-        CONFIG_PATH = ROUTE_PATH + '/settings/machine_settings.ini' 
-        self.machine_setting = configparser.ConfigParser()
-        self.machine_setting.read(CONFIG_PATH)
+        CONFIG_PATH = ROUTE_PATH + '/settings/settings.json'
+        with open(CONFIG_PATH, 'r') as f:
+            self.settings = json.load(f)
 
     def change(self, param, changes):
         print("machine tree changes:")
         
         for param, change, data in changes:
             path = self.p.childPath(param)
-            childName = '.'.join(path)
-            # Get the path hierarchy and write the corresponding section and key in the configuration file
-            section, key = path[0], '.'.join(path[1:])
-            self.machine_setting.set(section, key, str(data))
-        
-        with open('settings/machine_settings.ini', 'w') as file:
-            self.machine_setting.write(file)
-        print('  parameter: %s'% childName)
-        print('  change:    %s'% change)
-        print('  data:      %s'% str(data))
-        print('  ----------')
+            # Set section and key based on path length
+            if len(path) == 3:
+                section, subsection, key = path[0], path[1], path[2]
+                self.settings[section][subsection][key] = data
+                print(section, subsection, key, ":", data)
+            elif len(path) == 2:
+                section, key = path[0], path[1]
+                self.settings[section][key] = data
+                print(section, key, ":", data)
+            else:
+                continue
+        print('-------------')
+            
+        # Write updated settings to json file
+        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' 
+        CONFIG_PATH = ROUTE_PATH + '/settings/settings.json'
+        with open(CONFIG_PATH, 'w') as f:
+            json.dump(self.settings, f, indent=4)
+
 
 
     def save_settings(self):
