@@ -9,6 +9,10 @@
 # What is G-coordinator?
 To use a 3D printer, basically, you need to prepare a 3D model and then slice it using slicing software to create G-code, which is then loaded into the printer. The G-coordinator developed this time is an open-source software in Python specifically designed for directly creating G-code. You can find it at the following URL: [https://github.com/tomohiron907/G-coordinator](https://github.com/tomohiron907/G-coordinator).
 
+Additionally, there is a Python library called "gcoordinator" that extracts the internal G-code generation engine of G-coordinator. (URL: https://github.com/tomohiron907/gcoordinator)
+
+Using this Python library, you can generate G-code directly from Python scripts without installing the GUI. The G-code generation engine inside the G-coordinator app also uses this Python library.
+
 ![gif_img1](img/modeling.gif)
 By directly creating G-code, it becomes possible to easily produce shapes and structures that were previously difficult to achieve using traditional methods of creating 3D models. For example, it allows for the realization of intricate knitting patterns like the one shown below.
 
@@ -72,20 +76,23 @@ The code will be displayed in the editor on the left, and when you press the rel
 In G-coordinator, the modeling process takes place within the function called `object_modeling()`. As mentioned earlier, what we ultimately want is a list of coordinates. Therefore, we are creating a list that includes the coordinates of the points that the tool should pass through.
 
 
-```ruby
-def object_modeling():
-    full_object=[]
-    for height in range(LAYER):
-        arg = np.linspace(0, np.pi*2,100)
-        rad = 10
-        x = rad*np.cos(arg)
-        y = rad*np.sin(arg)
-        z = np.full_like(arg, height*0.2+0.2)
-        layer = Path(x,y,z)
-        full_object.append(layer)
-            
+```python
+import math
+import numpy as np
+import gcoordinator as gc
 
-    return full_object
+LAYER = 100
+
+full_object=[]
+for height in range(LAYER):
+    arg = np.linspace(0, 2*np.pi, 100)
+    x = 10 * np.cos(arg)
+    y = 10 * np.sin(arg)
+    z = np.full_like(arg, (height+1) * 0.2)
+    wall = gc.Path(x, y, z)
+    full_object.append(wall)
+
+gc.gui_export(full_object)
 ```
 
 
@@ -100,7 +107,7 @@ Next, to draw a circle, the function sets up an angle (`argument`) using a numpy
 
 <br>
 
-```layer = Path(x,y,z)```
+```layer = gc.Path(x,y,z)```
 
 
 Furthermore, in the code, the endpoint of the path in the nth layer and the starting point of the path in the n+1st layer are automatically connected, allowing for smooth travel between layers.
@@ -217,6 +224,10 @@ To foster community engagement and encourage more users, it would be beneficial 
 # G-coordinatorとは？
 3Dプリンタを使用するためには，基本的には3Dモデルを用意し，それをスライスソフトにかけてG-codeを作成してプリンタに読み込ませる必要があります．今回開発したG-coordinatorはpythonで直接G-codeを作成するためのオープンソースフトウェアです．(URL:https://github.com/tomohiron907/G-coordinator)
 
+また，内部のG-code生成エンジンを切り出したgcoordinatorというライブラリもあります.(URL:https://github.com/tomohiron907/gcoordinator)
+
+このpythonライブラリをしようすると，GUIをインストールすることなく，pythonスクリプトからG-codeを生成することができます．このG-coordinatorのアプリも，内部のG-code生成エンジンはgcoordinatorを使用しています．
+
 ![gif_img1](img/modeling.gif)
 
 <br>
@@ -295,20 +306,23 @@ G-coordinator では，object_modeling()という関数の中でモデリング�
 
 <br>
 
-```ruby
-def object_modeling():
-    full_object=[]
-    for height in range(LAYER):
-        arg = np.linspace(0, np.pi*2,100)
-        rad = 10
-        x = rad*np.cos(arg)
-        y = rad*np.sin(arg)
-        z = np.full_like(arg, height*0.2+0.2)
-        layer = Path(x,y,z)
-        full_object.append(layer)
-            
+```python
+import math
+import numpy as np
+import gcoordinator as gc
 
-    return full_object
+LAYER = 100
+
+full_object=[]
+for height in range(LAYER):
+    arg = np.linspace(0, 2*np.pi, 100)
+    x = 10 * np.cos(arg)
+    y = 10 * np.sin(arg)
+    z = np.full_like(arg, (height+1) * 0.2)
+    wall = gc.Path(x, y, z)
+    full_object.append(wall)
+
+gc.gui_export(full_object)
 ```
 <br>
 
@@ -334,7 +348,7 @@ y座標は，
 より計算できます．
 高さ方向のz座標に関しては，argと同じ要素数のarrayをheightに応じて値を初期化しています．0.2を足しているのは，heightが0から始まっても，第一層目は高さ0.2の場所に印刷して欲しいからです．
 
-```layer = Path(x,y,z)```
+```layer = gc.Path(x,y,z)```
 
 <br>
 なお，n段目のPathの終点とn+1段目のPathの始点とは，自動でトラベルするようになっています．
