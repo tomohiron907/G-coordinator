@@ -1,5 +1,5 @@
 '''
-G-coordinator ver 2.3.0
+G-coordinator ver 3.0.0
 License: MIT
 Author: Tomohiro Taniguchi
 Usage: 
