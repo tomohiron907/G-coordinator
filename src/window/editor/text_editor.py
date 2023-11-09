@@ -1,14 +1,10 @@
-
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtPrintSupport import *
+from PyQt5.QtWidgets         import *
+from PyQt5.QtGui             import *
+from PyQt5.QtWidgets         import *
+from PyQt5.QtCore            import *
+from PyQt5.QtPrintSupport    import *
 from window.editor.completer import Completer
-import path_generator
-import print_settings
-import numpy as np
-import inspect
+
 
 
 

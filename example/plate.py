@@ -1,22 +1,18 @@
 import numpy as np
-from path_generator import *
-from infill_generator import *
-import print_settings
-nozzle = print_settings.nozzle_diameter
-thickness = print_settings.layer_height
-#ext_multiplier = 1.2
+import gcoordinator as gc
+
+nozzle = 0.4
+thickness = 0.2
 LAYER = 2
 
-def object_modeling():
-    full_object=[]
-    for height in range(LAYER):
-        x = np.array([100,-100,-100,100,100], dtype = float)
-        y = np.array([100,100,-100,-100,100], dtype = float)
-        z = np.full_like(x, (height+1)*thickness)
-        wall = Path(x, y, z)
-        infill = line_infill(wall, infill_distance=0.4)
-        full_object.append(wall)
-        full_object.append(infill)
-        
-        
-    return full_object
+full_object=[]
+for height in range(LAYER):
+    x = np.array([100,-100,-100,100,100], dtype = float)
+    y = np.array([100,100,-100,-100,100], dtype = float)
+    z = np.full_like(x, (height+1)*thickness)
+    wall = gc.Path(x, y, z)
+    infill = gc.line_infill(wall, infill_distance=0.4)
+    full_object.append(wall)
+    full_object.append(infill)
+    
+gc.gui_export(full_object)

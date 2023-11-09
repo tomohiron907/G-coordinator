@@ -1,29 +1,26 @@
+import sys
+import math
+import json
+import colorsys
 import numpy as np
 import pyqtgraph.opengl as gl
-import pyqtgraph as pg
-import copy
-import sys
-import configparser
-import math
-from print_settings import *
-from kinematics.kin_base import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
+from PyQt5.QtGui          import *
+from PyQt5.QtWidgets      import *
+from PyQt5.QtCore         import *
 from PyQt5.QtPrintSupport import *
-import colorsys
-import time
 
-ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-CONFIG_PATH = ROUTE_PATH + '/settings/print_setting.ini' # 編集
-print_setting = configparser.ConfigParser()
-print_setting.read(CONFIG_PATH)
+
 
 
 def grid_draw(widget):
-        
+        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' 
+        CONFIG_PATH = ROUTE_PATH + '/settings/settings.json'
+        with open(CONFIG_PATH, 'r') as f:
+            settings = json.load(f)
+        bed_size_x = settings['Hardware']['bed_size']['bed_size_x']
+        bed_size_y = settings['Hardware']['bed_size']['bed_size_y']
         gz = gl.GLGridItem()
-        gz.setSize(print_settings.bed_x, print_settings.bed_y)
+        gz.setSize(bed_size_x, bed_size_y)
         gz.setSpacing(10,10)
         axis = gl.GLAxisItem()
         axis.setSize(50,50,50)
@@ -88,7 +85,6 @@ def draw_full_object(widget, full_object):
             hue = z % 360  
             rgb = colorsys.hsv_to_rgb(hue/360, 1, 1)  
             color[i] = (*rgb, 1)  
-
         coord = np.insert(coord, 1, coord[0], axis=0)
         coord = np.append(coord, [coord[-1]], axis=0)
         
@@ -97,7 +93,6 @@ def draw_full_object(widget, full_object):
         
         pos_array.append(coord)
         colors.append(color)
-    
     pos_array = np.concatenate(pos_array)
     colors = np.concatenate(colors)
 

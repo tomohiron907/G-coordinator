@@ -6,9 +6,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import ast
-
-import path_generator
-import print_settings
+import gcoordinator as gc
 
 
 def extract_variable_names(code_str, names):
@@ -94,8 +92,7 @@ class Completer(QCompleter):
         # Initialize the list so that unused variable names, etc. 
         # do not remain in word_list
         self.word_list = [] 
-        self.word_list_path_generator(path_generator)
-        self.word_list_print_setting(print_settings)
+        self.word_list_path_generator(gc.path_generator)
         text = self.parent().toPlainText()
 
         self.variable_set = extract_variable_names(text, self.variable_set)

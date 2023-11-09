@@ -1,0 +1,64 @@
+{
+    "Print": {
+        "nozzle": {
+            "nozzle_diameter": 0.4,
+            "filament_diameter": 1.75
+        },
+        "layer": {
+            "layer_height": 0.2
+        },
+        "speed": {
+            "print_speed": 15000,
+            "travel_speed": 25000
+        },
+        "origin": {
+            "x": 100,
+            "y": 100
+        },
+        "fan_speed": {
+            "fan_speed": 255
+        },
+        "temperature": {
+            "nozzle_temperature": 200,
+            "bed_temperature": 50
+        },
+        "travel_option": {
+            "retraction": false,
+            "retraction_distance": 2.0,
+            "unretraction_distance": 2.0,
+            "z_hop": false,
+            "z_hop_distance": 3
+        },
+        "extrusion_option": {
+            "extrusion_multiplier": 1.0
+        }
+    },
+    "Hardware": {
+        "kinematics": "Cartesian",
+        "bed_size": {
+            "bed_size_x": 210,
+            "bed_size_y": 210,
+            "bed_size_z": 205
+        }
+    },
+    "Kinematics": {
+        "NozzleTilt": {
+            "tilt_code": "B",
+            "rot_code": "A",
+            "tilt_offset": 0.0,
+            "rot_offset": 0.0
+        },
+        "BedTiltBC": {
+            "tilt_code": "B",
+            "rot_code": "C",
+            "tilt_offset": 0.0,
+            "rot_offset": 0,
+            "div_distance": 0.5
+        },
+        "BedRotate": {
+            "rot_code": "C",
+            "rot_offset": 0.0,
+            "div_distance": 0.5
+        }
+    }
+}

@@ -2,13 +2,13 @@ import os
 import sys
 import traceback
 import platform
+import pickle
 
 from PyQt5.QtCore                   import *
 from PyQt5.QtGui                    import *
 from PyQt5.QtWidgets                import *
 from PyQt5.QtPrintSupport           import *
 
-from window.main.                   import_file import import_file
 from window.draw_object             import draw_full_object, draw_object_slider, grid_draw
 from window.main.ui_settings        import Ui_MainWindow
 from window.gcode_export_window     import GcodeExportWindow
@@ -16,9 +16,7 @@ from window.machine_settings_window import MachineSettingsDialog
 from window.app_settings_window     import SettingsWindow
 from window.main.file_operations    import FileOperation
 
-from gcode.gcode_process            import Gcode
-from path_generator                 import Path
-import path_generator
+import gcoordinator as gc
 import qdarktheme
 
 
@@ -36,36 +34,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         reload and draw update object in pyqtgraph widget
         """
-        Path.count = 0
         print('draw_object')
         
         try:
-            # reload modeling.py
-            modeling = import_file('buffer/modeling.py')
-            self.full_object=modeling.object_modeling() 
+            # get code from editor
+            with open(main_window.path, 'r') as f:
+                self.code = f.read()
+            # execute python code. In the code, the full_objects 
+            # should be saved in buffer/full_object.pickle
+            gc.load_settings('settings/settings.json')
+            exec(self.code, globals())
+            with open('buffer/full_object.pickle', 'rb') as f:
+                self.full_object = pickle.load(f)
             # in full_object list, the elements are Path and Path List
             # make all elements in full_object list to Path
-            self.full_object = path_generator.flatten_path_list(self.full_object)
-
+            self.full_object = gc.path_generator.flatten_path_list(self.full_object)
             self.message_console.setTextColor(QColor('#00bfff'))
             self.message_console.append('object displyed')
-            with open("buffer/modeling.py",'w') as f:
-                # after calling object_modeling(), modeling.py will be rewrited with no content
-                pass
+            
         except:
             # if there is a sytax error in modeling.py, the file is not reloaded
             print('syntax error!!')
             self.message_console.setTextColor(QColor('#FF6347'))
             print(str(traceback.format_exc()))
             self.message_console.append(traceback.format_exc())
-            with open("buffer/modeling.py",'w') as f:
-                # modeling file is rewrited with no content
-                pass
-        
+            
         # draw updated object in pyqtgraph widget
         self.graphicsView.clear()  
         grid_draw(self.graphicsView)
-        draw_full_object(self.graphicsView,self.full_object)  
+        draw_full_object(self.graphicsView, self.full_object)  
         self.slider_layer.setRange  (0, len(self.full_object)-1)  
         self.slider_layer.setValue  (   len(self.full_object)-1)
         self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
@@ -103,7 +100,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.slider_segment.setValue(self.slider_segment.value()+1)
 
     def Gcode_create(self):
-        Gcode(self.full_object)
+        self.gcode = gc.GCode(self.full_object)
+        self.gcode.start_gcode('settings/start_gcode.txt')
+        self.gcode.end_gcode('settings/end_gcode.txt')
+        self.gcode.save('buffer/G-coordinator.gcode')
         self.message_console.setTextColor(QColor('#00bfff'))
         self.message_console.setText('Gcode Exported')
         self.gcode_window = GcodeExportWindow()
@@ -149,9 +149,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def file_open(self):
         self.file_operation.open(self)
 
-    def save_as_modeling(self):
-        self.file_operation.save_as_modeling(self)
-
     def file_save(self):
         self.file_operation.save(self)
 
@@ -179,7 +176,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.menu_bar.contact_us(self)
     
     def run(self):
-        self.save_as_modeling()
+        self.file_save()
         self.draw_updated_object()
 
 
