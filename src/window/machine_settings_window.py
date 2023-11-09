@@ -140,4 +140,8 @@ class MachineSettingsDialog(QWidget):
         with open(end_file_path, 'w') as file:
             file.write(content)
 
+        
+        # Show restart notification
+        QMessageBox.information(self, "Restart Required", "Changes will take effect after restarting the application.")
+        
         self.close()

@@ -1,26 +1,26 @@
+import sys
+import math
+import json
+import colorsys
 import numpy as np
 import pyqtgraph.opengl as gl
-import pyqtgraph as pg
-import copy
-import sys
-import configparser
-import math
 from PyQt5.QtGui          import *
 from PyQt5.QtWidgets      import *
 from PyQt5.QtCore         import *
 from PyQt5.QtPrintSupport import *
-import colorsys
 
-ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' # 追加
-CONFIG_PATH = ROUTE_PATH + '/settings/print_setting.ini' # 編集
-print_setting = configparser.ConfigParser()
-print_setting.read(CONFIG_PATH)
+
 
 
 def grid_draw(widget):
-        
+        ROUTE_PATH = sys.path[1] if 2 == len(sys.path) else '.' 
+        CONFIG_PATH = ROUTE_PATH + '/settings/settings.json'
+        with open(CONFIG_PATH, 'r') as f:
+            settings = json.load(f)
+        bed_size_x = settings['Hardware']['bed_size']['bed_size_x']
+        bed_size_y = settings['Hardware']['bed_size']['bed_size_y']
         gz = gl.GLGridItem()
-        gz.setSize(200, 200)
+        gz.setSize(bed_size_x, bed_size_y)
         gz.setSpacing(10,10)
         axis = gl.GLAxisItem()
         axis.setSize(50,50,50)

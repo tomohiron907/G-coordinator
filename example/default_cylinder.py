@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import gcoordinator as gc
-
+from console import print
 LAYER = 100
 
 full_object=[]
@@ -12,5 +12,5 @@ for height in range(LAYER):
     z = np.full_like(arg, (height+1) * 0.2)
     wall = gc.Path(x, y, z)
     full_object.append(wall)
-
+    print(f'layer {height}')
 gc.gui_export(full_object)
