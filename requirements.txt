@@ -2,7 +2,7 @@ contourpy==1.2.0
 cycler==0.12.1
 darkdetect==0.7.1
 fonttools==4.44.0
-gcoordinator==0.0.12
+gcoordinator==0.0.13
 importlib-resources==6.1.1
 kiwisolver==1.4.5
 matplotlib==3.7.1
@@ -12,7 +12,7 @@ Pillow==10.1.0
 PyOpenGL==3.1.7
 pyparsing==3.1.1
 PyQt5==5.15.10
-PyQt5-Qt5==5.15.11
+PyQt5-Qt5==5.15.2
 PyQt5-sip==12.13.0
 pyqtdarktheme==2.1.0
 pyqtgraph==0.13.2
