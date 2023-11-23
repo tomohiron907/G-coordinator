@@ -2,9 +2,10 @@
 G-coordinator ver 3.0.0
 License: MIT
 Author: Tomohiro Taniguchi
-Usage: 
-- Documentation(Japanese): https://qiita.com/tomohiron907/items/747e74965d18f358d852
-- GitHub Repository: https://github.com/tomohiron907/G-coordinator/tree/main
+
+- Documentation(Japanese): https://gcoordinator.readthedocs.io/ja/latest/
+- Documentation(English): https://gcoordinator.readthedocs.io/en/latest/
+- GitHub Repository: https://github.com/tomohiron907/gcoordinator
 '''
 
 
