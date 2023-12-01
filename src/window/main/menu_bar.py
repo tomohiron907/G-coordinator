@@ -58,7 +58,7 @@ class MenuBar:
 
 
     def version_info(self, main_window):
-        version = 'G-coordinator 2.2.2'
+        version = 'G-coordinator 3.0.0'
         QMessageBox.information(main_window, 'Version Information', f'Version: {version}')
 
     def contact_us(self, main_window):
