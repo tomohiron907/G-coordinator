@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 import traceback
 import platform
 import pickle
@@ -28,9 +29,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         grid_draw(self.graphicsView)
         self.file_operation = FileOperation()
 
+
+    def get_lines(self, cmd):
+        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, universal_newlines=True)
+
+        while True:
+            line = proc.stdout.readline()
+            
+            if line:
+                yield line.strip()  # 改行文字を取り除く
+
+            if not line and proc.poll() is not None:
+                break
+
     #=================================================================
     # event handler 
-    def draw_updated_object(self):
+    '''def draw_updated_object(self):
         """
         reload and draw update object in pyqtgraph widget
         """
@@ -43,7 +57,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # execute python code. In the code, the full_objects 
             # should be saved in buffer/full_object.pickle
             gc.load_settings('settings/settings.json')
-            exec(self.code, globals())
+            self.message_console.setTextColor(QColor('#ffffff'))
+            for line in self.get_lines(f'python3 -u {main_window.path}'):
+                #self.message_console.clear()
+                self.message_console.append(line)
+                app.processEvents()
+            
             with open('buffer/full_object.pickle', 'rb') as f:
                 self.full_object = pickle.load(f)
             # in full_object list, the elements are Path and Path List
@@ -60,6 +79,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.message_console.append(traceback.format_exc())
             
         # draw updated object in pyqtgraph widget
+        self.graphicsView.clear()  
+        grid_draw(self.graphicsView)
+        draw_full_object(self.graphicsView, self.full_object)  
+        self.slider_layer.setRange  (0, len(self.full_object)-1)  
+        self.slider_layer.setValue  (   len(self.full_object)-1)
+        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
+        self.slider_segment.setValue(   len(self.full_object[self.slider_layer.value()].coords))
+        self.file_save()'''
+    
+    def draw_updated_object(self):
+        gc.load_settings('settings/settings.json')
+        self.message_console.setTextColor(QColor('#ffffff'))
+        for line in self.get_lines(f'python3 -u {main_window.path}'):
+            self.message_console.append(line)
+            app.processEvents()
+        
+        with open('buffer/full_object.pickle', 'rb') as f:
+            self.full_object = pickle.load(f)
+
+        self.full_object = gc.path_generator.flatten_path_list(self.full_object)
+        self.message_console.setTextColor(QColor('#00bfff'))
+        self.message_console.append('object displyed')
+
         self.graphicsView.clear()  
         grid_draw(self.graphicsView)
         draw_full_object(self.graphicsView, self.full_object)  
