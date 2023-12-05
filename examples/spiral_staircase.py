@@ -1,11 +1,12 @@
 import numpy as np
+from tqdm import tqdm
 import gcoordinator as gc
 
 full_object = []
 LAYER = 1000
 band = np.pi/8
 twist = 1.5 * np.pi
-for height in range(LAYER):
+for height in tqdm(range(LAYER)):
     t = height/LAYER
     arg = np.linspace(0, 2*np.pi, 100)
     x = 20 * np.cos(arg)

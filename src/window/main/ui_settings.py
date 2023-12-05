@@ -197,7 +197,7 @@ class Ui_MainWindow(object):
         self.reload_button.pressed.connect(MainWindow.run)
         self.machine_settings_button.pressed.connect(MainWindow.open_machine_settings_window)
         
-        self.gcode_export_button.pressed.connect(MainWindow.draw_updated_object)
+        self.gcode_export_button.pressed.connect(MainWindow.render_execution_result)
         self.gcode_export_button.pressed.connect(MainWindow.Gcode_create)
         self.slider_layer.valueChanged['int'].connect(MainWindow.redraw_layer_object)
         self.up_button.pressed.connect(MainWindow.up_button_pressed)

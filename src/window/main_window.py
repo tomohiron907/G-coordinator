@@ -28,105 +28,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.new()
         grid_draw(self.graphicsView)
         self.file_operation = FileOperation()
-
-    def display_stdout(self, message):
-        self.message_console.setTextColor(QColor('#ffffff'))
-        self.message_console.append(message)
-        self.message_console.moveCursor(QTextCursor.End)
-        app.processEvents()
     
-    def display_stderr(self, message):
-        self.message_console.setTextColor(QColor('#FF6347'))
-        self.message_console.append(message)
-        self.message_console.moveCursor(QTextCursor.End)
-        app.processEvents()
-
-    def exec_code(self, cmd):
-        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1, universal_newlines=True)
-
-        while True:
-            line = proc.stdout.readline()
-            error = proc.stderr.readline()
-            
-            if line:
-                self.display_stdout(line.strip())
-
-            if error:
-                self.display_stderr(error.strip())
-
-            if not line and proc.poll() is not None:
-                break
-
-    #=================================================================
-    # event handler 
-    '''def draw_updated_object(self):
-        """
-        reload and draw update object in pyqtgraph widget
-        """
-        print('draw_object')
+    def render_execution_result(self):
+        gc.load_settings('settings/settings.json')
+        is_completed = self.exec_code(f'python3 -u {main_window.path}')
         
-        try:
-            # get code from editor
-            with open(main_window.path, 'r') as f:
-                self.code = f.read()
-            # execute python code. In the code, the full_objects 
-            # should be saved in buffer/full_object.pickle
-            gc.load_settings('settings/settings.json')
-            self.message_console.setTextColor(QColor('#ffffff'))
-            for line in self.get_lines(f'python3 -u {main_window.path}'):
-                #self.message_console.clear()
-                self.message_console.append(line)
-                app.processEvents()
-            
+        if is_completed:
             with open('buffer/full_object.pickle', 'rb') as f:
                 self.full_object = pickle.load(f)
-            # in full_object list, the elements are Path and Path List
-            # make all elements in full_object list to Path
+
             self.full_object = gc.path_generator.flatten_path_list(self.full_object)
-            self.message_console.setTextColor(QColor('#00bfff'))
-            self.message_console.append('object displyed')
-            
-        except:
-            # if there is a sytax error in modeling.py, the file is not reloaded
-            print('syntax error!!')
-            self.message_console.setTextColor(QColor('#FF6347'))
-            print(str(traceback.format_exc()))
-            self.message_console.append(traceback.format_exc())
-            
-        # draw updated object in pyqtgraph widget
-        self.graphicsView.clear()  
-        grid_draw(self.graphicsView)
-        draw_full_object(self.graphicsView, self.full_object)  
-        self.slider_layer.setRange  (0, len(self.full_object)-1)  
-        self.slider_layer.setValue  (   len(self.full_object)-1)
-        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
-        self.slider_segment.setValue(   len(self.full_object[self.slider_layer.value()].coords))
-        self.file_save()'''
+            self.graphicsView.clear()  
+            grid_draw(self.graphicsView)
+            draw_full_object(self.graphicsView, self.full_object)  
+            self.set_sliders()
+            self.file_save()
+            self.display_message('object displayed', '#00bfff')
+        
+        else:
+            self.display_message('Error occured while executing the code', '#FF6347')
     
-    def draw_updated_object(self):
-        gc.load_settings('settings/settings.json')
-        self.message_console.setTextColor(QColor('#ffffff'))
-        '''for line in self.get_lines(f'python3 -u {main_window.path}'):
-            self.message_console.append(line)
-            app.processEvents()'''
+    def exec_code(self, cmd):
+        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, universal_newlines=True)
+        while True:
+            line = proc.stdout.readline()
+            if line:
+                self.display_message(line.strip(), '#ffffff')
+            if not line and proc.poll() is not None:
+                break
         
-        self.exec_code(f'python3 -u {main_window.path}')
-        
-        with open('buffer/full_object.pickle', 'rb') as f:
-            self.full_object = pickle.load(f)
-
-        self.full_object = gc.path_generator.flatten_path_list(self.full_object)
-        self.message_console.setTextColor(QColor('#00bfff'))
-        self.message_console.append('object displyed')
-
-        self.graphicsView.clear()  
-        grid_draw(self.graphicsView)
-        draw_full_object(self.graphicsView, self.full_object)  
-        self.slider_layer.setRange  (0, len(self.full_object)-1)  
-        self.slider_layer.setValue  (   len(self.full_object)-1)
-        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
-        self.slider_segment.setValue(   len(self.full_object[self.slider_layer.value()].coords))
-        self.file_save()
+        # Check the exit code of the process
+        return_code = proc.returncode
+        if return_code == 0:
+            return True
+        else:
+            return False
 
     def redraw_layer_object(self): 
         # redraw updated objects according to the layer slider
@@ -146,6 +82,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                             self.slider_layer.value(),\
                             self.slider_segment.value()) 
     
+    def set_sliders(self):
+        self.slider_layer.setRange  (0, len(self.full_object)-1)  
+        self.slider_layer.setValue  (   len(self.full_object)-1)
+        self.slider_segment.setRange(0, len(self.full_object[self.slider_layer.value()].coords))
+        self.slider_segment.setValue(   len(self.full_object[self.slider_layer.value()].coords))
+    
     def up_button_pressed(self):
         self.slider_layer.setValue(self.slider_layer.value()+1)
     
@@ -163,8 +105,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.gcode.start_gcode('settings/start_gcode.txt')
         self.gcode.end_gcode('settings/end_gcode.txt')
         self.gcode.save('buffer/G-coordinator.gcode')
-        self.message_console.setTextColor(QColor('#00bfff'))
-        self.message_console.setText('Gcode Exported')
+        self.display_message('Gcode Exported', '#00bfff')
         self.gcode_window = GcodeExportWindow()
         self.gcode_window.show()
 
@@ -236,19 +177,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def run(self):
         self.file_save()
-        self.draw_updated_object()
-
-
+        self.render_execution_result()
 
 
 
     #=================================================================
     # other methods
-    def print_console(self, message):
-        # print message in console
-        self.message_console.setTextColor(QColor('#ffffff'))
+
+    def display_message(self, message, color):
+        self.message_console.setTextColor(QColor(color))
         self.message_console.append(message)
         self.message_console.moveCursor(QTextCursor.End)
+        app.processEvents()
 
     def new(self):
         # when you open the G-coordinator, this method is called
