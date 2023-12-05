@@ -29,15 +29,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         grid_draw(self.graphicsView)
         self.file_operation = FileOperation()
 
+    def display_stdout(self, message):
+        self.message_console.setTextColor(QColor('#ffffff'))
+        self.message_console.append(message)
+        self.message_console.moveCursor(QTextCursor.End)
+        app.processEvents()
+    
+    def display_stderr(self, message):
+        self.message_console.setTextColor(QColor('#FF6347'))
+        self.message_console.append(message)
+        self.message_console.moveCursor(QTextCursor.End)
+        app.processEvents()
 
-    def get_lines(self, cmd):
-        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, universal_newlines=True)
+    def exec_code(self, cmd):
+        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1, universal_newlines=True)
 
         while True:
             line = proc.stdout.readline()
+            error = proc.stderr.readline()
             
             if line:
-                yield line.strip()  # 改行文字を取り除く
+                self.display_stdout(line.strip())
+
+            if error:
+                self.display_stderr(error.strip())
 
             if not line and proc.poll() is not None:
                 break
@@ -91,9 +106,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def draw_updated_object(self):
         gc.load_settings('settings/settings.json')
         self.message_console.setTextColor(QColor('#ffffff'))
-        for line in self.get_lines(f'python3 -u {main_window.path}'):
+        '''for line in self.get_lines(f'python3 -u {main_window.path}'):
             self.message_console.append(line)
-            app.processEvents()
+            app.processEvents()'''
+        
+        self.exec_code(f'python3 -u {main_window.path}')
         
         with open('buffer/full_object.pickle', 'rb') as f:
             self.full_object = pickle.load(f)
