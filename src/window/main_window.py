@@ -17,6 +17,8 @@ from window.machine_settings_window import MachineSettingsDialog
 from window.app_settings_window     import SettingsWindow
 from window.main.file_operations    import FileOperation
 
+
+
 import gcoordinator as gc
 import qdarktheme
 
@@ -126,11 +128,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         qdarktheme.setup_theme(theme)
         # qtextedit font size changes according to a platform (Don't know why)
         # This is a workaround for now.
-        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        font_path = os.path.join(parent_dir, "resources", "FiraCode-Regular.ttf")
-        font_id = QFontDatabase.addApplicationFont(font_path)
+        font_path = 'resources/FiraCode-Regular.ttf'
+        absolute_font_path = os.path.abspath(font_path)
+
+        if os.path.exists(absolute_font_path):
+            print(f"The file {absolute_font_path} exists.")
+        else:
+            print(f"The file {absolute_font_path} does not exist.")
+
+        font_id = QFontDatabase.addApplicationFont(absolute_font_path)
+
+        if font_id != -1:
+            print(f"Font added successfully with ID {font_id}")
+        else:
+            print("Failed to add font.")
+
         font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
-        
+        print(font_family)
         if platform.system() == "Darwin":
             font = QFont(font_family, int(font_size))
         else:
