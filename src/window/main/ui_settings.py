@@ -54,9 +54,9 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(central_widget)
         MainWindow.setWindowTitle('Splitter with handle')
         
-        self.open_button = SvgButton('window/button/open_file.svg', MainWindow)
+        self.open_button = SvgButton('resources/open_file.svg', MainWindow)
         self.open_button.resize(0.12)
-        self.reload_button = SvgButton('window/button/play.svg', MainWindow)
+        self.reload_button = SvgButton('resources/play.svg', MainWindow)
         self.reload_button.resize(0.3)
         if platform.system() == "Darwin":
             self.open_button.setGeometry(18, 10, 60, 50)

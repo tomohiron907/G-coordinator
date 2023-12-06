@@ -126,13 +126,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         qdarktheme.setup_theme(theme)
         # qtextedit font size changes according to a platform (Don't know why)
         # This is a workaround for now.
+        parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        font_path = os.path.join(parent_dir, "resources", "FiraCode-Regular.ttf")
+        font_id = QFontDatabase.addApplicationFont(font_path)
+        font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
+        
         if platform.system() == "Darwin":
-            font = QFont('Arial', int(font_size))
+            font = QFont(font_family, int(font_size))
         else:
-            font = QFont('Arial', int(font_size)-2)
-        console_font = QFont('Arial', int(console_font_size))
+            font = QFont(font_family, int(font_size)-2)
+        console_font = QFont(font_family, int(console_font_size))
         self.editor.setFont(font)
         self.line_number_widget.setFontSize(int(font_size))
+        self.line_number_widget.setFont(font)
         self.message_console.setFont(console_font)
     
     def closeEvent(self, event):
