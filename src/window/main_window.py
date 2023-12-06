@@ -123,36 +123,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def apply_settings(self):
         settings = QSettings('settings/app_settings.ini', QSettings.IniFormat)
         theme = settings.value('theme')
-        font_size = settings.value('editor/font_size')
+        editor_font_size = settings.value('editor/font_size')
         console_font_size = settings.value('console/font_size')
         qdarktheme.setup_theme(theme)
-        # qtextedit font size changes according to a platform (Don't know why)
-        # This is a workaround for now.
+
         font_path = 'resources/FiraCode-Regular.ttf'
         absolute_font_path = os.path.abspath(font_path)
-
-        if os.path.exists(absolute_font_path):
-            print(f"The file {absolute_font_path} exists.")
-        else:
-            print(f"The file {absolute_font_path} does not exist.")
-
         font_id = QFontDatabase.addApplicationFont(absolute_font_path)
-
-        if font_id != -1:
-            print(f"Font added successfully with ID {font_id}")
-        else:
-            print("Failed to add font.")
-
         font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
-        print(font_family)
-        if platform.system() == "Darwin":
-            font = QFont(font_family, int(font_size))
-        else:
-            font = QFont(font_family, int(font_size)-2)
+        
+        editor_font = QFont(font_family, int(editor_font_size))
         console_font = QFont(font_family, int(console_font_size))
-        self.editor.setFont(font)
-        self.line_number_widget.setFontSize(int(font_size))
-        self.line_number_widget.setFont(font)
+        self.editor.setFont(editor_font)
+        self.line_number_widget.setFontSize(int(editor_font_size))
+        self.line_number_widget.setFont(editor_font)
         self.message_console.setFont(console_font)
     
     def closeEvent(self, event):
