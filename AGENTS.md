@@ -4,6 +4,7 @@
 このリポジトリにおけるエージェントの目的:
 - **gcoordinator** を用いて **決定的に再現可能な G-code** を生成する。
 - 生成物は `artifacts/` に保存し、設定・経路・変換処理を**スクリプト化**して小さな差分でPR可能にする。
+- プロンプトやPRは日本語
 
 ## References
 - API要約: `agents/gcoordinator_apiguide.md`（存在する場合は最優先で参照）
@@ -28,6 +29,18 @@ pip install ruff black pytest
 ```
 
 > 本リポジトリがライブラリを内包している場合は `pip install -e .` を使用。外部パッケージとして利用する場合は、プロジェクトの指定手順に従う。
+
+### `user/` ツリーの新設
+`user/` 以下に作業用ディレクトリが存在しない場合は、以下でまとめて作成してください。
+
+```sh
+mkdir -p user/configs/printer
+mkdir -p user/presets
+mkdir -p user/scripts
+mkdir -p user/artifacts
+```
+
+`user/configs/printer/` にはプリンタ設定 JSON、`user/presets/` には幾何パラメータの YAML/JSON、`user/scripts/` には CLI スクリプト、`user/artifacts/` には生成物（G-code やメタ情報）を配置します。
 
 ## Conventions
 - **入出力を決定的に**するため、乱数・時刻依存を廃止。座標列は NumPy 配列、角度はラジアン。
@@ -55,23 +68,6 @@ pip install ruff black pytest
 - **DON'T**: 物理プリンタへ直接送信/実行しない（オフラインでの G-code 生成・検証のみに限定）。
 - **DON'T**: 巨大ファイルをリポジトリへ直コミットしない。
 
-## Commands (標準化コマンド)
-```zsh
-# 1) 設定検証（JSONの妥当性チェックなど、用意があれば）
-python -m scripts.validate_configs
-
-# 2) パターン生成（例：円周）
-python -m scripts.generate --preset presets/circle.yaml --printer configs/printer/sample.json --out artifacts/circle.gcode
-
-# 3) 幾何変換（例：Zオフセット + 回転）
-python -m scripts.transform --in artifacts/circle.gcode --z 0.2 --rotate-xy 1.57079632679 --out artifacts/circle_xform.gcode
-
-# 4) 検証（レイヤ数や総移動距離の集計）
-python -m scripts.inspect --in artifacts/circle_xform.gcode --meta artifacts/circle_xform.meta.json
-```
-
-> `user/scripts/*` はこのリポジトリに合わせて実装すること。最小限の CLI 引数（`--in/--out`, `--preset`, `--printer` 等）を統一。
-
 ## Verification (Done Criteria)
 - `user/artifacts/*.gcode` が存在し、**再実行でバイナリ同一**（`sha256sum` が一致）
 - 生成メタ情報（例：総移動距離、レイヤ数、最小/最大速度）が `*.meta.json` に保存される
@@ -93,4 +89,4 @@ ruff check . && black --check . && pytest -q
 - Use Python venv; coordinates as NumPy arrays, angles in radians.
 - Keep determinism: same inputs must produce identical G-code (check `sha256`).
 - No physical printer access; file outputs only under `artifacts/`.
-- Read `docs/gcoordinator_api_agent.md` first for module/API cheat sheet.
+- Read `agents/gcoordinator_apiguide.md` first for module/API cheat sheet.
