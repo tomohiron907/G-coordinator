@@ -1,0 +1,12 @@
+{
+    "name": "simple_rectangle",
+    "description": "Tutorial 1 rectangle path (10 mm square) defined in XY plane at Z=0.",
+    "points": [
+        [0.0, 0.0, 0.0],
+        [10.0, 0.0, 0.0],
+        [10.0, 10.0, 0.0],
+        [0.0, 10.0, 0.0],
+        [0.0, 0.0, 0.0]
+    ],
+    "closed": true
+}

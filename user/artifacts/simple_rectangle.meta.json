@@ -1,0 +1,26 @@
+{
+  "closed_loop": true,
+  "config": "/home/yasushi/G-coordinator/user/configs/printer/basic_cartesian.json",
+  "end_gcode": "/home/yasushi/G-coordinator/user/configs/printer/end_basic.gcode",
+  "gcode_out": "/home/yasushi/G-coordinator/user/artifacts/simple_rectangle.gcode",
+  "gcode_sha256": "e67ff875f813b0ea84a753d0e463de923298697c32edec3e92a541fd7c260eab",
+  "meta_out": "/home/yasushi/G-coordinator/user/artifacts/simple_rectangle.meta.json",
+  "path_stats": {
+    "bounding_box_max": [
+      10.0,
+      10.0,
+      0.0
+    ],
+    "bounding_box_min": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "num_points": 5,
+    "num_segments": 4,
+    "total_path_length_mm": 40.0
+  },
+  "preset": "/home/yasushi/G-coordinator/user/presets/simple_rectangle.json",
+  "start_gcode": "/home/yasushi/G-coordinator/user/configs/printer/start_basic.gcode",
+  "tutorial": "https://gcoordinator.readthedocs.io/ja/latest/tutorials/tutorial_1.html"
+}
