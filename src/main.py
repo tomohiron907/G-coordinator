@@ -16,6 +16,9 @@ Author: Tomohiro Taniguchi
 #1. Change the current directory to "src" by using the command: `cd src`.
 #2. Run the "main.py" file by executing the command: `python3 main.py`.
 
+# srcディレクトリに移動
+import os
+os.chdir("./src")
 
 
 import sys
