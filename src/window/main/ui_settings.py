@@ -57,9 +57,9 @@ class Ui_MainWindow(object):
         self.open_button = SvgButton('resources/open_file.svg', MainWindow)
         self.open_button.resize(0.12)
         self.file_reload_button = SvgButton('resources/reload.svg', MainWindow)
-        self.file_reload_button.resize(0.6)
+        self.file_reload_button.resize(0.6) # ユーザーによる手動サイズ調整
         self.run_button = SvgButton('resources/play.svg', MainWindow)
-        self.run_button.resize(0.3)
+        self.run_button.resize(0.3) # ユーザーによる手動サイズ調整
         if platform.system() == "Darwin":
             self.open_button.setGeometry(18, 10, 60, 50)
             self.file_reload_button.setGeometry(78, 10, 60, 50)
