@@ -16,6 +16,7 @@ from window.gcode_export_window     import GcodeExportWindow
 from window.machine_settings_window import MachineSettingsDialog
 from window.app_settings_window     import SettingsWindow
 from window.main.file_operations    import FileOperation
+from window.button.svg_button       import SvgButton
 
 
 
@@ -27,6 +28,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
+        self._setup_file_reload_button()
         self.new()
         grid_draw(self.graphicsView)
         self.file_operation = FileOperation()
@@ -158,6 +160,48 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def file_save_as(self):
         self.file_operation.save_as(self)
+
+    def _setup_file_reload_button(self):
+        self.run_button = self.reload_button
+        open_geom = self.open_button.geometry()
+        run_geom = self.run_button.geometry()
+        spacing = run_geom.x() - open_geom.x()
+        if spacing <= 0:
+            spacing = run_geom.width()
+
+        self.file_reload_button = SvgButton('resources/reload.svg', self)
+        self.file_reload_button.resize(0.12)
+        self.file_reload_button.setGeometry(run_geom)
+        self.file_reload_button.pressed.connect(self.file_reload)
+
+        new_run_x = run_geom.x() + spacing
+        self.run_button.setGeometry(new_run_x, run_geom.y(), run_geom.width(), run_geom.height())
+
+    def file_reload(self):
+        if not self.path:
+            self.display_message('No file selected to reload', '#FF6347')
+            return
+
+        previous_cursor_pos = self.editor.textCursor().position()
+        scrollbar = self.editor.verticalScrollBar()
+        previous_scroll_value = scrollbar.value()
+
+        try:
+            with open(self.path, 'r') as file:
+                text = file.read()
+        except Exception as exc:
+            QMessageBox.critical(self, 'Reload failed', str(exc))
+            self.display_message('File reload failed', '#FF6347')
+            return
+
+        self.editor.setPlainText(text)
+        new_cursor_pos = min(previous_cursor_pos, len(text))
+        cursor = self.editor.textCursor()
+        cursor.setPosition(new_cursor_pos)
+        self.editor.setTextCursor(cursor)
+        scrollbar = self.editor.verticalScrollBar()
+        scrollbar.setValue(min(previous_scroll_value, scrollbar.maximum()))
+        self.display_message('File reloaded from disk', '#00bfff')
 
     def update_title(self):
         # setting window title with prefix as file name
