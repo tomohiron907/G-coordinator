@@ -159,6 +159,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def file_save_as(self):
         self.file_operation.save_as(self)
 
+    def file_reload(self):
+        if not self.path:
+            self.display_message('No file selected to reload', '#FF6347')
+            return
+
+        previous_cursor_pos = self.editor.textCursor().position()
+        scrollbar = self.editor.verticalScrollBar()
+        previous_scroll_value = scrollbar.value()
+
+        try:
+            with open(self.path, 'r') as file:
+                text = file.read()
+        except Exception as exc:
+            QMessageBox.critical(self, 'Reload failed', str(exc))
+            self.display_message('File reload failed', '#FF6347')
+            return
+
+        self.editor.setPlainText(text)
+        new_cursor_pos = min(previous_cursor_pos, len(text))
+        cursor = self.editor.textCursor()
+        cursor.setPosition(new_cursor_pos)
+        self.editor.setTextCursor(cursor)
+        scrollbar = self.editor.verticalScrollBar()
+        scrollbar.setValue(min(previous_scroll_value, scrollbar.maximum()))
+        self.display_message('File reloaded from disk', '#00bfff')
+
     def update_title(self):
         # setting window title with prefix as file name
         self.setWindowTitle("%s - G-coordinator" %(os.path.basename(self.path)
