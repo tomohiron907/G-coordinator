@@ -16,7 +16,6 @@ from window.gcode_export_window     import GcodeExportWindow
 from window.machine_settings_window import MachineSettingsDialog
 from window.app_settings_window     import SettingsWindow
 from window.main.file_operations    import FileOperation
-from window.button.svg_button       import SvgButton
 
 
 
@@ -28,7 +27,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-        self._setup_file_reload_button()
         self.new()
         grid_draw(self.graphicsView)
         self.file_operation = FileOperation()
@@ -160,22 +158,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def file_save_as(self):
         self.file_operation.save_as(self)
-
-    def _setup_file_reload_button(self):
-        self.run_button = self.reload_button
-        open_geom = self.open_button.geometry()
-        run_geom = self.run_button.geometry()
-        spacing = run_geom.x() - open_geom.x()
-        if spacing <= 0:
-            spacing = run_geom.width()
-
-        self.file_reload_button = SvgButton('resources/reload.svg', self)
-        self.file_reload_button.resize(0.12)
-        self.file_reload_button.setGeometry(run_geom)
-        self.file_reload_button.pressed.connect(self.file_reload)
-
-        new_run_x = run_geom.x() + spacing
-        self.run_button.setGeometry(new_run_x, run_geom.y(), run_geom.width(), run_geom.height())
 
     def file_reload(self):
         if not self.path:

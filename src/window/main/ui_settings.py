@@ -56,14 +56,18 @@ class Ui_MainWindow(object):
         
         self.open_button = SvgButton('resources/open_file.svg', MainWindow)
         self.open_button.resize(0.12)
-        self.reload_button = SvgButton('resources/play.svg', MainWindow)
-        self.reload_button.resize(0.3)
+        self.file_reload_button = SvgButton('resources/reload.svg', MainWindow)
+        self.file_reload_button.resize(0.6)
+        self.run_button = SvgButton('resources/play.svg', MainWindow)
+        self.run_button.resize(0.3)
         if platform.system() == "Darwin":
             self.open_button.setGeometry(18, 10, 60, 50)
-            self.reload_button.setGeometry(78, 10, 60, 50)
+            self.file_reload_button.setGeometry(78, 10, 60, 50)
+            self.run_button.setGeometry(138, 10, 60, 50)
         else:
             self.open_button.setGeometry(18, 30, 60, 50)
-            self.reload_button.setGeometry(78, 30, 60, 50)
+            self.file_reload_button.setGeometry(78, 30, 60, 50)
+            self.run_button.setGeometry(138, 30, 60, 50)
 
 
         self.retranslateUi(MainWindow)
@@ -194,7 +198,8 @@ class Ui_MainWindow(object):
     
     def signal_connecter(self, MainWindow):
         self.open_button.pressed.connect(MainWindow.file_open)
-        self.reload_button.pressed.connect(MainWindow.run)
+        self.file_reload_button.pressed.connect(MainWindow.file_reload)
+        self.run_button.pressed.connect(MainWindow.run)
         self.machine_settings_button.pressed.connect(MainWindow.open_machine_settings_window)
         
         self.gcode_export_button.pressed.connect(MainWindow.render_execution_result)
@@ -212,4 +217,3 @@ class Ui_MainWindow(object):
             n = int(self.editor.document().lineCount())
             self.line_number_widget.changeLineCount(n)
         
-
