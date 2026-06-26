@@ -47,36 +47,36 @@ export async function initParameters(containerId: string): Promise<Settings> {
   const print = settings.Print;
 
   const fNozzle = pane.addFolder({ title: 'Nozzle', expanded: true });
-  fNozzle.addBinding(print.nozzle, 'nozzle_diameter', { label: 'Diameter', min: 0.1, max: 2.0, step: 0.05 });
-  fNozzle.addBinding(print.nozzle, 'filament_diameter', { label: 'Filament ⌀', min: 1.0, max: 3.0, step: 0.05 });
+  fNozzle.addBinding(print.nozzle, 'nozzle_diameter', { label: 'Diameter', step: 0.05 });
+  fNozzle.addBinding(print.nozzle, 'filament_diameter', { label: 'Filament ⌀', step: 0.05 });
 
   const fLayer = pane.addFolder({ title: 'Layer', expanded: true });
-  fLayer.addBinding(print.layer, 'layer_height', { label: 'Height', min: 0.05, max: 1.0, step: 0.01 });
+  fLayer.addBinding(print.layer, 'layer_height', { label: 'Height', step: 0.01 });
 
-  const fSpeed = pane.addFolder({ title: 'Speed', expanded: false });
-  fSpeed.addBinding(print.speed, 'print_speed', { label: 'Print', min: 100, max: 100000, step: 100 });
-  fSpeed.addBinding(print.speed, 'travel_speed', { label: 'Travel', min: 100, max: 100000, step: 100 });
+  const fSpeed = pane.addFolder({ title: 'Speed', expanded: true });
+  fSpeed.addBinding(print.speed, 'print_speed', { label: 'Print', step: 100 });
+  fSpeed.addBinding(print.speed, 'travel_speed', { label: 'Travel', step: 100 });
 
-  const fTemp = pane.addFolder({ title: 'Temperature', expanded: false });
-  fTemp.addBinding(print.temperature, 'nozzle_temperature', { label: 'Nozzle', min: 150, max: 300, step: 1 });
-  fTemp.addBinding(print.temperature, 'bed_temperature', { label: 'Bed', min: 0, max: 120, step: 1 });
+  const fTemp = pane.addFolder({ title: 'Temperature', expanded: true });
+  fTemp.addBinding(print.temperature, 'nozzle_temperature', { label: 'Nozzle', step: 1 });
+  fTemp.addBinding(print.temperature, 'bed_temperature', { label: 'Bed', step: 1 });
 
-  const fFan = pane.addFolder({ title: 'Fan', expanded: false });
-  fFan.addBinding(print.fan_speed, 'fan_speed', { label: 'Speed', min: 0, max: 255, step: 1 });
+  const fFan = pane.addFolder({ title: 'Fan', expanded: true });
+  fFan.addBinding(print.fan_speed, 'fan_speed', { label: 'Speed', step: 1 });
 
-  const fOrigin = pane.addFolder({ title: 'Origin', expanded: false });
-  fOrigin.addBinding(print.origin, 'x', { label: 'X', min: -300, max: 300, step: 0.5 });
-  fOrigin.addBinding(print.origin, 'y', { label: 'Y', min: -300, max: 300, step: 0.5 });
+  const fOrigin = pane.addFolder({ title: 'Origin', expanded: true });
+  fOrigin.addBinding(print.origin, 'x', { label: 'X', step: 0.5 });
+  fOrigin.addBinding(print.origin, 'y', { label: 'Y', step: 0.5 });
 
-  const fTravel = pane.addFolder({ title: 'Travel', expanded: false });
+  const fTravel = pane.addFolder({ title: 'Travel', expanded: true });
   fTravel.addBinding(print.travel_option, 'retraction', { label: 'Retraction' });
-  fTravel.addBinding(print.travel_option, 'retraction_distance', { label: 'Retract Dist', min: 0, max: 10, step: 0.1 });
-  fTravel.addBinding(print.travel_option, 'unretraction_distance', { label: 'Unretract Dist', min: 0, max: 10, step: 0.1 });
+  fTravel.addBinding(print.travel_option, 'retraction_distance', { label: 'Retract Dist', step: 0.1 });
+  fTravel.addBinding(print.travel_option, 'unretraction_distance', { label: 'Unretract Dist', step: 0.1 });
   fTravel.addBinding(print.travel_option, 'z_hop', { label: 'Z-hop' });
-  fTravel.addBinding(print.travel_option, 'z_hop_distance', { label: 'Z-hop Dist', min: 0, max: 10, step: 0.1 });
+  fTravel.addBinding(print.travel_option, 'z_hop_distance', { label: 'Z-hop Dist', step: 0.1 });
 
-  const fExtrusion = pane.addFolder({ title: 'Extrusion', expanded: false });
-  fExtrusion.addBinding(print.extrusion_option, 'extrusion_multiplier', { label: 'Multiplier', min: 0.5, max: 2.0, step: 0.01 });
+  const fExtrusion = pane.addFolder({ title: 'Extrusion', expanded: true });
+  fExtrusion.addBinding(print.extrusion_option, 'extrusion_multiplier', { label: 'Multiplier', step: 0.01 });
 
   pane.on('change', () => {
     saveSettings();

@@ -165,9 +165,9 @@ function msBuildPane(): void {
     label: 'Kinematics',
     options: { Cartesian: 'Cartesian', NozzleTilt: 'NozzleTilt', BedTilt: 'BedTilt', BedRotate: 'BedRotate' },
   });
-  fHW.addBinding(msState.hw, 'bed_size_x', { label: 'Bed X (mm)', min: 1, step: 1 });
-  fHW.addBinding(msState.hw, 'bed_size_y', { label: 'Bed Y (mm)', min: 1, step: 1 });
-  fHW.addBinding(msState.hw, 'bed_size_z', { label: 'Bed Z (mm)', min: 1, step: 1 });
+  fHW.addBinding(msState.hw, 'bed_size_x', { label: 'Bed X (mm)', step: 1 });
+  fHW.addBinding(msState.hw, 'bed_size_y', { label: 'Bed Y (mm)', step: 1 });
+  fHW.addBinding(msState.hw, 'bed_size_z', { label: 'Bed Z (mm)', step: 1 });
 
   const fNT = msPane.addFolder({ title: 'NozzleTilt', expanded: true });
   fNT.addBinding(msState.nt, 'tilt_code',   { label: 'Tilt Axis' });

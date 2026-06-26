@@ -273,6 +273,10 @@ html, body {
   border: none !important;
 }
 
+#tweakpane-container {
+  --tp-blade-value-width: 80px;
+}
+
 #export-gcode-btn {
   margin: 8px;
   padding: 7px 10px;
