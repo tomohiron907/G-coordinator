@@ -234,6 +234,35 @@ async fn open_file(app: AppHandle) -> Result<Option<Value>, String> {
 }
 
 #[tauri::command]
+fn save_script(path: String, code: String) -> Result<(), String> {
+    std::fs::write(&path, code)
+        .map_err(|e| format!("Failed to save file: {e}"))
+}
+
+#[tauri::command]
+async fn save_script_dialog(code: String, app: AppHandle) -> Result<Option<String>, String> {
+    use tauri_plugin_dialog::DialogExt;
+
+    let path = app
+        .dialog()
+        .file()
+        .add_filter("Python", &["py"])
+        .set_file_name("untitled.py")
+        .blocking_save_file();
+
+    match path {
+        Some(fp) => {
+            let p = fp.into_path().map_err(|e| format!("Invalid path: {e}"))?;
+            let path_str = p.to_string_lossy().to_string();
+            std::fs::write(&p, code)
+                .map_err(|e| format!("Failed to save file: {e}"))?;
+            Ok(Some(path_str))
+        }
+        None => Ok(None),
+    }
+}
+
+#[tauri::command]
 async fn save_gcode_dialog(gcode: String, app: AppHandle) -> Result<Option<String>, String> {
     use tauri_plugin_dialog::DialogExt;
 
@@ -270,6 +299,8 @@ pub fn run() {
             get_settings,
             save_settings,
             open_file,
+            save_script,
+            save_script_dialog,
             save_gcode_dialog,
             get_gcode_texts,
             save_gcode_texts,

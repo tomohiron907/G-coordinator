@@ -1,6 +1,6 @@
 import './style.css';
 import './preview.ts';
-import { initEditor, getCode, setCode, getCurrentFilePath, setCurrentFilePath } from './editor.ts';
+import { initEditor, getCode, setCode, getCurrentFilePath, setCurrentFilePath, isModified, markSaved } from './editor.ts';
 import { initConsole, consoleClear, consoleLog, consoleError } from './console.ts';
 import { initParameters, getSettings, onOriginChange } from './parameters.ts';
 import { showComputing, updateBedSize, updateOrigin } from './preview.ts';
@@ -11,6 +11,64 @@ import { Pane } from 'tweakpane';
 
 initConsole('console-output');
 initEditor('monaco-container');
+
+// ---- Title helpers ----
+
+function updateTitle(): void {
+  const path = getCurrentFilePath();
+  const name = path ? path.split('/').pop() ?? 'Untitled' : 'Untitled';
+  document.title = (isModified() ? '• ' : '') + name + ' — G-coordinator';
+}
+
+window.addEventListener('editor-dirty', updateTitle);
+
+// ---- Save helpers ----
+
+async function saveFile(): Promise<boolean> {
+  const path = getCurrentFilePath();
+  if (!path) return saveFileAs();
+  try {
+    await invoke('save_script', { path, code: getCode() });
+    markSaved();
+    updateTitle();
+    return true;
+  } catch (e) {
+    consoleError('Failed to save: ' + String(e));
+    return false;
+  }
+}
+
+async function saveFileAs(): Promise<boolean> {
+  try {
+    const newPath: string | null = await invoke('save_script_dialog', { code: getCode() });
+    if (newPath) {
+      setCurrentFilePath(newPath);
+      markSaved();
+      updateTitle();
+      consoleLog(`Saved: ${newPath}`);
+      return true;
+    }
+    return false;
+  } catch (e) {
+    consoleError('Failed to save: ' + String(e));
+    return false;
+  }
+}
+
+window.addEventListener('request-save', () => { saveFile(); });
+window.addEventListener('request-save-as', () => { saveFileAs(); });
+
+window.addEventListener('keydown', (e) => {
+  if (e.metaKey || e.ctrlKey) {
+    if (e.shiftKey && e.key === 'S') {
+      e.preventDefault();
+      saveFileAs();
+    } else if (!e.shiftKey && e.key === 's') {
+      e.preventDefault();
+      saveFile();
+    }
+  }
+});
 
 let lastPickleB64: string | null = null;
 
@@ -23,6 +81,15 @@ initParameters('tweakpane-container').then((settings) => {
 // ---- Run button ----
 
 document.getElementById('run-btn')!.addEventListener('click', async () => {
+  const path = getCurrentFilePath();
+  if (!path) {
+    const saved = await saveFileAs();
+    if (!saved) return;
+  } else {
+    const saved = await saveFile();
+    if (!saved) return;
+  }
+
   const code = getCode();
   const settings = getSettings();
   if (!settings) return;
@@ -86,6 +153,8 @@ document.getElementById('open-btn')!.addEventListener('click', async () => {
     if (result) {
       setCode(result.content);
       setCurrentFilePath(result.path);
+      markSaved();
+      updateTitle();
       consoleClear();
       consoleLog(`Opened: ${result.path}`);
     }
