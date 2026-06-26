@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>G-coordinator</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+
+      <!-- Left Pane -->
+      <div id="left-pane">
+        <div id="editor-wrapper">
+          <div id="editor-toolbar">
+            <button id="open-btn" title="Open File">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                <path d="M20 6H12L10 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V8C22 6.9 21.1 6 20 6ZM20 18H4V6H9.17L11.17 8H20V18Z" fill="rgb(170,170,170)"/>
+              </svg>
+            </button>
+            <button id="run-btn" title="Run (Ctrl+Enter)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+                <circle cx="12" cy="12" r="10" fill="none" stroke="rgb(170,170,170)" stroke-width="1.5"/>
+                <polygon points="10,8 16,12 10,16" fill="rgb(170,170,170)"/>
+              </svg>
+            </button>
+          </div>
+          <div id="monaco-container"></div>
+        </div>
+        <div id="h-resize-handle"></div>
+        <div id="console-wrapper">
+          <div id="console-header">Console</div>
+          <div id="console-output"></div>
+        </div>
+      </div>
+
+      <!-- Vertical resize handle (left|center) -->
+      <div id="v-resize-left" class="v-resize-handle"></div>
+
+      <!-- Center Pane -->
+      <div id="center-pane">
+        <div id="canvas-container"></div>
+        <div id="computing-overlay">Computing...</div>
+
+        <!-- Layer slider (vertical, right side) -->
+        <div id="layer-controls">
+          <div id="layer-label">
+            <span id="layer-val">0</span>/<span id="layer-total">0</span>
+          </div>
+          <input type="range" id="layer-slider" orient="vertical" min="0" max="0" value="0" />
+        </div>
+
+        <!-- Segment slider (horizontal, bottom) -->
+        <div id="segment-controls">
+          <input type="range" id="curve-slider" min="0" max="0" value="0" />
+          <span id="curve-val">0</span>/<span id="curve-total">0</span>
+        </div>
+      </div>
+
+      <!-- Vertical resize handle (center|right) -->
+      <div id="v-resize-right" class="v-resize-handle"></div>
+
+      <!-- Right Pane -->
+      <div id="right-pane">
+        <button id="machine-settings-btn">Machine Settings</button>
+        <div id="tweakpane-container"></div>
+        <button id="export-gcode-btn">Export G-code</button>
+      </div>
+
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

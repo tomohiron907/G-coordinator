@@ -1,0 +1,314 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #1e1e1e;
+  color: #cccccc;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 13px;
+}
+
+#app {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---- Panes ---- */
+
+#left-pane {
+  display: flex;
+  flex-direction: column;
+  width: 340px;
+  min-width: 180px;
+  max-width: 60vw;
+  height: 100%;
+  background: #1e1e1e;
+  overflow: hidden;
+}
+
+#center-pane {
+  flex: 1;
+  position: relative;
+  min-width: 200px;
+  height: 100%;
+  background: #1e1e1e;
+  overflow: hidden;
+}
+
+#right-pane {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  min-width: 160px;
+  max-width: 50vw;
+  height: 100%;
+  background: #252526;
+  border-left: 1px solid #3c3c3c;
+  overflow: hidden;
+}
+
+/* ---- Vertical resize handles ---- */
+
+.v-resize-handle {
+  width: 4px;
+  background: #3c3c3c;
+  cursor: col-resize;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.v-resize-handle:hover,
+.v-resize-handle.dragging {
+  background: #007acc;
+}
+
+/* ---- Left pane internals ---- */
+
+#editor-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 80px;
+  overflow: hidden;
+}
+
+#editor-toolbar {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 10;
+  display: flex;
+  gap: 4px;
+}
+
+#editor-toolbar button {
+  width: 28px;
+  height: 28px;
+  background: rgba(30, 30, 30, 0.85);
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+#editor-toolbar button:hover {
+  background: rgba(60, 60, 60, 0.95);
+}
+
+#run-btn:hover svg polygon {
+  fill: #4caf50;
+}
+
+#monaco-container {
+  flex: 1;
+  height: 100%;
+}
+
+/* Horizontal resize (editor | console) */
+#h-resize-handle {
+  height: 4px;
+  background: #3c3c3c;
+  cursor: row-resize;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+#h-resize-handle:hover,
+#h-resize-handle.dragging {
+  background: #007acc;
+}
+
+#console-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 180px;
+  min-height: 40px;
+  overflow: hidden;
+  background: #1e1e1e;
+}
+
+#console-header {
+  padding: 3px 8px;
+  font-size: 11px;
+  color: #888;
+  background: #252526;
+  border-bottom: 1px solid #3c3c3c;
+  flex-shrink: 0;
+}
+
+#console-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 8px;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: #cccccc;
+}
+
+#console-output .error {
+  color: #f48771;
+}
+
+/* ---- Center pane internals ---- */
+
+#canvas-container {
+  width: 100%;
+  height: 100%;
+}
+
+#computing-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #ccc;
+  pointer-events: none;
+  z-index: 20;
+}
+
+#computing-overlay.visible {
+  display: flex;
+}
+
+/* Layer slider (vertical, right side of canvas) */
+#layer-controls {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+}
+
+#layer-label {
+  font-size: 11px;
+  color: #888;
+  white-space: nowrap;
+}
+
+#layer-slider {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  flex: 1;
+  cursor: pointer;
+  accent-color: #007acc;
+}
+
+/* Segment slider (horizontal, bottom of canvas) */
+#segment-controls {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 70px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+}
+
+#curve-slider {
+  flex: 1;
+  cursor: pointer;
+  accent-color: #007acc;
+}
+
+#curve-val, #curve-total {
+  font-size: 11px;
+  color: #888;
+  white-space: nowrap;
+}
+
+/* ---- Right pane internals ---- */
+
+#machine-settings-btn {
+  margin: 8px;
+  padding: 5px 10px;
+  background: #3c3c3c;
+  border: 1px solid #555;
+  border-radius: 3px;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 12px;
+  text-align: left;
+  flex-shrink: 0;
+}
+
+#machine-settings-btn:hover {
+  background: #4a4a4a;
+}
+
+#tweakpane-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+/* Style Tweakpane to fit our dark theme */
+#tweakpane-container .tp-dfwv {
+  width: 100% !important;
+  border: none !important;
+}
+
+#export-gcode-btn {
+  margin: 8px;
+  padding: 7px 10px;
+  background: #0e639c;
+  border: 1px solid #1177bb;
+  border-radius: 3px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+#export-gcode-btn:hover {
+  background: #1177bb;
+}
+
+#export-gcode-btn:disabled {
+  background: #3c3c3c;
+  border-color: #555;
+  color: #666;
+  cursor: default;
+}
+
+/* ---- Scrollbars ---- */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

@@ -1,0 +1,72 @@
+/// <reference types="vite/client" />
+import * as monaco from 'monaco-editor';
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+
+self.MonacoEnvironment = {
+  getWorker(_: unknown, _label: string) {
+    return new editorWorker();
+  },
+};
+
+const DEFAULT_CODE = `# Documentation:
+# English:  https://gcoordinator.readthedocs.io/en/latest/
+# Japanese: https://gcoordinator.readthedocs.io/ja/latest/
+
+import gcoordinator as gc
+
+
+gc.gui_export()
+`;
+
+let editor: monaco.editor.IStandaloneCodeEditor | null = null;
+let currentFilePath: string | null = null;
+
+export function initEditor(containerId: string): void {
+  const container = document.getElementById(containerId) as HTMLElement;
+
+  monaco.editor.defineTheme('gc-dark', {
+    base: 'vs-dark',
+    inherit: true,
+    rules: [],
+    colors: {
+      'editor.background': '#1e1e1e',
+    },
+  });
+
+  editor = monaco.editor.create(container, {
+    value: DEFAULT_CODE,
+    language: 'python',
+    theme: 'gc-dark',
+    fontSize: 13,
+    fontFamily: "'Fira Code', 'Consolas', 'Courier New', monospace",
+    fontLigatures: true,
+    minimap: { enabled: false },
+    scrollBeyondLastLine: false,
+    renderLineHighlight: 'line',
+    automaticLayout: true,
+    tabSize: 4,
+    insertSpaces: true,
+    wordWrap: 'off',
+    lineNumbers: 'on',
+  });
+
+  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+    document.getElementById('run-btn')?.click();
+  });
+}
+
+export function getCode(): string {
+  return editor?.getValue() ?? '';
+}
+
+export function setCode(code: string): void {
+  editor?.setValue(code);
+}
+
+export function getCurrentFilePath(): string | null {
+  return currentFilePath;
+}
+
+export function setCurrentFilePath(path: string | null): void {
+  currentFilePath = path;
+}
