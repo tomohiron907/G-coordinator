@@ -33,6 +33,19 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.target.set(0, 0, 0);
 
+// ---- Render on demand ----
+
+let needsRender = true;
+function scheduleRender(): void { needsRender = true; }
+
+// Fires on every camera change (including during damping), so damping frames are covered.
+controls.addEventListener('change', scheduleRender);
+
+// ---- Shared materials ----
+
+const brightMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.FrontSide, flatShading: true, shininess: 60 });
+const dimMaterial    = new THREE.MeshPhongMaterial({ color: 0x555555, side: THREE.FrontSide, flatShading: true, shininess: 60 });
+
 // Grid in XY plane (Z=0 is the printer bed)
 const grid = new THREE.GridHelper(200, 20, 0x555555, 0x333333);
 grid.rotation.x = Math.PI / 2;
@@ -123,6 +136,7 @@ function applyVerticalSlider(): void {
     hSlider.value = String(totalLen);
     hTotalLabel.textContent = String(totalLen);
     applyHorizontalSlider();
+    scheduleRender();
 }
 
 vSlider.addEventListener('input', applyVerticalSlider);
@@ -136,7 +150,7 @@ const hTotalLabel  = document.getElementById('curve-total') as HTMLElement;
 function dimLowerLayers(dim: boolean): void {
     pathMeshes.forEach((mesh, i) => {
         if (i < currentTopIndex) {
-            (mesh.material as THREE.MeshPhongMaterial).color.setHex(dim ? 0x555555 : 0xffffff);
+            mesh.material = dim ? dimMaterial : brightMaterial;
         }
     });
 }
@@ -173,6 +187,7 @@ function applyHorizontalSlider(): void {
         hValLabel.textContent = String(pointCount);
         dimLowerLayers(true);
     }
+    scheduleRender();
 }
 
 hSlider.addEventListener('input', applyHorizontalSlider);
@@ -289,11 +304,10 @@ export function applyPreviewData(msg: PreviewData): void {
     const computingOverlay = document.getElementById('computing-overlay');
     computingOverlay?.classList.remove('visible');
 
-    // Clear old meshes
+    // Clear old meshes (materials are shared — do not dispose them)
     pathMeshes.forEach((mesh) => {
         scene.remove(mesh);
         mesh.geometry.dispose();
-        (mesh.material as THREE.Material).dispose();
     });
     pathMeshes = [];
     travelLines.forEach((line) => {
@@ -318,8 +332,7 @@ export function applyPreviewData(msg: PreviewData): void {
         const len = path_lengths[pi];
         const positions = allCoords.slice(offset * 3, (offset + len) * 3);
         const geometry = buildDiamondTube(positions, len, nozzleSize);
-        const material = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.FrontSide, flatShading: true, shininess: 60 });
-        const mesh = new THREE.Mesh(geometry, material);
+        const mesh = new THREE.Mesh(geometry, brightMaterial);
         scene.add(mesh);
         pathMeshes.push(mesh);
         storedLayerCoords.push(positions);
@@ -391,6 +404,7 @@ export function applyPreviewData(msg: PreviewData): void {
         else      { line.geometry.setDrawRange(0, 0); }
     });
     applyHorizontalSlider();
+    scheduleRender();
 }
 
 export function showComputing(visible: boolean): void {
@@ -407,8 +421,11 @@ listen<PreviewData>('preview-update', (event) => {
 
 function animate(): void {
     requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
+    controls.update(); // fires 'change' events during damping, keeping needsRender true
+    if (needsRender) {
+        renderer.render(scene, camera);
+        needsRender = false;
+    }
 }
 animate();
 
@@ -421,4 +438,5 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
     travelLineMaterials.forEach(mat => mat.resolution.set(w, h));
+    scheduleRender();
 });
