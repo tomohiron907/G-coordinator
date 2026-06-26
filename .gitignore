@@ -22,6 +22,8 @@ src-tauri/binaries/
 # PyInstaller build artifacts
 build/
 *.spec
+dist-pyinstaller/
+build-pyinstaller/
 
 # Editor
 .vscode/settings.json

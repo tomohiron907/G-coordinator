@@ -31,12 +31,20 @@ fn make_python_cmd(app: &AppHandle, script: &str) -> Command {
     }
     #[cfg(not(debug_assertions))]
     {
-        // Sidecar binary: e.g. runner-aarch64-apple-darwin
-        let stem = script.trim_end_matches(".py");
-        let triple = tauri::utils::platform::target_triple().unwrap_or_default();
-        let bin_name = format!("{}-{}", stem, triple);
-        let resource_dir = app.path().resource_dir().unwrap_or_default();
-        Command::new(resource_dir.join("binaries").join(bin_name))
+        let _ = app;
+        // Tauri places externalBin in Contents/MacOS/ (same dir as main exe)
+        // and strips the triple suffix during bundling.
+        let bin_name = match script {
+            "runner.py" => "runner",
+            "gcode_gen.py" => "gcode-gen",
+            "completion_data.py" => "completion-data",
+            other => other.trim_end_matches(".py"),
+        };
+        let exe_dir = std::env::current_exe()
+            .ok()
+            .and_then(|p| p.parent().map(|p| p.to_path_buf()))
+            .unwrap_or_default();
+        Command::new(exe_dir.join(bin_name))
     }
 }
 

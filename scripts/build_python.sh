@@ -40,7 +40,7 @@ echo "==> Target triple: $TRIPLE"
 
 # ---- Create isolated build venv ----
 echo "==> Creating build venv at $VENV"
-uv venv "$VENV" --python "$PYTHON_VERSION"
+uv venv "$VENV" --python "$PYTHON_VERSION" --clear
 
 PYTHON="$VENV/bin/python"
 if [[ "$OS" == MINGW* || "$OS" == CYGWIN* || "$OS" == MSYS* ]]; then
@@ -54,10 +54,6 @@ uv pip install --python "$PYTHON" \
   "numpy" \
   "contourpy" \
   "msgpack"
-
-# ---- Locate gcoordinator settings data ----
-GC_PKG=$("$PYTHON" -c "import gcoordinator, os; print(os.path.dirname(gcoordinator.__file__))")
-GC_SETTINGS="$GC_PKG/settings"
 
 # ---- Helper: run PyInstaller ----
 build_binary() {
@@ -82,22 +78,24 @@ build_binary() {
     --hidden-import numpy.core \
     --hidden-import contourpy \
     --hidden-import msgpack \
-    --add-data "$GC_SETTINGS:gcoordinator/settings" \
     "python/$script"
 }
 
-# ---- Build both scripts ----
-build_binary "runner.py"    "runner"
-build_binary "gcode_gen.py" "gcode-gen"
+# ---- Build all scripts ----
+build_binary "runner.py"          "runner"
+build_binary "gcode_gen.py"       "gcode-gen"
+build_binary "completion_data.py" "completion-data"
 
 # ---- Copy to src-tauri/binaries/ ----
 mkdir -p "$BINARIES_DIR"
-cp "dist-pyinstaller/runner-$TRIPLE"    "$BINARIES_DIR/runner-$TRIPLE"
-cp "dist-pyinstaller/gcode-gen-$TRIPLE" "$BINARIES_DIR/gcode-gen-$TRIPLE"
+cp "dist-pyinstaller/runner-$TRIPLE"           "$BINARIES_DIR/runner-$TRIPLE"
+cp "dist-pyinstaller/gcode-gen-$TRIPLE"        "$BINARIES_DIR/gcode-gen-$TRIPLE"
+cp "dist-pyinstaller/completion-data-$TRIPLE"  "$BINARIES_DIR/completion-data-$TRIPLE"
 
 # Mark binaries executable (no-op on Windows, required on macOS/Linux)
 chmod +x "$BINARIES_DIR/runner-$TRIPLE"
 chmod +x "$BINARIES_DIR/gcode-gen-$TRIPLE"
+chmod +x "$BINARIES_DIR/completion-data-$TRIPLE"
 
 echo ""
 echo "==> Done. Binaries written to $BINARIES_DIR/"
