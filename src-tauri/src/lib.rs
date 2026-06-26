@@ -88,6 +88,32 @@ fn default_settings_path(app: &AppHandle) -> PathBuf {
         .join("settings.json")
 }
 
+// ---- G-code helpers ----
+
+fn gcode_user_path(app: &AppHandle, name: &str) -> PathBuf {
+    app.path()
+        .app_config_dir()
+        .unwrap_or_else(|_| PathBuf::from("."))
+        .join(name)
+}
+
+fn gcode_default_path(app: &AppHandle, name: &str) -> PathBuf {
+    app.path()
+        .resource_dir()
+        .unwrap_or_else(|_| workspace_root().join("src"))
+        .join("settings")
+        .join(name)
+}
+
+fn read_gcode(app: &AppHandle, name: &str) -> String {
+    let user_path = gcode_user_path(app, name);
+    if user_path.exists() {
+        std::fs::read_to_string(user_path).unwrap_or_default()
+    } else {
+        std::fs::read_to_string(gcode_default_path(app, name)).unwrap_or_default()
+    }
+}
+
 // ---- Tauri commands ----
 
 #[tauri::command]
@@ -111,17 +137,8 @@ async fn export_gcode(
     settings: Value,
     app: AppHandle,
 ) -> Result<Value, String> {
-    // Load start/end gcode from resources
-    let res_dir = app
-        .path()
-        .resource_dir()
-        .unwrap_or_else(|_| workspace_root().join("src"));
-    let settings_dir = res_dir.join("settings");
-
-    let start_gcode = std::fs::read_to_string(settings_dir.join("start_gcode.txt"))
-        .unwrap_or_default();
-    let end_gcode = std::fs::read_to_string(settings_dir.join("end_gcode.txt"))
-        .unwrap_or_default();
+    let start_gcode = read_gcode(&app, "start_gcode.txt");
+    let end_gcode   = read_gcode(&app, "end_gcode.txt");
 
     let input = serde_json::json!({
         "pickle_b64": pickle_b64,
@@ -170,6 +187,28 @@ fn save_settings(settings: Value, app: AppHandle) -> Result<(), String> {
     let raw = serde_json::to_string_pretty(&settings)
         .map_err(|e| format!("Failed to serialize settings: {e}"))?;
     std::fs::write(&path, raw).map_err(|e| format!("Failed to write settings: {e}"))
+}
+
+#[tauri::command]
+fn get_gcode_texts(app: AppHandle) -> Result<Value, String> {
+    Ok(serde_json::json!({
+        "start_gcode": read_gcode(&app, "start_gcode.txt"),
+        "end_gcode":   read_gcode(&app, "end_gcode.txt"),
+    }))
+}
+
+#[tauri::command]
+fn save_gcode_texts(start_gcode: String, end_gcode: String, app: AppHandle) -> Result<(), String> {
+    let config_dir = app.path()
+        .app_config_dir()
+        .map_err(|e| format!("Failed to get config dir: {e}"))?;
+    std::fs::create_dir_all(&config_dir)
+        .map_err(|e| format!("Failed to create config dir: {e}"))?;
+    std::fs::write(config_dir.join("start_gcode.txt"), start_gcode)
+        .map_err(|e| format!("Failed to write start_gcode.txt: {e}"))?;
+    std::fs::write(config_dir.join("end_gcode.txt"), end_gcode)
+        .map_err(|e| format!("Failed to write end_gcode.txt: {e}"))?;
+    Ok(())
 }
 
 #[tauri::command]
@@ -232,6 +271,8 @@ pub fn run() {
             save_settings,
             open_file,
             save_gcode_dialog,
+            get_gcode_texts,
+            save_gcode_texts,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

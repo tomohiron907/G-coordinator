@@ -5,6 +5,7 @@ import { initConsole, consoleClear, consoleLog, consoleError } from './console.t
 import { initParameters, getSettings } from './parameters.ts';
 import { showComputing } from './preview.ts';
 import { invoke } from '@tauri-apps/api/core';
+import { Pane } from 'tweakpane';
 
 // ---- Init ----
 
@@ -121,10 +122,138 @@ document.getElementById('export-gcode-btn')!.addEventListener('click', async () 
   }
 });
 
-// ---- Machine Settings button ----
+// ---- Machine Settings dialog ----
 
-document.getElementById('machine-settings-btn')!.addEventListener('click', () => {
-  consoleLog('Machine Settings window is not yet implemented in Tauri version.');
+const msDialog = document.getElementById('machine-settings-dialog') as HTMLElement;
+let msPane: Pane | null = null;
+
+const msState = {
+  hw: { kinematics: 'Cartesian', bed_size_x: 220, bed_size_y: 220, bed_size_z: 250 },
+  nt: { tilt_code: 'B', rot_code: 'C', tilt_offset: 0, rot_offset: 0 },
+  bt: { tilt_code: 'B', rot_code: 'C', tilt_offset: 0, rot_offset: 0, div_distance: 1.0 },
+  br: { rot_code: 'C', rot_offset: 0, div_distance: 1.0 },
+};
+
+function msLoadState(settings: ReturnType<typeof getSettings>): void {
+  if (!settings) return;
+  const { Hardware: hw, Kinematics: kin } = settings;
+  msState.hw.kinematics   = hw.kinematics;
+  msState.hw.bed_size_x   = hw.bed_size.bed_size_x;
+  msState.hw.bed_size_y   = hw.bed_size.bed_size_y;
+  msState.hw.bed_size_z   = hw.bed_size.bed_size_z;
+  msState.nt.tilt_code    = kin.NozzleTilt.tilt_code;
+  msState.nt.rot_code     = kin.NozzleTilt.rot_code;
+  msState.nt.tilt_offset  = kin.NozzleTilt.tilt_offset;
+  msState.nt.rot_offset   = kin.NozzleTilt.rot_offset;
+  msState.bt.tilt_code    = kin.BedTiltBC.tilt_code;
+  msState.bt.rot_code     = kin.BedTiltBC.rot_code;
+  msState.bt.tilt_offset  = kin.BedTiltBC.tilt_offset;
+  msState.bt.rot_offset   = kin.BedTiltBC.rot_offset;
+  msState.bt.div_distance = kin.BedTiltBC.div_distance;
+  msState.br.rot_code     = kin.BedRotate.rot_code;
+  msState.br.rot_offset   = kin.BedRotate.rot_offset;
+  msState.br.div_distance = kin.BedRotate.div_distance;
+}
+
+function msBuildPane(): void {
+  const container = document.getElementById('ms-tweakpane-container')!;
+  msPane?.dispose();
+  msPane = new Pane({ container });
+
+  const fHW = msPane.addFolder({ title: 'Hardware', expanded: true });
+  fHW.addBinding(msState.hw, 'kinematics', {
+    label: 'Kinematics',
+    options: { Cartesian: 'Cartesian', NozzleTilt: 'NozzleTilt', BedTilt: 'BedTilt', BedRotate: 'BedRotate' },
+  });
+  fHW.addBinding(msState.hw, 'bed_size_x', { label: 'Bed X (mm)', min: 1, step: 1 });
+  fHW.addBinding(msState.hw, 'bed_size_y', { label: 'Bed Y (mm)', min: 1, step: 1 });
+  fHW.addBinding(msState.hw, 'bed_size_z', { label: 'Bed Z (mm)', min: 1, step: 1 });
+
+  const fNT = msPane.addFolder({ title: 'NozzleTilt', expanded: true });
+  fNT.addBinding(msState.nt, 'tilt_code',   { label: 'Tilt Axis' });
+  fNT.addBinding(msState.nt, 'rot_code',    { label: 'Rot Axis' });
+  fNT.addBinding(msState.nt, 'tilt_offset', { label: 'Tilt Offset', step: 0.1 });
+  fNT.addBinding(msState.nt, 'rot_offset',  { label: 'Rot Offset',  step: 0.1 });
+
+  const fBT = msPane.addFolder({ title: 'BedTiltBC', expanded: true });
+  fBT.addBinding(msState.bt, 'tilt_code',    { label: 'Tilt Axis' });
+  fBT.addBinding(msState.bt, 'rot_code',     { label: 'Rot Axis' });
+  fBT.addBinding(msState.bt, 'tilt_offset',  { label: 'Tilt Offset',  step: 0.1 });
+  fBT.addBinding(msState.bt, 'rot_offset',   { label: 'Rot Offset',   step: 0.1 });
+  fBT.addBinding(msState.bt, 'div_distance', { label: 'Div Distance', step: 0.1 });
+
+  const fBR = msPane.addFolder({ title: 'BedRotate', expanded: true });
+  fBR.addBinding(msState.br, 'rot_code',     { label: 'Rot Axis' });
+  fBR.addBinding(msState.br, 'rot_offset',   { label: 'Rot Offset',   step: 0.1 });
+  fBR.addBinding(msState.br, 'div_distance', { label: 'Div Distance', step: 0.1 });
+
+  const updateKinFolders = () => {
+    fNT.hidden = msState.hw.kinematics !== 'NozzleTilt';
+    fBT.hidden = msState.hw.kinematics !== 'BedTilt';
+    fBR.hidden = msState.hw.kinematics !== 'BedRotate';
+  };
+  updateKinFolders();
+  msPane.on('change', updateKinFolders);
+}
+
+function msClose(): void {
+  msDialog.hidden = true;
+}
+
+document.getElementById('machine-settings-btn')!.addEventListener('click', async () => {
+  try {
+    const gcodeResult = await invoke<{ start_gcode: string; end_gcode: string }>('get_gcode_texts');
+    msLoadState(getSettings());
+    (document.getElementById('ms-start-gcode') as HTMLTextAreaElement).value = gcodeResult.start_gcode;
+    (document.getElementById('ms-end-gcode')   as HTMLTextAreaElement).value = gcodeResult.end_gcode;
+    msBuildPane();
+    msDialog.hidden = false;
+  } catch (e) {
+    consoleError('Failed to open Machine Settings: ' + String(e));
+  }
+});
+
+document.getElementById('ms-close-btn')!.addEventListener('click', msClose);
+document.getElementById('ms-cancel-btn')!.addEventListener('click', msClose);
+msDialog.addEventListener('click', (e) => { if (e.target === msDialog) msClose(); });
+
+document.getElementById('ms-save-btn')!.addEventListener('click', async () => {
+  const settings = getSettings();
+  if (!settings) return;
+
+  settings.Hardware.kinematics          = msState.hw.kinematics;
+  settings.Hardware.bed_size.bed_size_x = msState.hw.bed_size_x;
+  settings.Hardware.bed_size.bed_size_y = msState.hw.bed_size_y;
+  settings.Hardware.bed_size.bed_size_z = msState.hw.bed_size_z;
+
+  settings.Kinematics.NozzleTilt.tilt_code   = msState.nt.tilt_code;
+  settings.Kinematics.NozzleTilt.rot_code    = msState.nt.rot_code;
+  settings.Kinematics.NozzleTilt.tilt_offset = msState.nt.tilt_offset;
+  settings.Kinematics.NozzleTilt.rot_offset  = msState.nt.rot_offset;
+
+  settings.Kinematics.BedTiltBC.tilt_code    = msState.bt.tilt_code;
+  settings.Kinematics.BedTiltBC.rot_code     = msState.bt.rot_code;
+  settings.Kinematics.BedTiltBC.tilt_offset  = msState.bt.tilt_offset;
+  settings.Kinematics.BedTiltBC.rot_offset   = msState.bt.rot_offset;
+  settings.Kinematics.BedTiltBC.div_distance = msState.bt.div_distance;
+
+  settings.Kinematics.BedRotate.rot_code     = msState.br.rot_code;
+  settings.Kinematics.BedRotate.rot_offset   = msState.br.rot_offset;
+  settings.Kinematics.BedRotate.div_distance = msState.br.div_distance;
+
+  const startGcode = (document.getElementById('ms-start-gcode') as HTMLTextAreaElement).value;
+  const endGcode   = (document.getElementById('ms-end-gcode')   as HTMLTextAreaElement).value;
+
+  try {
+    await Promise.all([
+      invoke('save_settings', { settings }),
+      invoke('save_gcode_texts', { startGcode, endGcode }),
+    ]);
+    msClose();
+    consoleLog('Machine settings saved.');
+  } catch (e) {
+    consoleError('Failed to save machine settings: ' + String(e));
+  }
 });
 
 // ---- Resizable panes ----

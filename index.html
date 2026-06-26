@@ -68,6 +68,32 @@
       </div>
 
     </div>
+
+    <!-- Machine Settings Dialog -->
+    <div id="machine-settings-dialog" class="ms-overlay" hidden>
+      <div class="ms-dialog-box">
+        <div class="ms-header">
+          <span>Machine Settings</span>
+          <button class="ms-close-btn" id="ms-close-btn">&#x2715;</button>
+        </div>
+        <div class="ms-body">
+          <div id="ms-tweakpane-container"></div>
+          <section class="ms-section">
+            <h3 class="ms-section-title">Start G-code</h3>
+            <textarea id="ms-start-gcode" class="ms-gcode-editor" spellcheck="false"></textarea>
+          </section>
+          <section class="ms-section">
+            <h3 class="ms-section-title">End G-code</h3>
+            <textarea id="ms-end-gcode" class="ms-gcode-editor" spellcheck="false"></textarea>
+          </section>
+        </div><!-- .ms-body -->
+        <div class="ms-footer">
+          <button id="ms-cancel-btn" class="ms-btn ms-btn-cancel">Cancel</button>
+          <button id="ms-save-btn" class="ms-btn ms-btn-save">Save</button>
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

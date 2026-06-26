@@ -22,6 +22,11 @@ export interface Settings {
     kinematics: string;
     bed_size: { bed_size_x: number; bed_size_y: number; bed_size_z: number };
   };
+  Kinematics: {
+    NozzleTilt: { tilt_code: string; rot_code: string; tilt_offset: number; rot_offset: number };
+    BedTiltBC:  { tilt_code: string; rot_code: string; tilt_offset: number; rot_offset: number; div_distance: number };
+    BedRotate:  { rot_code: string; rot_offset: number; div_distance: number };
+  };
 }
 
 let pane: Pane | null = null;
