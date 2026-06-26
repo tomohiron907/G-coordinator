@@ -46,8 +46,46 @@ controls.addEventListener('change', scheduleRender);
 const brightMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.FrontSide, flatShading: true, shininess: 60 });
 const dimMaterial    = new THREE.MeshPhongMaterial({ color: 0x555555, side: THREE.FrontSide, flatShading: true, shininess: 60 });
 
-const axes = new THREE.AxesHelper(50);
-scene.add(axes);
+// ---- Origin marker: axes + XYZ labels ----
+
+function makeAxisLabel(text: string, color: string): THREE.Sprite {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+    ctx.font = 'Bold 52px sans-serif';
+    ctx.fillStyle = color;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, 32, 32);
+    const mat = new THREE.SpriteMaterial({
+        map: new THREE.CanvasTexture(canvas),
+        depthTest: false,
+        depthWrite: false,
+    });
+    const sprite = new THREE.Sprite(mat);
+    sprite.scale.set(4, 4, 1);
+    sprite.renderOrder = 2;
+    return sprite;
+}
+
+const AXES_SIZE = 30;
+const axes = new THREE.AxesHelper(AXES_SIZE);
+const axesMat = axes.material as THREE.LineBasicMaterial;
+axesMat.depthTest = false;
+axesMat.depthWrite = false;
+axes.renderOrder = 1;
+
+const xLabel = makeAxisLabel('X', '#ff4444');
+xLabel.position.set(AXES_SIZE + 6, 0, 0);
+const yLabel = makeAxisLabel('Y', '#44ff44');
+yLabel.position.set(0, AXES_SIZE + 6, 0);
+const zLabel = makeAxisLabel('Z', '#4488ff');
+zLabel.position.set(0, 0, AXES_SIZE + 6);
+
+const originGroup = new THREE.Group();
+originGroup.add(axes, xLabel, yLabel, zLabel);
+scene.add(originGroup);
 
 // ---- Bed visualization (dynamic) ----
 
@@ -97,7 +135,7 @@ export function updateBedSize(bedX: number, bedY: number): void {
 }
 
 export function updateOrigin(x: number, y: number): void {
-    axes.position.set(x, y, 0);
+    originGroup.position.set(x, y, 0);
     scheduleRender();
 }
 
