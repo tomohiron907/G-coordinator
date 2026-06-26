@@ -263,6 +263,14 @@ async fn save_script_dialog(code: String, app: AppHandle) -> Result<Option<Strin
 }
 
 #[tauri::command]
+async fn get_completion_data(app: AppHandle) -> Result<Value, String> {
+    let cmd = make_python_cmd(&app, "completion_data.py");
+    tokio::task::spawn_blocking(move || run_subprocess(cmd, ""))
+        .await
+        .map_err(|e| e.to_string())?
+}
+
+#[tauri::command]
 async fn save_gcode_dialog(gcode: String, app: AppHandle) -> Result<Option<String>, String> {
     use tauri_plugin_dialog::DialogExt;
 
@@ -304,6 +312,7 @@ pub fn run() {
             save_gcode_dialog,
             get_gcode_texts,
             save_gcode_texts,
+            get_completion_data,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
