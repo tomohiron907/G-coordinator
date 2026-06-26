@@ -87,6 +87,10 @@ const originGroup = new THREE.Group();
 originGroup.add(axes, xLabel, yLabel, zLabel);
 scene.add(originGroup);
 
+// ---- Print path group (offset by origin so user-space (0,0) aligns with axes) ----
+const pathGroup = new THREE.Group();
+scene.add(pathGroup);
+
 // ---- Bed visualization (dynamic) ----
 
 let bedGrid: THREE.LineSegments | null = null;
@@ -136,6 +140,7 @@ export function updateBedSize(bedX: number, bedY: number): void {
 
 export function updateOrigin(x: number, y: number): void {
     originGroup.position.set(x, y, 0);
+    pathGroup.position.set(x, y, 0);
     scheduleRender();
 }
 
@@ -167,7 +172,7 @@ const nozzleMat = new THREE.MeshPhongMaterial({
 const nozzleMesh = new THREE.Mesh(nozzleGeo, nozzleMat);
 nozzleMesh.rotation.x = -Math.PI / 2;
 nozzleMesh.visible = false;
-scene.add(nozzleMesh);
+pathGroup.add(nozzleMesh);
 
 // ---- State ----
 
@@ -394,12 +399,12 @@ export function applyPreviewData(msg: PreviewData): void {
 
     // Clear old meshes (materials are shared — do not dispose them)
     pathMeshes.forEach((mesh) => {
-        scene.remove(mesh);
+        pathGroup.remove(mesh);
         mesh.geometry.dispose();
     });
     pathMeshes = [];
     travelLines.forEach((line) => {
-        scene.remove(line);
+        pathGroup.remove(line);
         line.geometry.dispose();
         (line.material as THREE.Material).dispose();
     });
@@ -421,7 +426,7 @@ export function applyPreviewData(msg: PreviewData): void {
         const positions = allCoords.slice(offset * 3, (offset + len) * 3);
         const geometry = buildDiamondTube(positions, len, nozzleSize);
         const mesh = new THREE.Mesh(geometry, brightMaterial);
-        scene.add(mesh);
+        pathGroup.add(mesh);
         pathMeshes.push(mesh);
         storedLayerCoords.push(positions);
         offset += len;
@@ -460,7 +465,7 @@ export function applyPreviewData(msg: PreviewData): void {
             resolution: new THREE.Vector2(container.clientWidth, container.clientHeight),
         });
         const line = new Line2(geo, mat);
-        scene.add(line);
+        pathGroup.add(line);
         travelLines.push(line);
         travelLineMaterials.push(mat);
         storedTravelCoords.push(ptsArray);
