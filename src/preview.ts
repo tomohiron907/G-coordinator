@@ -60,19 +60,19 @@ function makeAxisLabel(text: string, color: string): THREE.Sprite {
     ctx.fillText(text, 32, 32);
     const mat = new THREE.SpriteMaterial({
         map: new THREE.CanvasTexture(canvas),
-        depthTest: false,
+        depthTest: true,
         depthWrite: false,
     });
     const sprite = new THREE.Sprite(mat);
     sprite.scale.set(4, 4, 1);
-    sprite.renderOrder = 2;
+    sprite.renderOrder = 1;
     return sprite;
 }
 
 const AXES_SIZE = 30;
 const axes = new THREE.AxesHelper(AXES_SIZE);
 const axesMat = axes.material as THREE.LineBasicMaterial;
-axesMat.depthTest = false;
+axesMat.depthTest = true;
 axesMat.depthWrite = false;
 axes.renderOrder = 1;
 
@@ -121,7 +121,8 @@ export function updateBedSize(bedX: number, bedY: number): void {
     }
     const gridGeo = new THREE.BufferGeometry();
     gridGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(gridPts), 3));
-    bedGrid = new THREE.LineSegments(gridGeo, new THREE.LineBasicMaterial({ color: 0x333333 }));
+    bedGrid = new THREE.LineSegments(gridGeo, new THREE.LineBasicMaterial({ color: 0x333333, depthWrite: false }));
+    bedGrid.renderOrder = -1;
     scene.add(bedGrid);
 
     // Bed boundary outline (brighter)
@@ -133,7 +134,8 @@ export function updateBedSize(bedX: number, bedY: number): void {
     ]);
     const outlineGeo = new THREE.BufferGeometry();
     outlineGeo.setAttribute('position', new THREE.BufferAttribute(outlinePts, 3));
-    bedOutline = new THREE.LineSegments(outlineGeo, new THREE.LineBasicMaterial({ color: 0x888888 }));
+    bedOutline = new THREE.LineSegments(outlineGeo, new THREE.LineBasicMaterial({ color: 0x888888, depthWrite: false }));
+    bedOutline.renderOrder = -1;
     scene.add(bedOutline);
     scheduleRender();
 }
