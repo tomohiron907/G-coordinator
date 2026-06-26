@@ -2,8 +2,8 @@ import './style.css';
 import './preview.ts';
 import { initEditor, getCode, setCode, getCurrentFilePath, setCurrentFilePath } from './editor.ts';
 import { initConsole, consoleClear, consoleLog, consoleError } from './console.ts';
-import { initParameters, getSettings } from './parameters.ts';
-import { showComputing } from './preview.ts';
+import { initParameters, getSettings, onOriginChange } from './parameters.ts';
+import { showComputing, updateBedSize, updateOrigin } from './preview.ts';
 import { invoke } from '@tauri-apps/api/core';
 import { Pane } from 'tweakpane';
 
@@ -14,7 +14,11 @@ initEditor('monaco-container');
 
 let lastPickleB64: string | null = null;
 
-initParameters('tweakpane-container').catch(console.error);
+initParameters('tweakpane-container').then((settings) => {
+  updateBedSize(settings.Hardware.bed_size.bed_size_x, settings.Hardware.bed_size.bed_size_y);
+  updateOrigin(settings.Print.origin.x, settings.Print.origin.y);
+  onOriginChange(updateOrigin);
+}).catch(console.error);
 
 // ---- Run button ----
 
@@ -249,6 +253,7 @@ document.getElementById('ms-save-btn')!.addEventListener('click', async () => {
       invoke('save_settings', { settings }),
       invoke('save_gcode_texts', { startGcode, endGcode }),
     ]);
+    updateBedSize(msState.hw.bed_size_x, msState.hw.bed_size_y);
     msClose();
     consoleLog('Machine settings saved.');
   } catch (e) {

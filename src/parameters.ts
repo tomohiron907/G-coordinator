@@ -31,6 +31,11 @@ export interface Settings {
 
 let pane: Pane | null = null;
 let currentSettings: Settings | null = null;
+let originCb: ((x: number, y: number) => void) | null = null;
+
+export function onOriginChange(cb: (x: number, y: number) => void): void {
+  originCb = cb;
+}
 
 export function getSettings(): Settings | null {
   return currentSettings;
@@ -80,6 +85,7 @@ export async function initParameters(containerId: string): Promise<Settings> {
 
   pane.on('change', () => {
     saveSettings();
+    originCb?.(print.origin.x, print.origin.y);
   });
 
   return settings;

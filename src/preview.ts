@@ -24,14 +24,14 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     10000
 );
-camera.position.set(50, -180, 120);
+camera.position.set(110, -70, 200);
 camera.up.set(0, 0, 1);
-camera.lookAt(0, 0, 0);
+camera.lookAt(110, 110, 0);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
-controls.target.set(0, 0, 0);
+controls.target.set(110, 110, 0);
 
 // ---- Render on demand ----
 
@@ -46,13 +46,63 @@ controls.addEventListener('change', scheduleRender);
 const brightMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, side: THREE.FrontSide, flatShading: true, shininess: 60 });
 const dimMaterial    = new THREE.MeshPhongMaterial({ color: 0x555555, side: THREE.FrontSide, flatShading: true, shininess: 60 });
 
-// Grid in XY plane (Z=0 is the printer bed)
-const grid = new THREE.GridHelper(200, 20, 0x555555, 0x333333);
-grid.rotation.x = Math.PI / 2;
-scene.add(grid);
-
 const axes = new THREE.AxesHelper(50);
 scene.add(axes);
+
+// ---- Bed visualization (dynamic) ----
+
+let bedGrid: THREE.LineSegments | null = null;
+let bedOutline: THREE.LineSegments | null = null;
+
+export function updateBedSize(bedX: number, bedY: number): void {
+    if (bedGrid) {
+        scene.remove(bedGrid);
+        bedGrid.geometry.dispose();
+        (bedGrid.material as THREE.Material).dispose();
+        bedGrid = null;
+    }
+    if (bedOutline) {
+        scene.remove(bedOutline);
+        bedOutline.geometry.dispose();
+        (bedOutline.material as THREE.Material).dispose();
+        bedOutline = null;
+    }
+
+    // Rectangular grid from (0,0) to (bedX, bedY) — 10mm spacing
+    const step = 10;
+    const gridPts: number[] = [];
+    for (let y = 0; y <= bedY + 0.001; y += step) {
+        gridPts.push(0, y, 0,  bedX, y, 0);
+    }
+    for (let x = 0; x <= bedX + 0.001; x += step) {
+        gridPts.push(x, 0, 0,  x, bedY, 0);
+    }
+    const gridGeo = new THREE.BufferGeometry();
+    gridGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(gridPts), 3));
+    bedGrid = new THREE.LineSegments(gridGeo, new THREE.LineBasicMaterial({ color: 0x333333 }));
+    scene.add(bedGrid);
+
+    // Bed boundary outline (brighter)
+    const outlinePts = new Float32Array([
+        0,    0,    0,   bedX, 0,    0,
+        bedX, 0,    0,   bedX, bedY, 0,
+        bedX, bedY, 0,   0,    bedY, 0,
+        0,    bedY, 0,   0,    0,    0,
+    ]);
+    const outlineGeo = new THREE.BufferGeometry();
+    outlineGeo.setAttribute('position', new THREE.BufferAttribute(outlinePts, 3));
+    bedOutline = new THREE.LineSegments(outlineGeo, new THREE.LineBasicMaterial({ color: 0x888888 }));
+    scene.add(bedOutline);
+    scheduleRender();
+}
+
+export function updateOrigin(x: number, y: number): void {
+    axes.position.set(x, y, 0);
+    scheduleRender();
+}
+
+// Initialize with defaults; overridden once settings load
+updateBedSize(220, 220);
 
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.15);
 scene.add(ambientLight);
