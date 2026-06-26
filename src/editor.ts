@@ -157,20 +157,138 @@ async function registerDynamicCompletions(): Promise<void> {
 export function initEditor(containerId: string): void {
   const container = document.getElementById(containerId) as HTMLElement;
 
+  // Override Python tokenizer to classify function/method calls separately from plain identifiers.
+  // Lookahead (?=\s*\() detects calls; uppercase-starting names without () become type.identifier.
+  monaco.languages.setMonarchTokensProvider('python', {
+    defaultToken: '',
+    tokenPostfix: '.python',
+    keywords: [
+      'False', 'None', 'True', '_', 'and', 'as', 'assert', 'async', 'await',
+      'break', 'case', 'class', 'continue', 'def', 'del', 'elif', 'else',
+      'except', 'exec', 'finally', 'for', 'from', 'global', 'if', 'import',
+      'in', 'is', 'lambda', 'match', 'nonlocal', 'not', 'or', 'pass', 'print',
+      'raise', 'return', 'try', 'type', 'while', 'with', 'yield',
+      'int', 'float', 'long', 'complex', 'hex', 'abs', 'all', 'any', 'apply',
+      'basestring', 'bin', 'bool', 'buffer', 'bytearray', 'callable', 'chr',
+      'classmethod', 'cmp', 'coerce', 'compile', 'delattr', 'dict', 'dir',
+      'divmod', 'enumerate', 'eval', 'execfile', 'file', 'filter', 'format',
+      'frozenset', 'getattr', 'globals', 'hasattr', 'hash', 'help', 'id',
+      'input', 'intern', 'isinstance', 'issubclass', 'iter', 'len', 'locals',
+      'list', 'map', 'max', 'memoryview', 'min', 'next', 'object', 'oct',
+      'open', 'ord', 'pow', 'property', 'reversed', 'range', 'raw_input',
+      'reduce', 'reload', 'repr', 'round', 'self', 'set', 'setattr', 'slice',
+      'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple', 'unichr',
+      'unicode', 'vars', 'xrange', 'zip',
+      '__dict__', '__methods__', '__members__', '__class__', '__bases__',
+      '__name__', '__mro__', '__subclasses__', '__init__', '__import__',
+    ],
+    brackets: [
+      { open: '{', close: '}', token: 'delimiter.curly' },
+      { open: '[', close: ']', token: 'delimiter.bracket' },
+      { open: '(', close: ')', token: 'delimiter.parenthesis' },
+    ],
+    tokenizer: {
+      root: [
+        { include: '@whitespace' },
+        { include: '@numbers' },
+        { include: '@strings' },
+        [/[,:;]/, 'delimiter'],
+        [/[{}\[\]()]/, '@brackets'],
+        [/@[a-zA-Z_]\w*/, 'tag'],
+        // function/method calls — lookahead for opening paren
+        [/[a-zA-Z_]\w*(?=\s*\()/, { cases: { '@keywords': 'keyword', '@default': 'entity.name.function' } }],
+        // ALL_CAPS identifiers — Python constant convention (no lowercase letters in the name)
+        [/[A-Z][A-Z0-9_]*\b/, { cases: { '@keywords': 'keyword', '@default': 'constant' } }],
+        // class-like names (PascalCase — uppercase start, has lowercase chars)
+        [/[A-Z]\w*/, { cases: { '@keywords': 'keyword', '@default': 'type.identifier' } }],
+        // general identifiers
+        [/[a-zA-Z_]\w*/, { cases: { '@keywords': 'keyword', '@default': 'identifier' } }],
+      ],
+      whitespace: [
+        [/\s+/, 'white'],
+        [/(^#.*$)/, 'comment'],
+        [/'''/, 'string', '@endDocString'],
+        [/"""/, 'string', '@endDblDocString'],
+      ],
+      endDocString: [
+        [/[^']+/, 'string'],
+        [/\\'/, 'string'],
+        [/'''/, 'string', '@popall'],
+        [/'/, 'string'],
+      ],
+      endDblDocString: [
+        [/[^"]+/, 'string'],
+        [/\\"/, 'string'],
+        [/"""/, 'string', '@popall'],
+        [/"/, 'string'],
+      ],
+      numbers: [
+        [/-?0x([abcdef]|[ABCDEF]|\d)+[lL]?/, 'number.hex'],
+        [/-?(\d*\.)?\d+([eE][+\-]?\d+)?[jJ]?[lL]?/, 'number'],
+      ],
+      strings: [
+        [/'$/, 'string.escape', '@popall'],
+        [/f'{1,3}/, 'string.escape', '@fStringBody'],
+        [/'/, 'string.escape', '@stringBody'],
+        [/"$/, 'string.escape', '@popall'],
+        [/f"{1,3}/, 'string.escape', '@fDblStringBody'],
+        [/"/, 'string.escape', '@dblStringBody'],
+      ],
+      fStringBody: [
+        [/[^\\'\{\}]+$/, 'string', '@popall'],
+        [/[^\\'\{\}]+/, 'string'],
+        [/\{[^\}':!=]+/, 'identifier', '@fStringDetail'],
+        [/\\./, 'string'],
+        [/'/, 'string.escape', '@popall'],
+        [/\\$/, 'string'],
+      ],
+      stringBody: [
+        [/[^\\']+$/, 'string', '@popall'],
+        [/[^\\']+/, 'string'],
+        [/\\./, 'string'],
+        [/'/, 'string.escape', '@popall'],
+        [/\\$/, 'string'],
+      ],
+      fDblStringBody: [
+        [/[^\\"\{\}]+$/, 'string', '@popall'],
+        [/[^\\"\{\}]+/, 'string'],
+        [/\{[^\}':!=]+/, 'identifier', '@fStringDetail'],
+        [/\\./, 'string'],
+        [/"/, 'string.escape', '@popall'],
+        [/\\$/, 'string'],
+      ],
+      dblStringBody: [
+        [/[^\\"]+$/, 'string', '@popall'],
+        [/[^\\"]+/, 'string'],
+        [/\\./, 'string'],
+        [/"/, 'string.escape', '@popall'],
+        [/\\$/, 'string'],
+      ],
+      fStringDetail: [
+        [/[:][^}]+/, 'string'],
+        [/[!][ars]/, 'string'],
+        [/=/, 'string'],
+        [/\}/, 'identifier', '@pop'],
+      ],
+    },
+  } as monaco.languages.IMonarchLanguage);
+
   monaco.editor.defineTheme('gc-dark', {
     base: 'vs-dark',
     inherit: true,
     rules: [
-      { token: 'keyword',         foreground: 'C586C0', fontStyle: 'bold' },
-      { token: 'keyword.control', foreground: 'C586C0', fontStyle: 'bold' },
-      { token: 'string',          foreground: 'CE9178' },
-      { token: 'string.escape',   foreground: 'D7BA7D' },
-      { token: 'comment',         foreground: '6A9955', fontStyle: 'italic' },
-      { token: 'number',          foreground: 'B5CEA8' },
-      { token: 'type.identifier', foreground: '4EC9B0' },
-      { token: 'delimiter',       foreground: 'D4D4D4' },
-      { token: 'operator',        foreground: 'D4D4D4' },
-      { token: 'identifier',      foreground: '9CDCFE' },
+      { token: 'keyword',              foreground: 'C586C0', fontStyle: 'bold' },
+      { token: 'keyword.control',      foreground: 'C586C0', fontStyle: 'bold' },
+      { token: 'entity.name.function', foreground: 'DCDCAA' },
+      { token: 'constant',             foreground: '569CD6' },
+      { token: 'type.identifier',      foreground: '4EC9B0' },
+      { token: 'identifier',           foreground: '9CDCFE' },
+      { token: 'string',               foreground: 'CE9178' },
+      { token: 'string.escape',        foreground: 'CE9178' },
+      { token: 'comment',              foreground: '6A9955', fontStyle: 'italic' },
+      { token: 'number',               foreground: 'B5CEA8' },
+      { token: 'delimiter',            foreground: 'D4D4D4' },
+      { token: 'operator',             foreground: 'D4D4D4' },
     ],
     colors: {
       'editor.background':              '#1e1e1e',
