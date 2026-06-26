@@ -230,11 +230,20 @@ function applyVerticalSlider(): void {
     hSlider.max   = String(totalLen);
     hSlider.value = String(totalLen);
     hTotalLabel.textContent = String(totalLen);
+    updateSliderFill(vSlider, '--v-fill', true);
     applyHorizontalSlider();
     scheduleRender();
 }
 
 vSlider.addEventListener('input', applyVerticalSlider);
+
+function updateSliderFill(slider: HTMLInputElement, prop: string, toTop: boolean): void {
+    const min = parseFloat(slider.min) || 0;
+    const max = parseFloat(slider.max) || 1;
+    const val = parseFloat(slider.value) || 0;
+    const pct = max > min ? ((val - min) / (max - min)) * 100 : 100;
+    slider.style.setProperty(prop, `${pct.toFixed(1)}%`);
+}
 
 // ---- Horizontal slider (curve range of the top layer) ----
 
@@ -282,6 +291,7 @@ function applyHorizontalSlider(): void {
         hValLabel.textContent = String(pointCount);
         dimLowerLayers(true);
     }
+    updateSliderFill(hSlider, '--h-fill', false);
     scheduleRender();
 }
 
@@ -498,6 +508,7 @@ export function applyPreviewData(msg: PreviewData): void {
         if (vis) { line.geometry.setDrawRange(0, Infinity); }
         else      { line.geometry.setDrawRange(0, 0); }
     });
+    updateSliderFill(vSlider, '--v-fill', true);
     applyHorizontalSlider();
     scheduleRender();
 }

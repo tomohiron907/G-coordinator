@@ -222,7 +222,23 @@ html, body {
   direction: rtl;
   flex: 1;
   cursor: pointer;
-  accent-color: #007acc;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 6px;
+  border-radius: 3px;
+  outline: none;
+  background: linear-gradient(to top, white var(--v-fill, 0%), #555 var(--v-fill, 0%));
+}
+
+#layer-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: 2px solid #888;
 }
 
 /* Segment slider (horizontal, bottom of canvas) */
@@ -240,7 +256,23 @@ html, body {
 #curve-slider {
   flex: 1;
   cursor: pointer;
-  accent-color: #007acc;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+  background: linear-gradient(to right, white var(--h-fill, 100%), #555 var(--h-fill, 100%));
+}
+
+#curve-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: 2px solid #888;
 }
 
 #curve-val, #curve-total {
