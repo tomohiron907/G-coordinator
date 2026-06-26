@@ -83,30 +83,31 @@ html, body {
 }
 
 #editor-toolbar {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  z-index: 10;
   display: flex;
   gap: 4px;
+  padding: 6px 8px;
+  background: #1e1e1e;
+  flex-shrink: 0;
+  align-items: center;
 }
 
 #editor-toolbar button {
-  width: 28px;
-  height: 28px;
-  background: rgba(30, 30, 30, 0.85);
-  border: 1px solid #3c3c3c;
+  width: 50px;
+  height: 50px;
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 #editor-toolbar button:hover {
-  background: rgba(60, 60, 60, 0.95);
+  background: #3c3c3c;
+  border-color: #555;
 }
 
 #run-btn:hover svg polygon {
@@ -115,7 +116,7 @@ html, body {
 
 #monaco-container {
   flex: 1;
-  height: 100%;
+  min-height: 0;
 }
 
 /* Horizontal resize (editor | console) */
